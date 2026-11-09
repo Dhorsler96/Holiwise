@@ -1,0 +1,95 @@
+---
+const { hero, destinations } = Astro.props;
+const words = hero.headline.split(' ');
+const places = ['Anywhere', 'Somewhere warm', ...destinations.slice(0, 4).map((d: any) => d.title)];
+const dates = ['Any dates', 'This weekend', 'Next month', 'February half-term', 'Easter', 'Summer'];
+---
+<section class="hero" id="top">
+  <div class="hero__media">
+    <img src={hero.poster.src} alt={hero.poster.alt} fetchpriority="high" decoding="async" />
+    {hero.videoUrl && <video src={hero.videoUrl} muted loop playsinline preload="metadata" data-hero-video aria-hidden="true"></video>}
+  </div>
+
+  <div class="hero__copy">
+    <h1 class="hero__title serif" aria-label={hero.headline}>
+      <span class="mask" aria-hidden="true">
+        {words.map((w: string, i: number) => <><span style={`--i:${i}`}>{w}</span>{i < words.length - 1 ? ' ' : ''}</>)}
+      </span>
+    </h1>
+    <p class="hero__intro">{hero.intro}</p>
+  </div>
+
+  <div class="hero__search">
+    <div class="tabs" role="tablist" aria-label="What are you looking for" data-tabs>
+      <button class="tabs__tab" role="tab" aria-selected="true" data-tab="stays" type="button">Stays</button>
+      <button class="tabs__tab" role="tab" aria-selected="false" data-tab="flights" type="button">Flights</button>
+      <div class="tabs__active" aria-hidden="true"><span>Stays</span><span>Flights</span></div>
+    </div>
+
+    <form class="search" data-search novalidate>
+      <div class="field" data-field="where">
+        <button class="field__btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span class="field__name" data-where-label>Where</span>
+          <span class="field__value" data-value>Anywhere</span>
+        </button>
+        <div class="pop" role="listbox" aria-label="Where">
+          <p class="pop__title">Start with a place, or a feeling</p>
+          {places.map((p, i) => <button class="pop__opt" type="button" role="option" aria-selected={i === 0 ? 'true' : 'false'} data-opt={p}>{p}</button>)}
+        </div>
+      </div>
+
+      <div class="field" data-field="when">
+        <button class="field__btn" type="button" aria-haspopup="true" aria-expanded="false">
+          <span class="field__name">When</span>
+          <span class="field__value" data-value>Any dates</span>
+        </button>
+        <div class="pop" aria-label="When">
+          <p class="pop__title">Roughly when?</p>
+          <div class="pop__chips">
+            {dates.map((d, i) => <button class="chip" type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-opt={d}>{d}</button>)}
+          </div>
+        </div>
+      </div>
+
+      <div class="field" data-field="who">
+        <button class="field__btn" type="button" aria-haspopup="true" aria-expanded="false">
+          <span class="field__name">Who</span>
+          <span class="field__value" data-value>2 guests</span>
+        </button>
+        <div class="pop" aria-label="Who">
+          <p class="pop__title">Who’s travelling?</p>
+          {[['Adults', 'adults', 2, 1], ['Children', 'children', 0, 0], ['Rooms', 'rooms', 1, 1]].map(([label, key, value, min]) => (
+            <div class="stepper" data-step={key} data-min={min}>
+              <span>{label}</span>
+              <span class="stepper__ctrl">
+                <button type="button" data-dir="-1" aria-label={`Fewer ${String(label).toLowerCase()}`}>−</button>
+                <output>{value}</output>
+                <button type="button" data-dir="1" aria-label={`More ${String(label).toLowerCase()}`}>+</button>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="field field--tell">
+        <label class="field__label">
+          <span class="field__name">Or just tell us</span>
+          <input type="text" name="brief" autocomplete="off" aria-label="Or just tell us what you have in mind" data-tell />
+          <span class="tell__ghost" data-ghost data-examples={JSON.stringify(hero.tellUsExamples)} aria-hidden="true">“{hero.tellUsExamples[0]}”</span>
+        </label>
+      </div>
+
+      <button class="btn btn--dark search__submit" type="submit" data-submit>
+        <span>Search</span>
+        <span class="is-sent" aria-hidden="true">Sent</span>
+      </button>
+    </form>
+
+    <a class="search__helper link" href="#" data-focus-tell>{hero.helper} →</a>
+  </div>
+</section>
+
+<div class="toast" role="status" aria-live="polite" data-toast>
+  <span class="toast__dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#141414" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <span><span data-toast-title>Leave it with us.</span><small data-toast-body></small></span>
+</div>

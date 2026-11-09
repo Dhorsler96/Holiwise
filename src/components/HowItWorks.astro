@@ -1,0 +1,49 @@
+---
+const { data } = Astro.props;
+const avatar = '/images/rhodes-lindos.jpg';
+---
+<section class="how section" id="how-it-works">
+  <h2 class="how__title serif" data-inview><span class="mask"><span>{data.heading}</span></span></h2>
+  <div class="how__steps">
+    {data.steps.map((step: any, i: number) => (
+      <article class="step" data-reveal data-inview style={`--i:${i}`}>
+        <h3 class="step__title">{step.title}</h3>
+        <p class="step__desc">{step.description}</p>
+        <div class="step__stage" data-inview data-threshold="0.45" aria-hidden="true">
+          {step.illustration === 'tellUs' && (
+            <div class="ill ill-card chat">
+              <div class="chat__head"><img src={avatar} alt="" loading="lazy" /><span><b>Sofia</b><small>Your travel agent</small></span><i></i></div>
+              <p class="bubble bubble--me seq" style="--s:0">Somewhere warm in February. Just the two of us, five nights.</p>
+              <p class="bubble bubble--agent seq" style="--s:1">Leave it with us. Beach or city?</p>
+              <p class="chat__meta seq" style="--s:1.4">Replied in 9 seconds</p>
+              <p class="bubble bubble--me seq" style="--s:2.4">Beach. Somewhere quiet.</p>
+              <div class="chat__input"><span>Just tell us…</span><i><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#141414" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></div>
+            </div>
+          )}
+          {step.illustration === 'threeOptions' && (
+            <div class="ill fan">
+              <span class="fan__chip"><i></i>3 options · 4 min</span>
+              <div class="opt opt--l ill-card"><img src="/images/rhodes-old-town.jpg" alt="" loading="lazy" /><b>Rhodes Old Town</b><small>5 nights · breakfast + credit</small></div>
+              <div class="opt opt--r ill-card"><img src="/images/symi.jpg" alt="" loading="lazy" /><b>Symi</b><small>5 nights · harbour-view room</small></div>
+              <div class="opt opt--c ill-card"><img src="/images/rhodes-lindos.jpg" alt="" loading="lazy" /><em>Our pick</em><b>Lindos, Rhodes</b><small>5 nights · suite upgrade</small></div>
+            </div>
+          )}
+          {step.illustration === 'booked' && (
+            <div class="ill booked">
+              <div class="booking ill-card">
+                <img src="/images/rhodes-lindos.jpg" alt="" loading="lazy" />
+                <div class="booking__body">
+                  <span class="booking__status"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#7FB89A"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#141414" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Confirmed</span>
+                  <b>Rhodes → Symi → Crete</b>
+                  <small>14 – 28 June · 2 guests</small>
+                  <ul>{['Flights', 'Transfers', 'Hotels', 'Sailing day'].map((t, j) => <li style={`--i:${j}`}>{t}</li>)}</ul>
+                </div>
+              </div>
+              <div class="note"><img src={avatar} alt="" loading="lazy" /><div><b>Sofia · Holiwise <span>now</span></b><p>Ferry delayed? Already rebooked on the 10:40. Your driver knows.</p></div></div>
+            </div>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

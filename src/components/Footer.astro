@@ -1,0 +1,47 @@
+---
+const { settings } = Astro.props;
+const year = new Date().getFullYear();
+const pay = [['visa', 'Visa'], ['mastercard', 'Mastercard'], ['american-express', 'American Express'], ['apple-pay', 'Apple Pay'], ['google-pay', 'Google Pay']];
+---
+<footer class="footer">
+  <div class="footer__top">
+    <div>
+      <p class="footer__headline serif">{settings.footerHeadline}</p>
+      <p class="footer__tagline">{settings.tagline}</p>
+      <div class="footer__ctas">
+        <a class="btn btn--light" href={settings.agentHref}>{settings.agentLabel}</a>
+        <a class="btn btn--ghost-light" href="#top" data-focus-tell>Start planning</a>
+      </div>
+      <p class="footer__contact">
+        <a class="link" href={`tel:${settings.phone.replace(/\s/g, '')}`}>{settings.phone}</a>
+        {settings.socials.map((s: any) => <a class="link" href={s.href}>{s.label}</a>)}
+      </p>
+    </div>
+    <nav class="footer__cols" aria-label="Footer">
+      {settings.footerColumns.map((col: any) => (
+        <div>
+          <h3>{col.title}</h3>
+          <ul>{col.links.map((l: any) => <li><a class="link" href={l.href}>{l.label}</a></li>)}</ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+
+  <div data-inview data-threshold="0.3"><p class="footer__mark" aria-hidden="true" data-wipe>HOLIWISE</p></div>
+
+  <div class="footer__trust">
+    <div class="footer__trust-l">
+      <div><b>Book with confidence</b><p>Your money is protected.</p></div>
+      <div class="badges">
+        <figure><img class="inv" src="/badges/atol.svg" alt="ATOL protected" loading="lazy" /></figure>
+        <figure><img class="mono" src="/badges/abta.svg" alt="ABTA" loading="lazy" style="height:30px" /><figcaption>ABTA No. {settings.abtaNumber}</figcaption></figure>
+        <figure><img class="mono" src="/badges/iata.svg" alt="IATA" loading="lazy" style="height:30px" /><figcaption>Licence: {settings.iataLicence}</figcaption></figure>
+      </div>
+    </div>
+    <ul class="pay" aria-label="Ways to pay">
+      {pay.map(([file, name]) => <li><img src={`/badges/${file}.svg`} alt={name} loading="lazy" /></li>)}
+    </ul>
+  </div>
+
+  <div class="footer__bottom"><span>{settings.companyLine}</span><span>© {year} Holiwise Ltd</span></div>
+</footer>

@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Statement from '../components/Statement.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import WhereNext from '../components/WhereNext.astro';
+import Deal from '../components/Deal.astro';
+import FinalCta from '../components/FinalCta.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteContent } from '../lib/sanity';
+
+const { home, settings } = await getSiteContent();
+---
+<Base title="Holiwise · Leave it with us" description={home.hero.intro} image={home.hero.poster.src}>
+  <Nav settings={settings} />
+  <main>
+    <Hero hero={home.hero} destinations={home.whereNext.destinations} />
+    <Statement text={home.statement} />
+    <HowItWorks data={home.howItWorks} />
+    <WhereNext data={home.whereNext} />
+    <Deal data={home.deal} />
+    <FinalCta data={home.finalCta} agentHref={settings.agentHref} />
+  </main>
+  <Footer settings={settings} />
+</Base>

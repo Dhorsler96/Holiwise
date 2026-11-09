@@ -1,0 +1,16 @@
+---
+const { data, agentHref } = Astro.props;
+const lines: string[] = data.headline.split('\n');
+---
+<section class="cta" data-parallax>
+  <div class="cta__bg"><img src={data.image.src} alt="" loading="lazy" decoding="async" data-parallax-img /></div>
+  <div class="cta__inner" data-inview data-threshold="0.4">
+    <h2 class="cta__title serif">
+      {lines.map((l, i) => <span class="mask"><span style={`--i:${i}`}>{l}</span></span>)}
+    </h2>
+    <div class="cta__actions" data-reveal data-inview style="--i:4">
+      <a class="btn btn--light" href="#top" data-focus-tell>{data.primaryLabel}</a>
+      <a class="btn btn--ghost-light" href={agentHref}>{data.secondaryLabel}</a>
+    </div>
+  </div>
+</section>

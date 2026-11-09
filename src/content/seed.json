@@ -1,0 +1,101 @@
+{
+  "settings": {
+    "nav": [
+      { "label": "Destinations", "href": "#where-next" },
+      { "label": "Stories", "href": "#" },
+      { "label": "Premium", "href": "#" },
+      { "label": "For companies", "href": "#" }
+    ],
+    "inviteLabel": "Have an invite?",
+    "agentLabel": "Message an agent",
+    "agentHref": "https://wa.me/442031037940",
+    "phone": "+44 20 3103 7940",
+    "tagline": "Luxury travel, handled by people.",
+    "footerHeadline": "Wherever’s next,\nleave it with us.",
+    "socials": [
+      { "label": "WhatsApp", "href": "https://wa.me/442031037940" },
+      { "label": "Instagram", "href": "#" },
+      { "label": "LinkedIn", "href": "#" }
+    ],
+    "footerColumns": [
+      { "title": "Holiwise", "links": [
+        { "label": "How it works", "href": "#how-it-works" },
+        { "label": "Destinations", "href": "#where-next" },
+        { "label": "Stories", "href": "#" },
+        { "label": "Premium", "href": "#" },
+        { "label": "For companies", "href": "#" }
+      ] },
+      { "title": "Help", "links": [
+        { "label": "Contact", "href": "#" },
+        { "label": "FAQs", "href": "#" },
+        { "label": "Find my booking", "href": "#" }
+      ] },
+      { "title": "Policies", "links": [
+        { "label": "Terms", "href": "#" },
+        { "label": "Privacy", "href": "#" },
+        { "label": "Licences", "href": "#" }
+      ] }
+    ],
+    "companyLine": "Holiwise Ltd · Registered in England & Wales · Company no. 15301867",
+    "abtaNumber": "Y6864",
+    "iataLicence": "91205796"
+  },
+  "home": {
+    "hero": {
+      "headline": "Leave it with us",
+      "intro": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and your agent sends three options in minutes.",
+      "poster": { "src": "/images/hero-poster.jpg", "alt": "Aerial view of a hotel garden and pool beside a lagoon" },
+      "videoUrl": null,
+      "helper": "Not sure where to go? Just tell us, and your agent sends three options",
+      "tellUsExamples": [
+        "A long weekend somewhere warm…",
+        "Two weeks in Greece in June, a bit of sailing…",
+        "Somewhere special for our anniversary…",
+        "Skiing in February, six of us…"
+      ]
+    },
+    "statement": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and we’ll find you options in minutes.",
+    "howItWorks": {
+      "heading": "You ask. We handle it. You go.",
+      "steps": [
+        { "title": "Tell us", "description": "A destination, a mood or just a date. Tell us what you have in mind.", "illustration": "tellUs" },
+        { "title": "Three options in minutes", "description": "Hand-picked by your agent, with every price checked.", "illustration": "threeOptions" },
+        { "title": "Booked and looked after", "description": "Everything arranged, and someone looking after you the whole way.", "illustration": "booked" }
+      ]
+    },
+    "whereNext": {
+      "heading": "Where next?",
+      "intro": "Ideas to start from, from a weekend away to the trip of a lifetime. Every one is a starting point, not a package.",
+      "ctaLabel": "Explore all ideas",
+      "destinations": [
+        { "title": "Seychelles", "slug": "seychelles", "summary": "Granite coves, clear water and very little to do. From the beaches of Mahé to a private island of your own, we’ll match the stay to the pace you want.", "image": { "src": "/images/seychelles.jpg", "alt": "Two paddleboarders on clear turquoise water" } },
+        { "title": "Rhodes", "slug": "rhodes", "summary": "Whitewashed Lindos above a sheltered bay, a medieval old town and day sails to Symi. Easy to reach, and easy to stretch into two weeks of islands.", "image": { "src": "/images/rhodes-lindos.jpg", "alt": "Lindos bay in Rhodes with the acropolis above the beach" } },
+        { "title": "Crete", "slug": "crete", "summary": "Harbour towns, mountain villages and long lunches by the water. Good for families, better with a villa and a driver who knows the back roads.", "image": { "src": "/images/crete.jpg", "alt": "A harbour town in Crete" } },
+        { "title": "Corfu", "slug": "corfu", "summary": "Green hills dropping into quiet coves on the north-east coast. Take a boat for the day and stop wherever looks good.", "image": { "src": "/images/corfu.jpg", "alt": "A cove on the coast of Corfu" } },
+        { "title": "Puglia", "slug": "puglia", "summary": "Masserie among the olive groves, white towns and the clearest sea in Italy. Best explored slowly, with dinner booked for you each night.", "image": { "src": "/images/puglia.jpg", "alt": "Cliffs and clear water on the Puglia coast" } }
+      ]
+    },
+    "deal": {
+      "heading": "More than a better price.",
+      "body": "We find the best overall deal: upgrades, credits and extras that make the whole trip better value.",
+      "reassurance": "Every price checked against booking direct.",
+      "stayTitle": "Jumeirah Muscat Bay · 6 nights",
+      "eyebrow": "What Holiwise adds",
+      "benefits": [
+        { "label": "Suite upgrade", "value": "Ocean view" },
+        { "label": "Hotel credit", "value": "$150 per stay" },
+        { "label": "Breakfast daily", "value": "For two" },
+        { "label": "Late checkout", "value": "Until 4pm" },
+        { "label": "Airport transfers", "value": "Private car" }
+      ],
+      "priceLabel": "Your price",
+      "price": "£X,XXX"
+    },
+    "finalCta": {
+      "headline": "Wherever you’re going next,\nwe’ll help you out",
+      "image": { "src": "/images/cta.jpg", "alt": "Rooftops and church towers at sunset" },
+      "primaryLabel": "Start planning",
+      "secondaryLabel": "Message an agent"
+    }
+  }
+}
