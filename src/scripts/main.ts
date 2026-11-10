@@ -501,7 +501,13 @@ if (search) {
     e.preventDefault();
     setOpen(null, true);
     const parts = [where.dataset.current || 'Anywhere', when.dataset.current || 'Any dates', who.dataset.current || '2 guests'];
-    if (tell.value.trim() && openBrief) { openBrief(tell.value.trim(), parts, submit); return; }
+    // Every search opens the brief flow. With nothing written, the brief is phrased from the fields.
+    if (openBrief) {
+      const [w, d, g] = parts;
+      const composed = `${w === 'Anywhere' ? 'Anywhere' : w}, ${d === 'Any dates' ? 'whenever suits' : d.charAt(0).toLowerCase() + d.slice(1)}, for ${g}`;
+      openBrief(tell.value.trim() || composed, parts, submit);
+      return;
+    }
     $('[data-toast-body]', toast)!.textContent = tell.value.trim() ? `“${tell.value.trim()}”` : parts.join(' · ');
     $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will send three options.';
     // "Search" morphs to "Sent" and back, the same way the field values change
