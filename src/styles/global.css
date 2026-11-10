@@ -380,11 +380,19 @@ ul { list-style: none; }
 .search[data-instant] .pop > * { animation: none !important; }
 /* Every popover opens with a serif title, as the brief panel does */
 .pop__title { padding: 8px 12px 6px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.pop__opt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border-radius: 2px; font-size: 14.5px; text-align: left; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+.pop__opt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border-radius: 2px; font-size: 14.5px; text-align: left; transition-property: transform, opacity; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
 .pop__opt small { color: var(--muted); font-size: 12.5px; }
 .pop__opt:not(:disabled):active { transform: scale(0.96); }
-.pop__opt[aria-selected='true'] { background: var(--mist); }
-@media (hover: hover) and (pointer: fine) { .pop__opt:hover { background: var(--mist); } }
+/* No hover box: the word dims instead. The selected option carries a small tick. */
+.pop__opt::after {
+  content: ''; flex: none; width: 12px; height: 12px; margin-left: 12px; background: currentColor; opacity: 0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.6 2.5L10 3.5' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.6 2.5L10 3.5' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: opacity 150ms ease-out;
+}
+.pop__opt[aria-selected='true']::after { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .pop__opt:hover { opacity: 0.5; } }
+.pop__opt:focus-visible { opacity: 0.5; }
 .pop__chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 8px 8px; max-width: 340px; }
 .chip { height: 34px; padding: 0 14px; border-radius: 4px; border: 1px solid var(--line); font-size: 14px; transition-property: transform, background-color, color, border-color; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
 .chip:not(:disabled):active { transform: scale(0.96); }
