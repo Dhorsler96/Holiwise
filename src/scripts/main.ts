@@ -97,7 +97,7 @@ if (search) {
     if (reduceMotion) { value.textContent = text; }
     else {
       value.classList.add('is-swapping');
-      window.setTimeout(() => { value.textContent = text; value.classList.remove('is-swapping'); }, 130);
+      window.setTimeout(() => { value.textContent = text; value.classList.remove('is-swapping'); }, 150);
     }
     value.classList.toggle('is-set', !isDefault);
     field.dataset.current = text;
@@ -217,7 +217,7 @@ if (search) {
         example = (example + 1) % examples.length;
         ghost.textContent = `“${examples[example]}”`;
         ghost.classList.remove('is-out');
-      }, 260);
+      }, 150);
     }, 3600);
   }
 
