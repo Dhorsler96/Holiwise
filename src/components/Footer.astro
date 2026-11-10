@@ -1,7 +1,8 @@
 ---
 const { settings } = Astro.props;
 const year = new Date().getFullYear();
-const pay = [['visa', 'Visa'], ['mastercard', 'Mastercard'], ['american-express', 'American Express'], ['apple-pay', 'Apple Pay'], ['google-pay', 'Google Pay']];
+// Visa, Apple Pay and Google Pay use white wordmarks on the dark chips; the others keep their own colours.
+const pay = [['visa-on-dark', 'Visa'], ['mastercard', 'Mastercard'], ['american-express', 'American Express'], ['apple-pay-on-dark', 'Apple Pay'], ['google-pay-on-dark', 'Google Pay']];
 ---
 <footer class="footer" data-theme="dark">
   <div class="footer__top">
