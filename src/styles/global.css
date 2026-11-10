@@ -235,8 +235,8 @@ ul { list-style: none; }
   transition: transform 320ms var(--ease-out);
 }
 .nav::before, .nav::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.nav::before { background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0)); border-bottom: 1px solid rgba(255, 255, 255, 0.33); transition: opacity 250ms ease; }
-.nav::after { background: var(--glass-dark); -webkit-backdrop-filter: var(--glass-blur) saturate(1.4); backdrop-filter: var(--glass-blur) saturate(1.4); border-bottom: 1px solid rgba(255, 255, 255, 0.08); opacity: 0; transition: opacity 250ms ease; }
+.nav::before { background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0)); transition: opacity 250ms ease; }
+.nav::after { background: var(--glass-dark); -webkit-backdrop-filter: var(--glass-blur) saturate(1.4); backdrop-filter: var(--glass-blur) saturate(1.4); opacity: 0; transition: opacity 250ms ease; }
 .nav.is-solid::before { opacity: 0; }
 .nav.is-solid::after { opacity: 1; }
 .nav.is-hidden { transform: translateY(-100%); }
