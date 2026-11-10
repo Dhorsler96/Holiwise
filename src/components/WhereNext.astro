@@ -14,15 +14,15 @@ const { data } = Astro.props;
     </div>
   </div>
 
-  <div class="carousel" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label={data.heading}>
+  <div class="carousel" data-carousel data-inview data-threshold="0.2" tabindex="0" role="region" aria-roledescription="carousel" aria-label={data.heading}>
     <div class="carousel__track" data-track data-count={data.destinations.length}>
       {/* Three copies so the carousel loops with a card peeking on both sides. Only the middle copy is exposed to assistive tech. */}
       {[0, 1, 2].flatMap((copy) => data.destinations.map((d: any, i: number) => {
         const real = copy === 1;
         return (
-          <article class:list={['card', { 'is-active': real && i === 0 }]} data-inview aria-hidden={real ? undefined : 'true'} inert={!real} aria-label={real ? `${i + 1} of ${data.destinations.length}: ${d.title}` : undefined}>
+          <article class:list={['card', { 'is-active': real && i === 0 }]} aria-hidden={real ? undefined : 'true'} inert={!real} aria-label={real ? `${i + 1} of ${data.destinations.length}: ${d.title}` : undefined}>
             <div class="card__media" data-focus style={d.image.lqip ? `background-image:url(${d.image.lqip})` : undefined}>
-              <img src={d.image.src} alt={real ? d.image.alt : ''} loading={real && i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
+              <img src={d.image.src} alt={real ? d.image.alt : ''} loading="eager" decoding="async" draggable="false" />
             </div>
             <div class="card__body">
               <h3 class="card__title">{d.title}</h3>

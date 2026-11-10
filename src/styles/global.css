@@ -219,7 +219,7 @@ ul { list-style: none; }
 .js [data-wipe] { clip-path: inset(0 0 100% 0); transition: clip-path 1000ms var(--ease-in-out); }
 /* Images come into focus where they sit: no slide, just opacity and a soft blur clearing */
 .js [data-focus] { opacity: 0; filter: blur(12px); transition-property: opacity, filter; transition-duration: 700ms; transition-timing-function: ease-out; }
-.js .is-in > [data-focus], .js [data-focus].is-in { opacity: 1; filter: blur(0px); }
+.js .carousel.is-in [data-focus] { opacity: 1; filter: blur(0px); }
 .js .is-in > [data-wipe], .js [data-wipe].is-in { clip-path: inset(0 0 0 0); }
 
 /* ---------- Nav ---------- */
