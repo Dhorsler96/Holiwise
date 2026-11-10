@@ -84,7 +84,8 @@ body, [data-theme='light'] { --bg: #ffffff; --fg: #1a1a1a; --fg-muted: #6b6b6b; 
    Without JS each section keeps its own colours from the rules above. */
 .js body[data-theme] [data-theme] { --bg: inherit; --fg: inherit; --fg-muted: inherit; --rule: inherit; --surface: inherit; }
 .js body[data-theme] { transition-property: --bg, --fg, --fg-muted, --rule, --surface; transition-duration: 500ms; transition-timing-function: cubic-bezier(0.45, 0, 0.25, 1); }
-.js .statement, .js .how, .js .where { background: transparent; }
+/* The statement keeps its own green so it arrives green, not dark-then-green */
+.js .how, .js .where { background: transparent; }
 
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 html.is-locked { overflow: hidden; }
@@ -446,7 +447,7 @@ ul { list-style: none; }
 .toast small { display: block; color: rgba(255, 255, 255, 0.6); font-size: 13px; }
 
 /* ---------- Statement ---------- */
-.statement { background: var(--bg); color: var(--fg); min-height: min(665px, 90svh); display: grid; place-items: center; text-align: center; position: relative; padding-block: clamp(110px, 14vw, 200px); }
+.statement { background: var(--green); color: #fff; min-height: min(665px, 90svh); display: grid; place-items: center; text-align: center; position: relative; padding-block: clamp(110px, 14vw, 200px); }
 .statement p { max-width: 990px; font-size: clamp(30px, 3.35vw, 48px); line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; }
 .statement__rule { position: absolute; left: 50%; width: 28px; height: 1px; margin-left: -14px; background: var(--rule); }
 .statement__rule--top { top: clamp(48px, 8vw, 128px); }
