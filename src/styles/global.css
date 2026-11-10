@@ -202,7 +202,7 @@ ul { list-style: none; }
 .tabs__active { position: absolute; inset: 0; display: inline-flex; gap: 6px; pointer-events: none; clip-path: inset(0 100% 0 0 round 4px); transition: clip-path 260ms var(--ease-out); }
 .tabs__active span { display: inline-flex; align-items: center; height: 33px; padding: 0 16px; border-radius: 4px; font-size: 14px; border: 1px solid #fff; background: #fff; color: var(--ink); }
 
-.search { position: relative; display: flex; align-items: stretch; min-height: 69px; border-radius: 4px; background: rgba(255, 255, 255, 0.78); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); color: var(--ink); transition: background-color 250ms ease; }
+.search { position: relative; display: flex; align-items: stretch; min-height: 69px; border-radius: 4px; background: rgba(255, 255, 255, 0.62); -webkit-backdrop-filter: blur(40px) saturate(1.5); backdrop-filter: blur(40px) saturate(1.5); color: var(--ink); transition: background-color 250ms ease; }
 .search:focus-within, .search.is-open { background: rgba(255, 255, 255, 0.94); }
 .field { position: relative; flex: 1 1 0; min-width: 0; }
 .field + .field::before { content: ''; position: absolute; left: 0; top: 16px; bottom: 16px; width: 1px; background: rgba(0, 0, 0, 0.12); }
