@@ -1,0 +1,85 @@
+---
+/* Prototype: what happens after someone sends a brief from "Or just tell us".
+   A sheet shows the brief, the agent working on it, then three options.
+   Front-end only: matching is by keyword and prices are placeholders. */
+const { destinations, agentHref } = Astro.props;
+
+const stays: Record<string, { stay: string; details: string; why: string; tags: string[] }> = {
+  Seychelles: {
+    stay: 'Beach villa on Mahé',
+    details: '7 nights · private pool · transfers',
+    why: 'Warm all year, very quiet, and a villa you never need to leave.',
+    tags: ['warm', 'winter', 'february', 'beach', 'quiet', 'adults', 'anniversary', 'special', 'honeymoon', 'island', 'surprise'],
+  },
+  Rhodes: {
+    stay: 'Suite above Lindos bay',
+    details: '5 nights · suite upgrade · breakfast',
+    why: 'Short flight, a sheltered bay below, and a suite we can upgrade.',
+    tags: ['greece', 'greek', 'island', 'beach', 'sailing', 'june', 'summer', 'warm', 'short', 'kids', 'family'],
+  },
+  Crete: {
+    stay: 'Harbour house in Chania',
+    details: '7 nights · sea view · car included',
+    why: 'Old-town evenings, long beaches by day, room for everyone.',
+    tags: ['greece', 'greek', 'island', 'family', 'kids', 'food', 'beach', 'sailing', 'june', 'summer', 'villa'],
+  },
+  Corfu: {
+    stay: 'Hillside villa, north-east coast',
+    details: '7 nights · pool · chef one evening',
+    why: 'Green hills over quiet coves, with space for the whole family.',
+    tags: ['greece', 'greek', 'island', 'villa', 'family', 'kids', 'sailing', 'quiet', 'june', 'summer'],
+  },
+  Puglia: {
+    stay: 'Masseria among the olives',
+    details: '5 nights · cooking class · late checkout',
+    why: 'Long lunches, white towns and the best food on a short flight.',
+    tags: ['food', 'italy', 'villa', 'short', 'family', 'anniversary', 'special', 'quiet', 'adults', 'weekend'],
+  },
+};
+const options = destinations.filter((d: any) => stays[d.title]).map((d: any) => ({ ...d, ...stays[d.title] }));
+---
+<div class="brief" role="dialog" aria-modal="true" aria-labelledby="brief-title" data-brief hidden>
+  <div class="brief__scrim" data-brief-close></div>
+  <div class="brief__sheet" tabindex="-1">
+    <div class="brief__top">
+      <p class="brief__eyebrow">Your brief</p>
+      <button class="brief__close" type="button" aria-label="Close" data-brief-close>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
+      </button>
+    </div>
+
+    <h2 class="brief__quote serif" id="brief-title" data-brief-quote></h2>
+    <ul class="brief__tags" data-brief-tags></ul>
+
+    <div class="brief__agent">
+      <img src="/images/rhodes-lindos.jpg" alt="" />
+      <div class="brief__agent-text">
+        <b>Sofia · your agent</b>
+        <span class="brief__status" data-brief-status aria-live="polite">Reading your brief</span>
+      </div>
+      <span class="brief__progress" aria-hidden="true"><i data-brief-bar></i></span>
+    </div>
+
+    <ol class="brief__options" data-brief-options>
+      {options.map((o: any) => (
+        <li class="brief__option" data-option={o.title} data-tags={o.tags.join(' ')} hidden>
+          <div class="brief__media"><img src={o.image.src} alt={o.image.alt} loading="lazy" /><em class="brief__pick">Our pick</em></div>
+          <p class="brief__place">{o.title}</p>
+          <h3 class="brief__stay">{o.stay}</h3>
+          <p class="brief__details">{o.details}</p>
+          <p class="brief__why">{o.why}</p>
+          <div class="brief__foot">
+            <span class="brief__price">From <b>£X,XXX</b> pp</span>
+            <a class="btn btn--ghost-dark" href={agentHref}>Ask Sofia</a>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <form class="brief__refine" data-brief-refine>
+      <input type="text" name="refine" autocomplete="off" placeholder="Not quite right? Tell Sofia what to change" aria-label="Tell Sofia what to change" />
+      <button class="btn btn--dark" type="submit">Send</button>
+      <a class="link brief__whatsapp" href={agentHref}>Or message on WhatsApp</a>
+    </form>
+  </div>
+</div>

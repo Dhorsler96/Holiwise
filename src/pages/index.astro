@@ -8,6 +8,7 @@ import WhereNext from '../components/WhereNext.astro';
 import Deal from '../components/Deal.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
+import BriefFlow from '../components/BriefFlow.astro';
 import { getSiteContent } from '../lib/sanity';
 
 const { home, settings } = await getSiteContent();
@@ -23,4 +24,5 @@ const { home, settings } = await getSiteContent();
     <FinalCta data={home.finalCta} agentHref={settings.agentHref} />
   </main>
   <Footer settings={settings} />
+  <BriefFlow destinations={home.whereNext.destinations} agentHref={settings.agentHref} />
 </Base>

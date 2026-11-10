@@ -19,7 +19,7 @@ const setText = (el: HTMLElement, text: string) => {
 };
 if (!reduceMotion) {
   const load = () => import('./calligraph').then(({ morph }) => {
-    for (const el of $$('[data-value], [data-where-label], [data-submit-label]')) morphers.set(el, morph(el, { animation: 'snappy' }));
+    for (const el of $$('[data-value], [data-where-label], [data-submit-label], [data-brief-status]')) morphers.set(el, morph(el, { animation: 'snappy' }));
     for (const el of $$('.stepper output')) morphers.set(el, morph(el, { variant: 'number', animation: 'snappy' }));
   });
   if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 2500 });
@@ -120,6 +120,109 @@ let keyboard = false;
 window.addEventListener('keydown', () => { keyboard = true; }, true);
 window.addEventListener('pointerdown', () => { keyboard = false; }, true);
 
+/* ---------- Brief flow (prototype): the sheet that answers a written brief ---------- */
+let openBrief: ((brief: string, parts: string[], returnFocus: HTMLElement) => void) | null = null;
+const flow = $('[data-brief]');
+if (flow) {
+  const sheet = $('.brief__sheet', flow)!;
+  const quote = $('[data-brief-quote]', flow)!;
+  const tags = $('[data-brief-tags]', flow)!;
+  const status = $('[data-brief-status]', flow)!;
+  const bar = $('[data-brief-bar]', flow)!;
+  const cards = $$('[data-option]', flow);
+  const refine = $<HTMLFormElement>('[data-brief-refine]', flow)!;
+  let timers: number[] = [];
+  let lastFocus: HTMLElement | null = null;
+  let briefText = '';
+  let latest = '';
+  let round = 0;
+
+  const later = (ms: number, fn: () => void) => { timers.push(window.setTimeout(fn, reduceMotion ? 0 : ms)); };
+  const clearTimers = () => { timers.forEach(window.clearTimeout); timers = []; };
+
+  // Score each stay by the words in the brief. The latest change counts most, then the Where choice.
+  const choose = (text: string, where: string) => {
+    const words = `${text} ${where}`.toLowerCase();
+    const fresh = latest.toLowerCase();
+    const scored = cards.map((card, i) => {
+      const cardTags = card.dataset.tags!.split(' ');
+      let score = cardTags.filter((t) => words.includes(t)).length + cardTags.filter((t) => fresh.includes(t)).length * 3;
+      if (words.includes(card.dataset.option!.toLowerCase())) score += 3;
+      if (fresh.includes(card.dataset.option!.toLowerCase())) score += 6;
+      return { card, score: score - (round ? ((i + round) % cards.length) * 0.01 : i * 0.01) };
+    });
+    return scored.sort((a, b) => b.score - a.score).slice(0, 3).map((s) => s.card);
+  };
+
+  const run = (where: string) => {
+    clearTimers();
+    flow.classList.remove('is-done');
+    cards.forEach((c) => { c.classList.remove('is-in'); c.hidden = true; });
+    bar.style.transform = 'scaleX(0)';
+    setText(status, 'Reading your brief');
+    later(120, () => { bar.style.transform = 'scaleX(0.3)'; });
+    later(1100, () => { setText(status, 'Checking prices and availability'); bar.style.transform = 'scaleX(0.7)'; });
+    later(2300, () => { setText(status, 'Choosing three options'); bar.style.transform = 'scaleX(1)'; });
+    later(3300, () => {
+      const picks = choose(briefText, where);
+      const list = picks[0].parentElement!;
+      picks.forEach((card, n) => { card.hidden = false; card.classList.toggle('is-pick', n === 0); card.style.setProperty('--n', String(n)); list.append(card); });
+      setText(status, 'Three options, ready when you are');
+      flow.classList.add('is-done');
+      requestAnimationFrame(() => requestAnimationFrame(() => picks.forEach((c) => c.classList.add('is-in'))));
+    });
+  };
+
+  const close = () => {
+    clearTimers();
+    flow.classList.remove('is-open');
+    root.classList.remove('is-locked');
+    window.setTimeout(() => { flow.hidden = true; }, reduceMotion ? 0 : 220);
+    lastFocus?.focus({ preventScroll: true });
+  };
+
+  openBrief = (brief, parts, returnFocus) => {
+    lastFocus = returnFocus;
+    briefText = brief;
+    latest = '';
+    round = 0;
+    quote.textContent = `“${brief.replace(/[.…]+$/, '')}”`;
+    tags.replaceChildren(...parts.map((p) => { const li = document.createElement('li'); li.textContent = p; return li; }));
+    root.style.setProperty('--sbw', `${window.innerWidth - root.clientWidth}px`);
+    root.classList.add('is-locked');
+    flow.hidden = false;
+    sheet.scrollTop = 0;
+    requestAnimationFrame(() => requestAnimationFrame(() => flow.classList.add('is-open')));
+    sheet.focus({ preventScroll: true });
+    run(parts[0]);
+  };
+
+  for (const el of $$('[data-brief-close]', flow)) el.addEventListener('click', close);
+  flow.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+    if (e.key === 'Tab') {
+      // Keep focus inside the sheet while it's open
+      const focusables = $$<HTMLElement>('button, a[href], input', sheet).filter((el) => !el.closest('[hidden]'));
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  refine.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = refine.elements.namedItem('refine') as HTMLInputElement;
+    const extra = input.value.trim();
+    if (!extra) { input.focus(); return; }
+    briefText = `${briefText}, ${extra}`;
+    latest = extra;
+    quote.textContent = `“${briefText.replace(/[.…]+$/, '')}”`;
+    input.value = '';
+    round++;
+    run(tags.firstElementChild?.textContent ?? '');
+  });
+}
+
 /* ---------- Search ---------- */
 const search = $<HTMLFormElement>('[data-search]');
 if (search) {
@@ -170,7 +273,7 @@ if (search) {
     });
     pop.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      if (e.target instanceof HTMLTextAreaElement) return;
+      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) return;
       const items = $$<HTMLButtonElement>('button:not(:disabled)', pop);
       const i = items.indexOf(document.activeElement as HTMLButtonElement);
       const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
@@ -181,12 +284,51 @@ if (search) {
 
   // Where
   const where = fields.find((f) => f.dataset.field === 'where')!;
-  $$('[data-opt]', where).forEach((opt, i) => opt.addEventListener('click', () => {
-    $$('[data-opt]', where).forEach((o) => o.setAttribute('aria-selected', String(o === opt)));
-    setValue(where, opt.dataset.opt!, i === 0);
+  $$('[data-opt]', where).forEach((opt) => opt.addEventListener('click', () => {
+    if (!opt.dataset.opt) return;
+    const picked = opt.hasAttribute('data-opt-custom') ? null : opt;
+    $$('[data-opt]', where).forEach((o) => o.setAttribute('aria-selected', String(o === picked)));
+    setValue(where, opt.dataset.opt!, picked === $$('[data-opt]:not([data-opt-custom])', where)[0]);
     setOpen(null, keyboard);
     $<HTMLElement>('.field__btn', where)!.focus({ preventScroll: true });
   }));
+
+  // Where: type to filter the list, or use exactly what was typed
+  const whereSearch = $<HTMLInputElement>('[data-where-search]', where)!;
+  const custom = $<HTMLButtonElement>('[data-opt-custom]', where)!;
+  const listed = $$<HTMLButtonElement>('[data-opt]:not([data-opt-custom])', where);
+  const whereEmpty = $('[data-where-empty]', where)!;
+  const filterWhere = () => {
+    const q = whereSearch.value.trim();
+    const needle = q.toLowerCase();
+    let shown = 0;
+    for (const opt of listed) {
+      const match = !needle || opt.dataset.opt!.toLowerCase().includes(needle);
+      opt.hidden = !match;
+      if (match) shown++;
+    }
+    const exact = listed.some((o) => o.dataset.opt!.toLowerCase() === needle);
+    custom.hidden = !q || exact;
+    custom.dataset.opt = q;
+    custom.innerHTML = '';
+    if (q) { custom.append('Use '); const quote = document.createElement('q'); quote.textContent = q; custom.append(quote); }
+    whereEmpty.hidden = shown > 0 || !q;
+  };
+  whereSearch.addEventListener('input', filterWhere);
+  whereSearch.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const first = listed.find((o) => !o.hidden && whereSearch.value.trim()) ?? (custom.hidden ? null : custom);
+      (first ?? (!custom.hidden ? custom : null))?.click();
+    }
+    if (e.key === 'ArrowDown') { e.preventDefault(); $$<HTMLButtonElement>('[data-opt]:not([hidden])', where)[0]?.focus(); }
+  });
+  $('.field__btn', where)!.addEventListener('click', () => {
+    if (open !== where) return;
+    whereSearch.value = '';
+    filterWhere();
+    whereSearch.focus({ preventScroll: true });
+  });
 
   // When
   const when = fields.find((f) => f.dataset.field === 'when')!;
@@ -353,6 +495,7 @@ if (search) {
     e.preventDefault();
     setOpen(null, true);
     const parts = [where.dataset.current || 'Anywhere', when.dataset.current || 'Any dates', who.dataset.current || '2 guests'];
+    if (tell.value.trim() && openBrief) { openBrief(tell.value.trim(), parts, submit); return; }
     $('[data-toast-body]', toast)!.textContent = tell.value.trim() ? `“${tell.value.trim()}”` : parts.join(' · ');
     $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will send three options.';
     // "Search" morphs to "Sent" and back, the same way the field values change

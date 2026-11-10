@@ -41,7 +41,10 @@ const suggestions: string[] = hero.tellSuggestions ?? [
         </button>
         <div class="pop" role="listbox" aria-label="Where">
           <p class="pop__title">Start with a place, or a feeling</p>
+          <input class="pop__search" type="text" autocomplete="off" placeholder="Search a place, or type a feeling" aria-label="Search a place, or type a feeling" data-where-search />
+          <button class="pop__opt pop__opt--custom" type="button" role="option" aria-selected="false" data-opt="" data-opt-custom hidden></button>
           {places.map((p, i) => <button class="pop__opt" type="button" role="option" aria-selected={i === 0 ? 'true' : 'false'} data-opt={p}>{p}</button>)}
+          <p class="pop__empty" data-where-empty hidden>Nothing in the list yet, but your agent can find it.</p>
         </div>
       </div>
 
