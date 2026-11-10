@@ -2,7 +2,7 @@
 const { data, agentHref } = Astro.props;
 const lines: string[] = data.headline.split('\n');
 ---
-<section class="cta" data-parallax>
+<section class="cta" data-parallax data-theme="dark">
   <div class="cta__bg"><img src={data.image.src} alt="" loading="lazy" decoding="async" data-parallax-img /></div>
   <div class="cta__inner" data-inview data-threshold="0.4">
     <h2 class="cta__title serif">

@@ -37,6 +37,21 @@ for (const el of $$('[data-inview]')) {
   observers.get(threshold)!.observe(el);
 }
 
+/* ---------- Scroll themes: the section across the middle of the viewport sets the page palette ---------- */
+const themed = $$('[data-theme]');
+if (themed.length) {
+  document.body.dataset.theme = themed[0].dataset.theme!;
+  const themeIO = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) document.body.dataset.theme = (entry.target as HTMLElement).dataset.theme!;
+      }
+    },
+    { rootMargin: '-50% 0px -50% 0px' },
+  );
+  themed.forEach((el) => themeIO.observe(el));
+}
+
 /* ---------- Nav: solid after the fold, tucks away on the way down ---------- */
 const nav = $('[data-nav]');
 if (nav) {

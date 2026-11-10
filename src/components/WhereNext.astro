@@ -1,7 +1,7 @@
 ---
 const { data } = Astro.props;
 ---
-<section class="where section" id="where-next">
+<section class="where section" id="where-next" data-theme="light">
   <div class="where__head" data-reveal data-inview>
     <div>
       <h2 class="where__title serif">{data.heading}</h2>
@@ -21,7 +21,7 @@ const { data } = Astro.props;
         const real = copy === 1;
         return (
           <article class:list={['card', { 'is-active': real && i === 0 }]} data-inview aria-hidden={real ? undefined : 'true'} inert={!real} aria-label={real ? `${i + 1} of ${data.destinations.length}: ${d.title}` : undefined}>
-            <div class="card__media" data-wipe style={d.image.lqip ? `background-image:url(${d.image.lqip})` : undefined}>
+            <div class="card__media" data-focus style={d.image.lqip ? `background-image:url(${d.image.lqip})` : undefined}>
               <img src={d.image.src} alt={real ? d.image.alt : ''} loading={real && i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
             </div>
             <div class="card__body">

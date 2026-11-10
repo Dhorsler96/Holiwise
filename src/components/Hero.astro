@@ -4,7 +4,7 @@ const words = hero.headline.split(' ');
 const places = ['Anywhere', 'Somewhere warm', ...destinations.slice(0, 4).map((d: any) => d.title)];
 const dates = ['Any dates', 'This weekend', 'Next month', 'February half-term', 'Easter', 'Summer'];
 ---
-<section class="hero" id="top">
+<section class="hero" id="top" data-theme="dark">
   <div class="hero__media">
     <img src={hero.poster.src} alt={hero.poster.alt} fetchpriority="high" decoding="async" />
     {hero.videoUrl && <video src={hero.videoUrl} muted loop playsinline preload="metadata" data-hero-video aria-hidden="true"></video>}

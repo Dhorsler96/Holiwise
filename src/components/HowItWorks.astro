@@ -2,7 +2,7 @@
 const { data } = Astro.props;
 const avatar = '/images/rhodes-lindos.jpg';
 ---
-<section class="how section" id="how-it-works">
+<section class="how section" id="how-it-works" data-theme="dark">
   <h2 class="how__title serif" data-inview><span class="mask"><span>{data.heading}</span></span></h2>
   <div class="how__steps">
     {data.steps.map((step: any, i: number) => (

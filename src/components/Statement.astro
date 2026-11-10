@@ -2,7 +2,7 @@
 const { text } = Astro.props;
 const words: string[] = text.split(' ');
 ---
-<section class="statement section" data-inview>
+<section class="statement section" data-inview data-theme="green">
   <span class="statement__rule statement__rule--top"></span>
   <p class="serif words" aria-label={text} data-inview data-threshold="0.4">
     {words.map((w, i) => <><span class="w" style={`--i:${i}`} aria-hidden="true">{w}</span>{' '}</>)}

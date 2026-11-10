@@ -3,7 +3,7 @@ const { settings } = Astro.props;
 const year = new Date().getFullYear();
 const pay = [['visa', 'Visa'], ['mastercard', 'Mastercard'], ['american-express', 'American Express'], ['apple-pay', 'Apple Pay'], ['google-pay', 'Google Pay']];
 ---
-<footer class="footer">
+<footer class="footer" data-theme="dark">
   <div class="footer__top">
     <div>
       <p class="footer__headline serif">{settings.footerHeadline}</p>
