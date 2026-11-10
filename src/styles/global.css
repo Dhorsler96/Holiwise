@@ -189,7 +189,7 @@ ul { list-style: none; }
   transition-timing-function: ease-out;
   transition-delay: calc(var(--i, 0) * 100ms);
 }
-.js [data-reveal].is-in { opacity: 1; transform: none; filter: blur(0px); }
+.js [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
 
 /* Word-by-word text */
 .words .w { display: inline-block; }
@@ -201,7 +201,7 @@ ul { list-style: none; }
   transition-timing-function: ease-out;
   transition-delay: calc(var(--i) * 28ms);
 }
-.js .words.is-in .w { opacity: 1; transform: none; filter: blur(0px); }
+.js .words.is-in .w { opacity: 1; transform: none; filter: none; }
 
 /* Display headlines enter word by word (or line by line), 80ms apart */
 .mask { display: block; }
@@ -213,13 +213,13 @@ ul { list-style: none; }
   transition-timing-function: ease-out;
   transition-delay: calc(var(--i, 0) * 80ms);
 }
-.js .is-in .mask > span, .js .mask.is-in > span, .js.is-loaded .hero__title .mask > span { opacity: 1; transform: none; filter: blur(0px); }
+.js .is-in .mask > span, .js .mask.is-in > span, .js.is-loaded .hero__title .mask > span { opacity: 1; transform: none; filter: none; }
 
 /* Image wipe */
 .js [data-wipe] { clip-path: inset(0 0 100% 0); transition: clip-path 1000ms var(--ease-in-out); }
 /* Images come into focus where they sit: no slide, just opacity and a soft blur clearing */
 .js [data-focus] { opacity: 0; filter: blur(12px); transition-property: opacity, filter; transition-duration: 700ms; transition-timing-function: ease-out; }
-.js .carousel.is-in [data-focus] { opacity: 1; filter: blur(0px); }
+.js .carousel.is-in [data-focus] { opacity: 1; filter: none; }
 .js .is-in > [data-wipe], .js [data-wipe].is-in { clip-path: inset(0 0 0 0); }
 
 /* ---------- Nav ---------- */
@@ -272,8 +272,8 @@ ul { list-style: none; }
 .js .hero__intro { transition-delay: 540ms; }
 .js .hero__search { transition-delay: 640ms; }
 .js .nav > * { opacity: 0; filter: blur(4px); transition: opacity 300ms ease-out, filter 300ms ease-out; }
-.js.is-loaded .hero__intro, .js.is-loaded .hero__search { opacity: 1; transform: none; filter: blur(0px); }
-.js.is-loaded .nav > * { opacity: 1; filter: blur(0px); }
+.js.is-loaded .hero__intro, .js.is-loaded .hero__search { opacity: 1; transform: none; filter: none; }
+.js.is-loaded .nav > * { opacity: 1; filter: none; }
 
 /* ---------- Search ---------- */
 .hero__search { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 32px; }
@@ -306,7 +306,7 @@ ul { list-style: none; }
 .search__submit span:not(.btn__fill) { display: inline-block; transition-property: transform, opacity, filter; transition-duration: 300ms; transition-timing-function: var(--ease-swap); }
 .search__submit span.is-sent { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: translateY(8px); filter: blur(4px); }
 .search__submit.is-sent > span:not(.btn__fill, .is-sent) { opacity: 0; transform: translateY(-8px); filter: blur(4px); }
-.search__submit.is-sent .is-sent { opacity: 1; transform: none; filter: blur(0px); }
+.search__submit.is-sent .is-sent { opacity: 1; transform: none; filter: none; }
 .search__helper { display: inline-block; margin-top: 12px; font-size: 13px; }
 
 /* Popovers scale from their trigger. Keyboard opens and field-to-field switches are instant. */
@@ -365,7 +365,7 @@ ul { list-style: none; }
   opacity: 0; transform: translateY(12px); filter: blur(4px); pointer-events: none;
   transition-property: opacity, transform, filter; transition-duration: 150ms; transition-timing-function: ease-out;
 }
-.toast.is-on { opacity: 1; transform: none; filter: blur(0px); pointer-events: auto; transition-duration: 300ms; }
+.toast.is-on { opacity: 1; transform: none; filter: none; pointer-events: auto; transition-duration: 300ms; }
 .toast__dot { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--confirm); color: #141414; display: grid; place-items: center; }
 .toast small { display: block; color: rgba(255, 255, 255, 0.6); font-size: 13px; }
 
@@ -497,7 +497,7 @@ ul { list-style: none; }
 .deal__total { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid var(--rule); font-size: 18px; font-weight: 600; }
 .deal__total strong { font-size: 36px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
 .js .deal__row, .js .deal__total { opacity: 0; transform: translateY(12px); filter: blur(4px); transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out; transition-delay: calc(100ms + var(--i) * 100ms); }
-.js .deal__card.is-in .deal__row, .js .deal__card.is-in .deal__total { opacity: 1; transform: none; filter: blur(0px); }
+.js .deal__card.is-in .deal__row, .js .deal__card.is-in .deal__total { opacity: 1; transform: none; filter: none; }
 @media (max-width: 900px) { .deal { grid-template-columns: 1fr; } }
 
 /* ---------- Final CTA ---------- */
