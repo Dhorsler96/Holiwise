@@ -544,6 +544,15 @@ ul { list-style: none; }
 @media (hover: hover) and (pointer: fine) { .round:not(:disabled):hover { border-color: var(--ink); } }
 .carousel { --card: min(1108px, 77vw); --gap: 24px; position: relative; margin-inline: calc(var(--gutter) * -1); touch-action: pan-y; cursor: grab; outline-offset: -4px; }
 .carousel.is-dragging { cursor: grabbing; }
+/* Arrows sit on the centred card's photo, half-way down, just inside its edges */
+.carousel__arrow {
+  position: absolute; z-index: 2; top: calc(var(--card) * 614 / 1108 / 2); translate: 0 -50%;
+  background: #fff; border-color: #fff; color: var(--ink); cursor: pointer;
+}
+.carousel__arrow--prev { left: calc((100vw - var(--card)) / 2 + 20px); }
+.carousel__arrow--next { right: calc((100vw - var(--card)) / 2 + 20px); }
+@media (hover: hover) and (pointer: fine) { .carousel__arrow:not(:disabled):hover { background: #f2f2f2; border-color: #f2f2f2; } }
+@media (max-width: 700px) { .carousel__arrow { display: none; } }
 .carousel__track { display: flex; gap: var(--gap); padding-inline: calc((100vw - var(--card)) / 2); width: max-content; will-change: transform; }
 .card { width: var(--card); flex: none; user-select: none; }
 .card__media { position: relative; aspect-ratio: 1108 / 614; border-radius: 10px; overflow: hidden; background: #d9d9d9 center / cover no-repeat; }
