@@ -36,7 +36,7 @@ export const HOME_QUERY = defineQuery(/* groq */ `
       destinations[]->{ _id, title, "slug": slug.current, summary, "video": video.asset->url, image{ ${imageFragment} } }
     },
     favourites{ heading, intro, stays[]{ _key, place, title, details, summary, price, image{ ${imageFragment} } } },
-    deal{ heading, body, reassurance, stayTitle, eyebrow, benefits[]{ _key, label, value }, priceLabel, price },
+    deal{ heading, body, reassurance, ctaLabel, ctaHref, ctaNote, stayTitle, eyebrow, benefits[]{ _key, label, value }, compareLabel, comparePrice, priceLabel, price },
     finalCta{ headline, primaryLabel, secondaryLabel, image{ ${imageFragment} } }
   }
 `);

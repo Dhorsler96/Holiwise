@@ -597,16 +597,22 @@ ul { list-style: none; }
 .deal__pill path { stroke-dasharray: 14; }
 .js .deal__pill path { stroke-dashoffset: 14; transition: stroke-dashoffset 500ms var(--ease-out) 500ms; }
 .js .deal__pill.is-in path { stroke-dashoffset: 0; }
+.deal__cta { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
+.deal__note { font-size: 13px; color: var(--fg-muted); }
 .deal__card { background: var(--surface); border-radius: 16px; padding: 24px; }
+.deal__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.deal__badge { flex: none; margin-top: 4px; padding: 4px 8px; border-radius: 2px; background: var(--ink); color: #fff; font-style: normal; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.deal__compare { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0; border-top: 1px solid var(--rule); font-size: 15px; color: var(--fg-muted); }
+.deal__compare s { font-variant-numeric: tabular-nums; text-decoration-thickness: 1px; }
 .deal__stay { font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; }
 .deal__eyebrow { margin: 12px 0 12px; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); }
 .deal__row { display: flex; justify-content: space-between; gap: 16px; padding: 12.5px 0; border-top: 1px solid var(--rule); font-size: 16px; }
 .deal__row dt { font-weight: 500; }
 .deal__row dd { margin: 0; color: var(--fg-muted); text-align: right; }
-.deal__total { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid var(--rule); font-size: 18px; font-weight: 600; }
+.deal__total { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; font-size: 18px; font-weight: 600; }
 .deal__total strong { font-size: 36px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
-.js .deal__row, .js .deal__total { opacity: 0; transform: translateY(12px); filter: blur(4px); transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out; transition-delay: calc(100ms + var(--i) * 100ms); }
-.js .deal__card.is-in .deal__row, .js .deal__card.is-in .deal__total { opacity: 1; transform: none; filter: none; }
+.js .deal__row, .js .deal__compare, .js .deal__total { opacity: 0; transform: translateY(12px); filter: blur(4px); transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out; transition-delay: calc(100ms + var(--i) * 100ms); }
+.js .deal__card.is-in .deal__row, .js .deal__card.is-in .deal__compare, .js .deal__card.is-in .deal__total { opacity: 1; transform: none; filter: none; }
 @media (max-width: 900px) { .deal { grid-template-columns: 1fr; } }
 
 /* ---------- Final CTA ---------- */
@@ -649,7 +655,7 @@ ul { list-style: none; }
 /* ---------- Reduced motion: keep fades, drop movement ---------- */
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal], .js .words .w, .js .mask > span, .js .chat .seq, .js .opt, .js .booking, .js .booking li, .js .note,
-  .js .deal__row, .js .deal__total, .js .hero__intro, .js .hero__search, .js .nav > *, .js .fan__chip,
+  .js .deal__row, .js .deal__compare, .js .deal__total, .js .hero__intro, .js .hero__search, .js .nav > *, .js .fan__chip,
   .pop, .toast, .tell__ghost, .tell__example, .search__submit span, .field__value, .statement__rule, .hero__title, .hero__intro {
     transform: none !important; filter: none !important; transition-property: opacity !important; transition-duration: 300ms !important;
   }

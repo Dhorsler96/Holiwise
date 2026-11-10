@@ -1,7 +1,9 @@
 ---
+/* Premium: members pay less, and get more. The card compares the price booking
+   direct with the member price for one example stay. */
 const { data } = Astro.props;
 ---
-<section class="deal section">
+<section class="deal section" id="premium">
   <div data-reveal data-inview>
     <h2 class="deal__title serif">{data.heading}</h2>
     <p class="deal__body">{data.body}</p>
@@ -9,13 +11,21 @@ const { data } = Astro.props;
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"/></svg>
       {data.reassurance}
     </p>
+    <div class="deal__cta">
+      <a class="btn btn--dark" href={data.ctaHref}>{data.ctaLabel}</a>
+      {data.ctaNote && <span class="deal__note">{data.ctaNote}</span>}
+    </div>
   </div>
   <div class="deal__card" data-inview data-threshold="0.3">
-    <h3 class="deal__stay serif">{data.stayTitle}</h3>
+    <div class="deal__top">
+      <h3 class="deal__stay serif">{data.stayTitle}</h3>
+      <em class="deal__badge">Premium</em>
+    </div>
     <p class="deal__eyebrow">{data.eyebrow}</p>
     <dl style="margin:0">
       {data.benefits.map((b: any, i: number) => <div class="deal__row" style={`--i:${i}`}><dt>{b.label}</dt><dd>{b.value}</dd></div>)}
     </dl>
-    <p class="deal__total" style={`--i:${data.benefits.length}`}><span>{data.priceLabel}</span><strong>{data.price}</strong></p>
+    <p class="deal__compare" style={`--i:${data.benefits.length}`}><span>{data.compareLabel}</span><s>{data.comparePrice}</s></p>
+    <p class="deal__total" style={`--i:${data.benefits.length + 1}`}><span>{data.priceLabel}</span><strong>{data.price}</strong></p>
   </div>
 </section>

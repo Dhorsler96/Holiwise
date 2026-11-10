@@ -79,11 +79,14 @@ export const homePage = defineType({
       ],
     }),
     defineField({
-      name: 'deal', type: 'object', group: 'value', title: 'Best overall deal',
+      name: 'deal', type: 'object', group: 'value', title: 'Premium',
       fields: [
         defineField({ name: 'heading', type: 'string' }),
         defineField({ name: 'body', type: 'text', rows: 2 }),
         defineField({ name: 'reassurance', type: 'string' }),
+        defineField({ name: 'ctaLabel', type: 'string', title: 'Button label' }),
+        defineField({ name: 'ctaHref', type: 'string', title: 'Button link', description: 'Premium sign-up page, e.g. /premium' }),
+        defineField({ name: 'ctaNote', type: 'string', title: 'Note beside the button', description: 'e.g. Membership from £XX a month' }),
         defineField({ name: 'stayTitle', type: 'string', title: 'Example stay' }),
         defineField({ name: 'eyebrow', type: 'string', title: 'Label above the benefits' }),
         defineField({
@@ -93,8 +96,10 @@ export const homePage = defineType({
             defineField({ name: 'value', type: 'string', title: 'Detail' }),
           ], preview: { select: { title: 'label', subtitle: 'value' } } })],
         }),
-        defineField({ name: 'priceLabel', type: 'string' }),
-        defineField({ name: 'price', type: 'string' }),
+        defineField({ name: 'compareLabel', type: 'string', title: 'Comparison label', description: 'e.g. Booking direct' }),
+        defineField({ name: 'comparePrice', type: 'string', title: 'Comparison price', description: 'Shown struck through' }),
+        defineField({ name: 'priceLabel', type: 'string', title: 'Member price label' }),
+        defineField({ name: 'price', type: 'string', title: 'Member price' }),
       ],
     }),
     defineField({

@@ -11,7 +11,7 @@
       },
       {
         "label": "Premium",
-        "href": "#"
+        "href": "/premium"
       },
       {
         "label": "For companies",
@@ -200,12 +200,19 @@
       ]
     },
     "deal": {
-      "heading": "More than a better price.",
-      "body": "We find the best overall deal: upgrades, credits and extras that make the whole trip better value.",
+      "heading": "Premium members pay less.",
+      "body": "Holiwise Premium unlocks member rates below the public price, then adds upgrades, credits and extras to every stay.",
       "reassurance": "Every price checked against booking direct.",
+      "ctaLabel": "Join Premium",
+      "ctaHref": "/premium",
+      "ctaNote": "Membership from £XX a month",
       "stayTitle": "Jumeirah Muscat Bay · 6 nights",
-      "eyebrow": "What Holiwise adds",
+      "eyebrow": "What Premium adds",
       "benefits": [
+        {
+          "label": "Member rate",
+          "value": "Below the public price"
+        },
         {
           "label": "Suite upgrade",
           "value": "Ocean view"
@@ -221,13 +228,11 @@
         {
           "label": "Late checkout",
           "value": "Until 4pm"
-        },
-        {
-          "label": "Airport transfers",
-          "value": "Private car"
         }
       ],
-      "priceLabel": "Your price",
+      "compareLabel": "Booking direct",
+      "comparePrice": "£X,XXX",
+      "priceLabel": "Your Premium price",
       "price": "£X,XXX"
     },
     "finalCta": {
