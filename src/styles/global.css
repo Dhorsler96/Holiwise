@@ -536,23 +536,24 @@ ul { list-style: none; }
 .where { overflow: hidden; background: var(--bg); color: var(--fg); }
 .where__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: clamp(32px, 5.6vw, 81px); }
 .where__title { font-size: clamp(30px, 2.8vw, 40px); }
-.where__intro { margin-top: 14px; max-width: 440px; font-size: 14px; line-height: 1.3; color: var(--fg-muted); }
-.where__controls { display: flex; align-items: center; gap: 10px; }
+.where__intro { margin-top: 16px; max-width: 440px; font-size: 14px; line-height: 1.3; color: var(--fg-muted); }
+.where__cta { margin-top: 24px; }
+/* Arrows: bare line icons in 44px hit areas, bottom-aligned with the button */
+.where__arrows { display: flex; align-items: center; gap: 8px; }
+.where__arrow {
+  width: 44px; height: 44px; display: grid; place-items: center; border-radius: 4px; color: var(--ink);
+  transition-property: transform, opacity; transition-duration: 150ms; transition-timing-function: ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+.where__arrow:not(:disabled):active { transform: scale(0.96); }
+@media (hover: hover) and (pointer: fine) { .where__arrow:hover { opacity: 0.5; } }
+.where__arrow:focus-visible { outline: 1px solid var(--stroke-strong); outline-offset: -1px; }
 .round { width: 40px; height: 40px; border-radius: 4px; border: 1px solid rgba(26, 26, 26, 0.3); display: grid; place-items: center; transition-property: transform, border-color, opacity; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
 .round:not(:disabled):active { transform: scale(0.96); }
 .round:disabled { opacity: 0.3; cursor: default; }
 @media (hover: hover) and (pointer: fine) { .round:not(:disabled):hover { border-color: var(--ink); } }
 .carousel { --card: min(1108px, 77vw); --gap: 24px; position: relative; margin-inline: calc(var(--gutter) * -1); touch-action: pan-y; cursor: grab; outline-offset: -4px; }
 .carousel.is-dragging { cursor: grabbing; }
-/* Arrows sit on the centred card's photo, half-way down, just inside its edges */
-.carousel__arrow {
-  position: absolute; z-index: 2; top: calc(var(--card) * 614 / 1108 / 2); translate: 0 -50%;
-  background: #fff; border-color: #fff; color: var(--ink); cursor: pointer;
-}
-.carousel__arrow--prev { left: calc((100vw - var(--card)) / 2 + 20px); }
-.carousel__arrow--next { right: calc((100vw - var(--card)) / 2 + 20px); }
-@media (hover: hover) and (pointer: fine) { .carousel__arrow:not(:disabled):hover { background: #f2f2f2; border-color: #f2f2f2; } }
-@media (max-width: 700px) { .carousel__arrow { display: none; } }
 .carousel__track { display: flex; gap: var(--gap); padding-inline: calc((100vw - var(--card)) / 2); width: max-content; will-change: transform; }
 .card { width: var(--card); flex: none; user-select: none; }
 .card__media { position: relative; aspect-ratio: 1108 / 614; border-radius: 10px; overflow: hidden; background: #d9d9d9 center / cover no-repeat; }
@@ -664,7 +665,7 @@ ul { list-style: none; }
   .js [data-focus] { filter: none; }
   .hero__media img, .card__media img { transform: none !important; transition: none; }
   .nav.is-hidden { transform: none; }
-  .btn:active, .chip:active, .round:active, .tabs__tab:active, .pop__opt:active, .stepper__ctrl button:active { transform: none !important; }
+  .btn:active, .chip:active, .round:active, .where__arrow:active, .tabs__tab:active, .pop__opt:active, .stepper__ctrl button:active { transform: none !important; }
   /* Buttons: the fill fades in place and the label changes colour, no rising or rolling */
   .btn__fill { transform: none !important; opacity: 0; transition: opacity 150ms ease-out !important; }
   .btn.is-rolling:hover .btn__fill { opacity: 1; }

@@ -574,7 +574,6 @@ if (carousel) {
 
   carousel.addEventListener('pointerdown', (e) => {
     if (pointerId !== null || (e.pointerType === 'mouse' && e.button !== 0)) return; // ignore extra touches
-    if ((e.target as HTMLElement).closest('.carousel__arrow')) return; // arrows are buttons, not drag handles
     pointerId = e.pointerId;
     dragging = false;
     startPointer = e.clientX;
