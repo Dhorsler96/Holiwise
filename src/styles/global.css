@@ -125,15 +125,35 @@ ul { list-style: none; }
   user-select: none;
 }
 .btn:not(:disabled):active { transform: scale(0.96); }
-.btn--light { background: #fff; color: var(--ink); }
-.btn--dark { background: var(--ink); color: #fff; }
-.btn--ghost-light { border-color: rgba(255, 255, 255, 0.55); color: #fff; }
-.btn--ghost-dark { border-color: var(--ink); color: var(--ink); }
+.btn--light { background: #fff; color: var(--ink); --btn-fill: var(--ink); --btn-fg-hover: #fff; }
+.btn--dark { background: var(--ink); color: #fff; --btn-fill: #3d3d3d; --btn-fg-hover: #fff; }
+/* Frosted glass over photography */
+.btn--ghost-light {
+  border-color: rgba(255, 255, 255, 0.55); color: #fff;
+  background: rgba(255, 255, 255, 0.11);
+  -webkit-backdrop-filter: blur(17px);
+  backdrop-filter: blur(17px);
+  --btn-fill: #fff; --btn-fg-hover: var(--ink);
+}
+.btn--ghost-dark { border-color: var(--fg, var(--ink)); color: var(--fg, var(--ink)); --btn-fill: var(--fg, var(--ink)); --btn-fg-hover: var(--bg, #fff); }
+
+/* Hover: a fill rises from below the button while the label rolls up to a copy in the
+   hover colour. Both move with transitions, so leaving mid-way reverses from where they are.
+   main.ts adds .btn__fill and .btn__label; without JS the plain colour swap below applies. */
+.btn.is-rolling { position: relative; overflow: hidden; isolation: isolate; }
+.btn__fill {
+  position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
+  background: var(--btn-fill); transform: translateY(101%);
+  transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.btn__label { position: relative; display: block; overflow: hidden; line-height: 1.4; }
+.btn__text { display: block; transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1); }
+.btn__text::after { content: attr(data-text); position: absolute; left: 0; top: 100%; width: 100%; color: var(--btn-fg-hover); }
 @media (hover: hover) and (pointer: fine) {
-  .btn--light:hover { background: #ececec; }
-  .btn--dark:hover { background: #333; }
-  .btn--ghost-light:hover { background: #fff; color: var(--ink); border-color: #fff; }
-  .btn--ghost-dark:hover { background: var(--ink); color: #fff; }
+  .btn.is-rolling:hover .btn__fill, .btn.is-rolling:focus-visible .btn__fill { transform: translateY(0); transition-duration: 400ms; }
+  .btn.is-rolling:hover .btn__text, .btn.is-rolling:focus-visible .btn__text { transform: translateY(-100%); transition-duration: 400ms; }
+  .btn--ghost-light.is-rolling:hover { border-color: #fff; }
+  .btn:not(.is-rolling):hover { background: var(--btn-fill); color: var(--btn-fg-hover); border-color: var(--btn-fill); }
 }
 
 /* Text link with an underline that draws from the left */
@@ -517,4 +537,10 @@ ul { list-style: none; }
   .hero__media img, .card__media img { transform: none !important; transition: none; }
   .nav.is-hidden { transform: none; }
   .btn:active, .chip:active, .round:active, .tabs__tab:active, .pop__opt:active, .stepper__ctrl button:active { transform: none !important; }
+  /* Buttons: the fill fades in place and the label changes colour, no rising or rolling */
+  .btn__fill { transform: none !important; opacity: 0; transition: opacity 150ms ease-out !important; }
+  .btn.is-rolling:hover .btn__fill { opacity: 1; }
+  .btn__text { transform: none !important; transition: color 150ms ease-out !important; }
+  .btn__text::after { display: none; }
+  .btn.is-rolling:hover .btn__text { color: var(--btn-fg-hover); }
 }

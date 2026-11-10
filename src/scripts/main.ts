@@ -37,6 +37,27 @@ for (const el of $$('[data-inview]')) {
   observers.get(threshold)!.observe(el);
 }
 
+/* ---------- Buttons: rising fill and rolling label ---------- */
+for (const btn of $$('.btn')) {
+  const fill = document.createElement('span');
+  fill.className = 'btn__fill';
+  fill.setAttribute('aria-hidden', 'true');
+  // The search button swaps its own label to "Sent", so it only takes the fill.
+  if (!btn.matches('[data-submit]')) {
+    const text = btn.textContent!.trim();
+    const label = document.createElement('span');
+    label.className = 'btn__label';
+    const inner = document.createElement('span');
+    inner.className = 'btn__text';
+    inner.dataset.text = text;
+    inner.textContent = text;
+    label.append(inner);
+    btn.replaceChildren(label);
+  }
+  btn.prepend(fill);
+  btn.classList.add('is-rolling');
+}
+
 /* ---------- Scroll themes: the section across the middle of the viewport sets the page palette ---------- */
 const themed = $$('[data-theme]');
 if (themed.length) {
