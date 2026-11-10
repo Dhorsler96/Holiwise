@@ -273,12 +273,7 @@ if (search) {
     const lower = tell.value.toLowerCase();
     for (const chip of suggests) chip.setAttribute('aria-pressed', String(lower.includes(chip.dataset.suggest!.toLowerCase())));
   };
-  const fitBrief = () => {
-    if (CSS.supports('field-sizing', 'content')) return;
-    tell.style.height = 'auto';
-    tell.style.height = `${tell.scrollHeight}px`;
-  };
-  tell.addEventListener('input', () => { syncGhost(); fitBrief(); });
+  tell.addEventListener('input', syncGhost);
   const focusBrief = () => { tell.focus({ preventScroll: true }); tell.setSelectionRange(tell.value.length, tell.value.length); };
   $('.field__btn', tellField)!.addEventListener('click', () => { if (open === tellField) focusBrief(); });
   for (const chip of suggests) chip.addEventListener('click', () => {
@@ -292,10 +287,9 @@ if (search) {
       tell.value = tell.value.trim() ? `${tell.value.trim().replace(/[,.]$/, '')}, ${text.toLowerCase()}` : text;
     }
     syncGhost();
-    fitBrief();
     focusBrief();
   });
-  $('[data-tell-reset]', tellField)!.addEventListener('click', () => { tell.value = ''; syncGhost(); fitBrief(); focusBrief(); });
+  $('[data-tell-reset]', tellField)!.addEventListener('click', () => { tell.value = ''; syncGhost(); focusBrief(); });
   const closeBrief = () => { setOpen(null, keyboard); $<HTMLElement>('.field__btn', tellField)!.focus({ preventScroll: true }); };
   $('[data-tell-done]', tellField)!.addEventListener('click', closeBrief);
   tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); closeBrief(); } });
