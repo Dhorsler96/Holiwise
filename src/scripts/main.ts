@@ -58,7 +58,7 @@ for (const el of $$('[data-inview]')) {
   observers.get(threshold)!.observe(el);
 }
 
-/* ---------- Hover: rolling labels on every button and text link; buttons also take a rising fill ---------- */
+/* ---------- Hover: buttons take a rising fill and a rolling label ---------- */
 const makeRoll = (text: string) => {
   const roll = document.createElement('span');
   roll.className = 'roll';
@@ -78,17 +78,7 @@ for (const btn of $$('.btn')) {
   btn.prepend(fill);
   btn.classList.add('is-rolling');
 }
-for (const link of $$('.link')) {
-  link.replaceChildren(makeRoll(link.textContent!.trim()));
-  link.classList.add('is-rolling');
-}
-// "Ask about this →": the words roll, the arrow keeps its nudge
-for (const link of $$('.arrow-link')) {
-  const textNode = Array.from(link.childNodes).find((n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim());
-  if (!textNode) continue;
-  textNode.replaceWith(makeRoll(textNode.textContent!.trim()));
-  link.classList.add('is-rolling');
-}
+// Text links don't roll: they draw an underline (CSS only).
 
 /* ---------- Scroll themes: the section across the middle of the viewport sets the page palette ---------- */
 const themed = $$('[data-theme]');
