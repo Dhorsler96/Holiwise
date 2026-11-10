@@ -38,6 +38,11 @@
   --nav-h: 80px;
 }
 
+/* Large desktop: content sits within the middle 80% of the screen. Backgrounds stay full-bleed. */
+@media (min-width: 1600px) {
+  :root { --gutter: 10vw; }
+}
+
 *,
 *::before,
 *::after { box-sizing: border-box; }
@@ -430,7 +435,7 @@ ul { list-style: none; }
 .footer__cols h3 { font-size: 14px; font-weight: 500; margin-bottom: 10px; }
 .footer__cols li + li { margin-top: 10px; }
 .footer__cols a { color: rgba(255, 255, 255, 0.85); }
-.footer__mark { margin: clamp(40px, 6vw, 84px) 0 clamp(24px, 3vw, 40px); font-family: var(--font-brand); font-weight: 600; font-size: 19.6vw; line-height: 0.82; letter-spacing: -0.005em; color: #222; text-align: center; white-space: nowrap; user-select: none; }
+.footer__mark { margin: clamp(40px, 6vw, 84px) 0 clamp(24px, 3vw, 40px); font-family: var(--font-brand); font-weight: 600; font-size: calc((100vw - 2 * var(--gutter)) * 0.2107); line-height: 0.82; letter-spacing: -0.005em; color: #222; text-align: center; white-space: nowrap; user-select: none; }
 .footer__trust { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding: 28px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); }
 .footer__trust-l { display: flex; align-items: center; flex-wrap: wrap; gap: 20px 36px; }
 .footer__trust b { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
