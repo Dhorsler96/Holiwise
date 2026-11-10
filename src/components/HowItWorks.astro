@@ -1,6 +1,6 @@
 ---
 const { data } = Astro.props;
-const avatar = '/images/rhodes-lindos.jpg';
+const avatar = '/images/how-avatar.jpg';
 ---
 <section class="how section" id="how-it-works" data-theme="dark">
   <h2 class="how__title serif" data-inview><span class="mask"><span>{data.heading}</span></span></h2>
@@ -23,15 +23,15 @@ const avatar = '/images/rhodes-lindos.jpg';
           {step.illustration === 'threeOptions' && (
             <div class="ill fan">
               <span class="fan__chip"><i></i>3 options · 4 min</span>
-              <div class="opt opt--l ill-card"><img src="/images/rhodes-old-town.jpg" alt="" loading="lazy" /><b>Rhodes Old Town</b><small>5 nights · breakfast + credit</small></div>
-              <div class="opt opt--r ill-card"><img src="/images/symi.jpg" alt="" loading="lazy" /><b>Symi</b><small>5 nights · harbour-view room</small></div>
-              <div class="opt opt--c ill-card"><img src="/images/rhodes-lindos.jpg" alt="" loading="lazy" /><em>Our pick</em><b>Lindos, Rhodes</b><small>5 nights · suite upgrade</small></div>
+              <div class="opt opt--l ill-card"><img src="/images/how-old-town.jpg" alt="" loading="lazy" /><b>Rhodes Old Town</b><small>5 nights · breakfast + credit</small></div>
+              <div class="opt opt--r ill-card"><img src="/images/how-train.jpg" alt="" loading="lazy" /><b>Symi</b><small>5 nights · harbour-view room</small></div>
+              <div class="opt opt--c ill-card"><img src="/images/how-pick.jpg" alt="" loading="lazy" /><em>Our pick</em><b>Lindos, Rhodes</b><small>5 nights · suite upgrade</small></div>
             </div>
           )}
           {step.illustration === 'booked' && (
             <div class="ill booked">
               <div class="booking ill-card">
-                <img src="/images/rhodes-lindos.jpg" alt="" loading="lazy" />
+                <img src="/images/how-booking.jpg" alt="" loading="lazy" />
                 <div class="booking__body">
                   <span class="booking__status"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Confirmed</span>
                   <b>Rhodes → Symi → Crete</b>
