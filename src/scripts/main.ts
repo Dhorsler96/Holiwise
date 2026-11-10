@@ -327,6 +327,10 @@ if (search) {
     if (open !== where) return;
     whereSearch.value = '';
     filterWhere();
+    // Hold the panel at its full height while people type, so filtering never collapses it
+    const pop = $('.pop', where)!;
+    pop.style.height = '';
+    pop.style.height = `${pop.offsetHeight}px`;
     whereSearch.focus({ preventScroll: true });
   });
 
