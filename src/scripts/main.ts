@@ -6,6 +6,26 @@ const $ = <T extends HTMLElement>(sel: string, el: ParentNode = document) => el.
 const $$ = <T extends HTMLElement>(sel: string, el: ParentNode = document) => Array.from(el.querySelectorAll<T>(sel));
 const nextFrame = (fn: () => void) => requestAnimationFrame(() => requestAnimationFrame(fn));
 
+/* ---------- Text transitions (Calligraph) ----------
+   Field values, the Where label and the guest counters morph between states:
+   shared characters slide, new ones fade in, digits roll. Calligraph needs React and Motion,
+   so it loads once the page is idle; until then, and under reduced motion, text swaps instantly. */
+type Morpher = { set: (text: string) => void };
+const morphers = new Map<HTMLElement, Morpher>();
+const setText = (el: HTMLElement, text: string) => {
+  const m = morphers.get(el);
+  if (m) m.set(text);
+  else el.textContent = text;
+};
+if (!reduceMotion) {
+  const load = () => import('./calligraph').then(({ morph }) => {
+    for (const el of $$('[data-value], [data-where-label]')) morphers.set(el, morph(el, { animation: 'snappy' }));
+    for (const el of $$('.stepper output')) morphers.set(el, morph(el, { variant: 'number', animation: 'snappy' }));
+  });
+  if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 2500 });
+  else window.setTimeout(load, 1200);
+}
+
 /* ---------- Page load ---------- */
 nextFrame(() => root.classList.add('is-loaded'));
 window.setTimeout(() => root.classList.add('is-settled'), 1600);
@@ -138,15 +158,11 @@ if (search) {
     open = field;
   };
 
-  /** Swap a field value with a short blur so the two states read as one change. */
+  /** Morph a field value to its new text. */
   const setValue = (field: HTMLElement, text: string, isDefault = false) => {
     const value = $('[data-value]', field)!;
-    if (value.textContent === text) return;
-    if (reduceMotion) { value.textContent = text; }
-    else {
-      value.classList.add('is-swapping');
-      window.setTimeout(() => { value.textContent = text; value.classList.remove('is-swapping'); }, 150);
-    }
+    if (field.dataset.current === text) return;
+    setText(value, text);
     value.classList.toggle('is-set', !isDefault);
     field.dataset.current = text;
   };
@@ -193,7 +209,7 @@ if (search) {
   const syncWho = () => {
     const guests = counts.adults + counts.children;
     const text = `${guests} guest${guests === 1 ? '' : 's'}${counts.rooms > 1 ? ` · ${counts.rooms} rooms` : ''}`;
-    $('[data-value]', who)!.textContent = text; // counts change in place: no swap animation on repeated presses
+    setText($('[data-value]', who)!, text);
     $('[data-value]', who)!.classList.toggle('is-set', text !== '2 guests');
     who.dataset.current = text;
   };
@@ -203,7 +219,7 @@ if (search) {
     const out = $('output', step)!;
     const [minus, plus] = $$<HTMLButtonElement>('button', step);
     counts[key] = Number(out.textContent);
-    const sync = () => { out.textContent = String(counts[key]); minus.disabled = counts[key] <= min; plus.disabled = counts[key] >= 9; };
+    const sync = () => { setText(out, String(counts[key])); minus.disabled = counts[key] <= min; plus.disabled = counts[key] >= 9; };
     for (const b of [minus, plus]) b.addEventListener('click', () => { counts[key] = Math.min(9, Math.max(min, counts[key] + Number(b.dataset.dir))); sync(); syncWho(); });
     sync();
   }
@@ -234,7 +250,7 @@ if (search) {
       tabButtons.forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
       place(btn, animate);
       const flights = btn.dataset.tab === 'flights';
-      $('[data-where-label]', where)!.textContent = flights ? 'From → To' : 'Where';
+      setText($('[data-where-label]', where)!, flights ? 'From → To' : 'Where');
       const current = where.dataset.current;
       if (!current || current === 'Anywhere' || current === 'London → Anywhere') setValue(where, flights ? 'London → Anywhere' : 'Anywhere', true);
     };
