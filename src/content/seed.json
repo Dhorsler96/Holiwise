@@ -271,37 +271,40 @@
           }
         },
         {
-          "place": "Mallorca",
-          "title": "Address Beach Resort",
-          "details": "6 nights, 2 guests from",
-          "summary": "Long lunches, white towns and the best food on a short flight.",
-          "price": "£5,573",
+          "place": "Amalfi Coast",
+          "title": "Caruso, Ravello",
+          "details": "5 nights, 2 guests from",
+          "summary": "An infinity pool above the coast, and Ravello on the doorstep.",
+          "price": "£X,XXX",
           "image": {
-            "src": "/images/fav-mallorca.jpg",
-            "alt": "A hotel pool among palms and stone buildings"
-          }
+            "src": "/images/belmond-caruso.jpg",
+            "alt": "Infinity pool on a terrace above the Amalfi Coast"
+          },
+          "_note": "INTERNAL ONLY: Belmond image used as a placeholder, not licensed for public use. Replace before launch."
         },
         {
-          "place": "Peru",
-          "title": "Sanctuary Lodge",
-          "details": "6 nights, 2 guests from",
-          "summary": "Long lunches, white towns and the best food on a short flight.",
-          "price": "£5,573",
+          "place": "Anguilla",
+          "title": "Cap Juluca",
+          "details": "7 nights, 2 guests from",
+          "summary": "White villas along a mile of quiet beach, made for doing very little.",
+          "price": "£X,XXX",
           "image": {
-            "src": "/images/fav-peru.jpg",
-            "alt": "A guest relaxing on a lawn beside a garden"
-          }
+            "src": "/images/belmond-cap-juluca.jpg",
+            "alt": "White villas along a curved beach"
+          },
+          "_note": "INTERNAL ONLY: Belmond image used as a placeholder, not licensed for public use. Replace before launch."
         },
         {
-          "place": "France",
-          "title": "The Oberoi Beach Resort, Mauritius",
+          "place": "Madeira",
+          "title": "Reid's Palace",
           "details": "6 nights, 2 guests from",
-          "summary": "Long lunches, white towns and the best food on a short flight.",
-          "price": "£5,573",
+          "summary": "Clifftop gardens, afternoon tea and the Atlantic all year round.",
+          "price": "£X,XXX",
           "image": {
-            "src": "/images/fav-france.jpg",
-            "alt": "Vineyards above a village at dusk"
-          }
+            "src": "/images/belmond-reids-palace.jpg",
+            "alt": "Pool terrace with parasols above the sea"
+          },
+          "_note": "INTERNAL ONLY: Belmond image used as a placeholder, not licensed for public use. Replace before launch."
         }
       ]
     }
