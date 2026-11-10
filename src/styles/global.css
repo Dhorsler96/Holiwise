@@ -220,13 +220,12 @@ ul { list-style: none; }
 .tabs__active { position: absolute; inset: 0; display: inline-flex; gap: 6px; pointer-events: none; clip-path: inset(0 100% 0 0 round 4px); transition: clip-path 150ms ease-out; }
 .tabs__active span { display: inline-flex; align-items: center; height: 33px; padding: 0 16px; border-radius: 4px; font-size: 14px; border: 1px solid #fff; background: #fff; color: var(--ink); }
 
-.search { position: relative; display: flex; align-items: stretch; min-height: 69px; border-radius: 16px; background: rgba(255, 255, 255, 0.62); -webkit-backdrop-filter: blur(40px) saturate(1.5); backdrop-filter: blur(40px) saturate(1.5); color: var(--ink); transition: background-color 150ms ease-out; }
+.search { position: relative; display: flex; align-items: stretch; min-height: 69px; border-radius: 4px; background: rgba(255, 255, 255, 0.62); -webkit-backdrop-filter: blur(40px) saturate(1.5); backdrop-filter: blur(40px) saturate(1.5); color: var(--ink); transition: background-color 150ms ease-out; }
 .search:focus-within, .search.is-open { background: rgba(255, 255, 255, 0.94); }
 .field { position: relative; flex: 1 1 0; min-width: 0; }
 .field + .field::before { content: ''; position: absolute; left: 0; top: 16px; bottom: 16px; width: 1px; background: rgba(0, 0, 0, 0.12); }
 .field__btn, .field__label { display: flex; flex-direction: column; justify-content: center; gap: 2px; width: 100%; height: 100%; padding: 0 32px; text-align: left; font-size: 14px; }
 .field__btn { transition: background-color 150ms ease-out; border-radius: 4px; -webkit-tap-highlight-color: transparent; }
-.field:first-child .field__btn { border-start-start-radius: 16px; border-end-start-radius: 16px; }
 .field__btn:active .field__value { transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) { .field__btn:hover { background: rgba(255, 255, 255, 0.5); } }
 .field__name { letter-spacing: 0.06em; color: #222; }
