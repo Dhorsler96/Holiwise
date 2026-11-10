@@ -19,7 +19,7 @@ const setText = (el: HTMLElement, text: string) => {
 };
 if (!reduceMotion) {
   const load = () => import('./calligraph').then(({ morph }) => {
-    for (const el of $$('[data-value], [data-where-label]')) morphers.set(el, morph(el, { animation: 'snappy' }));
+    for (const el of $$('[data-value], [data-where-label], [data-submit-label]')) morphers.set(el, morph(el, { animation: 'snappy' }));
     for (const el of $$('.stepper output')) morphers.set(el, morph(el, { variant: 'number', animation: 'snappy' }));
   });
   if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 2500 });
@@ -350,8 +350,11 @@ if (search) {
     const parts = [where.dataset.current || 'Anywhere', when.dataset.current || 'Any dates', who.dataset.current || '2 guests'];
     $('[data-toast-body]', toast)!.textContent = tell.value.trim() ? `“${tell.value.trim()}”` : parts.join(' · ');
     $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will send three options.';
-    submit.classList.add('is-sent');
-    window.setTimeout(() => submit.classList.remove('is-sent'), 1800);
+    // "Search" morphs to "Sent" and back, the same way the field values change
+    const label = $('[data-submit-label]', submit)!;
+    setText(label, 'Sent');
+    window.clearTimeout(Number(submit.dataset.resetTimer || 0));
+    submit.dataset.resetTimer = String(window.setTimeout(() => setText(label, 'Search'), 1800));
     toast.classList.add('is-on');
     runToast(4500);
   });

@@ -347,7 +347,7 @@ ul { list-style: none; }
 /* Popovers scale from their trigger. Keyboard opens and field-to-field switches are instant. */
 .pop {
   position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 5; min-width: 280px;
-  padding: 8px; border-radius: 14px; background: var(--glass-light); -webkit-backdrop-filter: var(--glass-blur) saturate(1.5); backdrop-filter: var(--glass-blur) saturate(1.5); color: var(--ink);
+  padding: 8px; border-radius: 4px; background: var(--glass-light); -webkit-backdrop-filter: var(--glass-blur) saturate(1.5); backdrop-filter: var(--glass-blur) saturate(1.5); color: var(--ink);
   border: 1px solid transparent;
   box-shadow: 0 0 0 1px oklch(0 0 0 / 0.06), 0 24px 60px -12px rgba(0, 0, 0, 0.35);
   overscroll-behavior: contain;
@@ -371,7 +371,7 @@ ul { list-style: none; }
 .search[data-instant] .pop > * { animation: none !important; }
 /* Every popover opens with a serif title, as the brief panel does */
 .pop__title { padding: 8px 12px 6px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.pop__opt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border-radius: 6px; font-size: 14.5px; text-align: left; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+.pop__opt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border-radius: 2px; font-size: 14.5px; text-align: left; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
 .pop__opt small { color: var(--muted); font-size: 12.5px; }
 .pop__opt:not(:disabled):active { transform: scale(0.96); }
 .pop__opt[aria-selected='true'] { background: var(--mist); }
