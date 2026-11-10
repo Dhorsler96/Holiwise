@@ -54,7 +54,7 @@ const options = destinations.filter((d: any) => stays[d.title]).map((d: any) => 
     <div class="brief__agent">
       <img src="/images/rhodes-lindos.jpg" alt="" />
       <div class="brief__agent-text">
-        <b>Sofia · your agent</b>
+        <b>Albin · your agent</b>
         <span class="brief__status" data-brief-status aria-live="polite">Reading your brief</span>
       </div>
       <span class="brief__progress" aria-hidden="true"><i data-brief-bar></i></span>
@@ -70,14 +70,14 @@ const options = destinations.filter((d: any) => stays[d.title]).map((d: any) => 
           <p class="brief__why">{o.why}</p>
           <div class="brief__foot">
             <span class="brief__price">From <b>£X,XXX</b> pp</span>
-            <a class="btn btn--ghost-dark" href={agentHref}>Ask Sofia</a>
+            <a class="btn btn--ghost-dark" href={agentHref}>Ask Albin</a>
           </div>
         </li>
       ))}
     </ol>
 
     <form class="brief__refine" data-brief-refine>
-      <input type="text" name="refine" autocomplete="off" placeholder="Not quite right? Tell Sofia what to change" aria-label="Tell Sofia what to change" />
+      <input type="text" name="refine" autocomplete="off" placeholder="Not quite right? Tell Albin what to change" aria-label="Tell Albin what to change" />
       <button class="btn btn--dark" type="submit">Send</button>
       <a class="link brief__whatsapp" href={agentHref}>Or message on WhatsApp</a>
     </form>
