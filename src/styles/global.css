@@ -42,6 +42,13 @@
   --image-outline-dark: oklch(1 0 0 / 0.1);
   --ring-dark: 0 0 0 1px oklch(1 0 0 / 0.08);
 
+  /* Glass: a neutral grey tint over a heavy blur, so it reads the same over any photograph.
+     Light glass is for surfaces that hold dark text. */
+  --glass: rgba(150, 150, 150, 0.4);
+  --glass-dark: rgba(24, 24, 24, 0.62);
+  --glass-light: rgba(255, 255, 255, 0.9);
+  --glass-blur: blur(50px);
+
   --gutter: clamp(20px, 4.17vw, 60px);
   --nav-h: 80px;
 }
@@ -129,10 +136,10 @@ ul { list-style: none; }
 .btn--dark { background: var(--ink); color: #fff; --btn-fill: #3d3d3d; --btn-fg-hover: #fff; }
 /* Frosted glass over photography */
 .btn--ghost-light {
-  border-color: rgba(255, 255, 255, 0.55); color: #fff;
-  background: rgba(255, 255, 255, 0.11);
-  -webkit-backdrop-filter: blur(17px);
-  backdrop-filter: blur(17px);
+  border-color: transparent; color: #fff;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   --btn-fill: #fff; --btn-fg-hover: var(--ink);
 }
 .btn--ghost-dark { border-color: var(--fg, var(--ink)); color: var(--fg, var(--ink)); --btn-fill: var(--fg, var(--ink)); --btn-fg-hover: var(--bg, #fff); }
@@ -224,7 +231,7 @@ ul { list-style: none; }
 }
 .nav::before, .nav::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .nav::before { background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0)); border-bottom: 1px solid rgba(255, 255, 255, 0.33); transition: opacity 250ms ease; }
-.nav::after { background: rgba(16, 16, 16, 0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); opacity: 0; transition: opacity 250ms ease; }
+.nav::after { background: var(--glass-dark); -webkit-backdrop-filter: var(--glass-blur) saturate(1.4); backdrop-filter: var(--glass-blur) saturate(1.4); border-bottom: 1px solid rgba(255, 255, 255, 0.08); opacity: 0; transition: opacity 250ms ease; }
 .nav.is-solid::before { opacity: 0; }
 .nav.is-solid::after { opacity: 1; }
 .nav.is-hidden { transform: translateY(-100%); }
@@ -236,12 +243,21 @@ ul { list-style: none; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; min-height: min(800px, 100svh); height: 100svh; max-height: 900px; color: #fff; overflow: hidden; background: #111; }
-.hero__media { position: absolute; inset: 0; }
+.hero__media { position: absolute; inset: 0; isolation: isolate; }
 .hero__media img, .hero__media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero__media img { transform: scale(1.08); transition: transform 2400ms var(--ease-out); }
 .is-loaded .hero__media img { transform: scale(1); }
 .hero__media video { opacity: 0; transition: opacity 800ms ease; }
 .hero__media video.is-ready { opacity: 1; }
+.hero__media::before { content: ''; position: absolute; inset: 0; z-index: 1; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transition: opacity 300ms ease-out; pointer-events: none; }
+.hero__title, .hero__intro { transition-property: filter, opacity; transition-duration: 300ms; transition-timing-function: ease-out; }
+.hero:has(.search.is-open) .hero__media::before { opacity: 1; }
+.hero:has(.search.is-open) :is(.hero__title, .hero__intro) { filter: blur(10px); opacity: 0.5; }
+.hero .tabs { transition: opacity 150ms ease-out; }
+.hero:has(.search.is-open) .tabs { opacity: 0; pointer-events: none; }
+/* Once the entrance has played, drop its delays so the overlay blur responds at once */
+.js.is-settled .hero__intro, .js.is-settled .hero__title .mask > span { transition-delay: 0ms; }
+.hero:has(.search.is-open) .hero__title .mask > span { transition: none; }
 .hero__media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.1) 45%, rgba(0, 0, 0, 0.5) 100%); }
 .hero__copy { position: absolute; inset: 0 var(--gutter); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-bottom: 60px; pointer-events: none; }
 .hero__title { font-size: clamp(44px, 5vw, 72px); letter-spacing: -0.03em; line-height: 0.95; }
@@ -262,7 +278,7 @@ ul { list-style: none; }
 /* ---------- Search ---------- */
 .hero__search { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 32px; }
 .tabs { position: relative; display: inline-flex; gap: 6px; margin-bottom: 11px; }
-.tabs__tab { height: 33px; padding: 0 16px; border-radius: 4px; font-size: 14px; border: 1px solid rgba(255, 255, 255, 0.5); color: #fff; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+.tabs__tab { height: 33px; padding: 0 16px; border-radius: 4px; font-size: 14px; border: 1px solid transparent; background: var(--glass); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); color: #fff; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
 .tabs__tab:not(:disabled):active { transform: scale(0.96); }
 /* Duplicate "active" layer, clipped to the selected tab: the colour change is one seamless wipe. */
 .tabs__active { position: absolute; inset: 0; display: inline-flex; gap: 6px; pointer-events: none; clip-path: inset(0 100% 0 0 round 4px); transition: clip-path 150ms ease-out; }
@@ -287,16 +303,16 @@ ul { list-style: none; }
 .tell__ghost.is-out { opacity: 0; filter: blur(4px); transform: translateY(-12px); transition-duration: 150ms; }
 .tell__ghost.is-hidden { opacity: 0; transition-duration: 0ms; }
 .search__submit { align-self: center; margin: 0 12px; height: 47px; min-width: 118px; padding: 0 30px; position: relative; overflow: hidden; }
-.search__submit span { display: inline-block; transition-property: transform, opacity, filter; transition-duration: 300ms; transition-timing-function: var(--ease-swap); }
-.search__submit .is-sent { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: translateY(8px); filter: blur(4px); }
-.search__submit.is-sent > span:first-child { opacity: 0; transform: translateY(-8px); filter: blur(4px); }
+.search__submit span:not(.btn__fill) { display: inline-block; transition-property: transform, opacity, filter; transition-duration: 300ms; transition-timing-function: var(--ease-swap); }
+.search__submit span.is-sent { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: translateY(8px); filter: blur(4px); }
+.search__submit.is-sent > span:not(.btn__fill, .is-sent) { opacity: 0; transform: translateY(-8px); filter: blur(4px); }
 .search__submit.is-sent .is-sent { opacity: 1; transform: none; filter: blur(0px); }
 .search__helper { display: inline-block; margin-top: 12px; font-size: 13px; }
 
 /* Popovers scale from their trigger. Keyboard opens and field-to-field switches are instant. */
 .pop {
   position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 5; min-width: 280px;
-  padding: 8px; border-radius: 14px; background: #fff; color: var(--ink);
+  padding: 8px; border-radius: 14px; background: var(--glass-light); -webkit-backdrop-filter: var(--glass-blur) saturate(1.5); backdrop-filter: var(--glass-blur) saturate(1.5); color: var(--ink);
   border: 1px solid transparent;
   box-shadow: 0 0 0 1px oklch(0 0 0 / 0.06), 0 24px 60px -12px rgba(0, 0, 0, 0.35);
   overscroll-behavior: contain;
@@ -343,7 +359,7 @@ ul { list-style: none; }
 .toast {
   position: fixed; left: 50%; bottom: 28px; z-index: 80; translate: -50% 0;
   display: flex; align-items: center; gap: 12px; max-width: min(520px, calc(100vw - 32px));
-  padding: 14px 18px; border-radius: 12px; background: #111; color: #fff; font-size: 14.5px;
+  padding: 14px 18px; border-radius: 12px; background: var(--glass-dark); -webkit-backdrop-filter: var(--glass-blur) saturate(1.4); backdrop-filter: var(--glass-blur) saturate(1.4); color: #fff; font-size: 14.5px;
   border: 1px solid transparent;
   box-shadow: var(--ring-dark), 0 20px 50px -10px rgba(0, 0, 0, 0.5);
   opacity: 0; transform: translateY(12px); filter: blur(4px); pointer-events: none;
@@ -525,7 +541,7 @@ ul { list-style: none; }
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal], .js .words .w, .js .mask > span, .js .chat .seq, .js .opt, .js .booking, .js .booking li, .js .note,
   .js .deal__row, .js .deal__total, .js .hero__intro, .js .hero__search, .js .nav > *, .js .fan__chip,
-  .pop, .toast, .tell__ghost, .search__submit span, .field__value, .statement__rule {
+  .pop, .toast, .tell__ghost, .search__submit span, .field__value, .statement__rule, .hero__title, .hero__intro {
     transform: none !important; filter: none !important; transition-property: opacity !important; transition-duration: 300ms !important;
   }
   .js .nav__links { transform: translateX(-50%) !important; }

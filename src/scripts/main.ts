@@ -8,6 +8,7 @@ const nextFrame = (fn: () => void) => requestAnimationFrame(() => requestAnimati
 
 /* ---------- Page load ---------- */
 nextFrame(() => root.classList.add('is-loaded'));
+window.setTimeout(() => root.classList.add('is-settled'), 1600);
 
 const heroVideo = $<HTMLVideoElement>('[data-hero-video]');
 if (heroVideo && !reduceMotion) {
