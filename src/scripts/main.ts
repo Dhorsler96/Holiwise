@@ -142,6 +142,9 @@ if (search) {
         $('.field__btn', f)?.setAttribute('aria-expanded', String(on));
       }
       search.classList.toggle('is-open', Boolean(field));
+      // Freeze the page behind an open popover, keeping the scrollbar's space so nothing shifts
+      if (field && !root.classList.contains('is-locked')) root.style.setProperty('--sbw', `${window.innerWidth - root.clientWidth}px`);
+      root.classList.toggle('is-locked', Boolean(field));
     };
     // Switching between fields, or opening with the keyboard, skips the animation.
     if (instant || (open && field)) instantly(apply); else apply();
@@ -307,9 +310,14 @@ if (search) {
 
   const focusTell = (prefill?: string) => {
     if (prefill !== undefined) { tell.value = prefill; syncGhost(); }
-    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-    setOpen(tellField, true);
-    focusBrief();
+    const open = () => { setOpen(tellField, true); focusBrief(); };
+    if (window.scrollY < 2 || reduceMotion) { window.scrollTo({ top: 0 }); open(); return; }
+    // Scroll up first; the panel (and the scroll lock) waits until the page has arrived
+    let done = false;
+    const finish = () => { if (!done) { done = true; open(); } };
+    window.addEventListener('scrollend', finish, { once: true });
+    window.setTimeout(finish, 900);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   for (const link of $$('[data-focus-tell]')) link.addEventListener('click', (e) => { e.preventDefault(); focusTell(); });
   for (const link of $$('[data-ask]')) link.addEventListener('click', (e) => {

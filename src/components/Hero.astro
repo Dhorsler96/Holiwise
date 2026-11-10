@@ -41,7 +41,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="field__value" data-value>Anywhere</span>
         </button>
         <div class="pop" role="listbox" aria-label="Where">
-          <p class="pop__title">Start with a place, or a feeling</p>
+          <p class="pop__title serif">Start with a place, or a feeling</p>
           {places.map((p, i) => <button class="pop__opt" type="button" role="option" aria-selected={i === 0 ? 'true' : 'false'} data-opt={p}>{p}</button>)}
         </div>
       </div>
@@ -52,7 +52,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="field__value" data-value>Any dates</span>
         </button>
         <div class="pop" aria-label="When">
-          <p class="pop__title">Roughly when?</p>
+          <p class="pop__title serif">Roughly when?</p>
           <div class="pop__chips">
             {dates.map((d, i) => <button class="chip" type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-opt={d}>{d}</button>)}
           </div>
@@ -65,7 +65,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="field__value" data-value>2 guests</span>
         </button>
         <div class="pop" aria-label="Who">
-          <p class="pop__title">Who’s travelling?</p>
+          <p class="pop__title serif">Who’s travelling?</p>
           {[['Adults', 'adults', 2, 1], ['Children', 'children', 0, 0], ['Rooms', 'rooms', 1, 1]].map(([label, key, value, min]) => (
             <div class="stepper" data-step={key} data-min={min}>
               <span>{label}</span>
@@ -86,8 +86,8 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="tell__ghost" data-ghost data-examples={JSON.stringify(hero.tellUsExamples)} aria-hidden="true">“{hero.tellUsExamples[0]}”</span>
         </button>
         <div class="pop pop--tell" role="dialog" aria-labelledby="tell-title">
-          <p class="tell__title serif" id="tell-title">Where are you thinking</p>
-          <div class="pop__chips tell__chips">
+          <p class="pop__title serif" id="tell-title">Where are you thinking</p>
+          <div class="pop__chips">
             {suggestions.map((t) => <button class="chip" type="button" aria-pressed="false" data-suggest={t}>{t}</button>)}
           </div>
           <textarea name="brief" rows="5" placeholder="Two weeks in Greece in June with the kids, somewhere with a good beach club, adults-only and quiet…" aria-label="Describe the trip you have in mind" data-tell></textarea>
