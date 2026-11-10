@@ -10,7 +10,6 @@ const suggestions: string[] = hero.tellSuggestions ?? [
   'A villa for the whole family',
   'Short flight, great food',
 ];
-const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4l1.9 5.1L18 11l-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9L11 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M19 2v4M17 4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
 ---
 <section class="hero" id="top" data-theme="dark">
   <div class="hero__media">
@@ -41,7 +40,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="field__value" data-value>Anywhere</span>
         </button>
         <div class="pop" role="listbox" aria-label="Where">
-          <p class="pop__title serif">Start with a place, or a feeling</p>
+          <p class="pop__title">Start with a place, or a feeling</p>
           {places.map((p, i) => <button class="pop__opt" type="button" role="option" aria-selected={i === 0 ? 'true' : 'false'} data-opt={p}>{p}</button>)}
         </div>
       </div>
@@ -52,7 +51,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="field__value" data-value>Any dates</span>
         </button>
         <div class="pop" aria-label="When">
-          <p class="pop__title serif">Roughly when?</p>
+          <p class="pop__title">Roughly when?</p>
           <div class="pop__chips">
             {dates.map((d, i) => <button class="chip" type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-opt={d}>{d}</button>)}
           </div>
@@ -65,7 +64,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
           <span class="field__value" data-value>2 guests</span>
         </button>
         <div class="pop" aria-label="Who">
-          <p class="pop__title serif">Who’s travelling?</p>
+          <p class="pop__title">Who’s travelling?</p>
           {[['Adults', 'adults', 2, 1], ['Children', 'children', 0, 0], ['Rooms', 'rooms', 1, 1]].map(([label, key, value, min]) => (
             <div class="stepper" data-step={key} data-min={min}>
               <span>{label}</span>
@@ -81,7 +80,7 @@ const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24"
 
       <div class="field field--tell" data-field="tell">
         <button class="field__btn" type="button" aria-haspopup="dialog" aria-expanded="false">
-          <span class="field__name"><Fragment set:html={sparkle} />Or just tell us <em class="beta">Beta</em></span>
+          <span class="field__name">Or just tell us</span>
           <span class="field__value tell__value" data-tell-value></span>
           <span class="tell__ghost" data-ghost data-examples={JSON.stringify(hero.tellUsExamples)} aria-hidden="true">“{hero.tellUsExamples[0]}”</span>
         </button>

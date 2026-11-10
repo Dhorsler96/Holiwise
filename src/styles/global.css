@@ -311,12 +311,19 @@ ul { list-style: none; }
 .field--tell .tell__ghost.is-hidden { display: none; }
 .beta { font-style: normal; font-size: 10px; line-height: 1; letter-spacing: 0.04em; padding: 3px 6px; border-radius: 2px; background: var(--ink); color: #fff; }
 /* Brief panel: solid, wide, as in Figma (274:2864) */
-.field[data-field="where"] .pop { width: 420px; }
-.pop.pop--tell { left: auto; right: 0; width: min(790px, calc(100vw - 2 * var(--gutter))); transform-origin: calc(100% - 120px) 100%; }
-.pop--tell .pop__chips { max-width: none; }
+.pop.pop--tell {
+  left: auto; right: 0; width: min(790px, calc(100vw - 2 * var(--gutter))); padding: 22px; border-radius: 4px;
+  background: rgba(253, 253, 253, 0.86);
+  box-shadow: 0 0 0 1px var(--stroke), 0 30px 60px -20px rgba(0, 0, 0, 0.28), 0 10px 20px -10px rgba(0, 0, 0, 0.1);
+  transform-origin: calc(100% - 120px) 100%;
+}
+.pop--tell .pop__title { padding: 0; margin-bottom: 16px; font-size: 28px; line-height: 38px; letter-spacing: -0.02em; text-transform: none; color: var(--ink); }
+.pop--tell .pop__chips { padding: 0; max-width: none; gap: 6px 14px; }
+.pop--tell .chip { height: 30px; padding: 0 12px; font-size: 13px; border-color: var(--stroke); }
+@media (hover: hover) and (pointer: fine) { .pop--tell .chip:not([aria-pressed='true']):hover { border-color: var(--stroke-strong); } }
 .pop--tell textarea {
   display: block; width: 100%; height: 132px; margin-top: 16px; padding: 16px;
-  border: 1px solid var(--stroke); border-radius: 8px; outline: none; resize: none; background: #fff; overflow-y: auto;
+  border: 1px solid var(--stroke); border-radius: 8px; outline: none; resize: none; background: transparent; overflow-y: auto;
   font: inherit; font-size: 14px; line-height: 1.5; color: var(--ink);
   transition: border-color 150ms ease-out;
 }
@@ -339,12 +346,10 @@ ul { list-style: none; }
 
 /* Popovers scale from their trigger. Keyboard opens and field-to-field switches are instant. */
 .pop {
-  position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 5; min-width: 320px;
-  padding: 22px; border-radius: 4px; color: var(--ink);
-  /* Frosted near-white: reads as the solid Figma panel, with the photo softly blurred through it */
-  background: rgba(253, 253, 253, 0.86); -webkit-backdrop-filter: var(--glass-blur) saturate(1.5); backdrop-filter: var(--glass-blur) saturate(1.5);
+  position: absolute; left: 0; bottom: calc(100% + 10px); z-index: 5; min-width: 280px;
+  padding: 8px; border-radius: 14px; background: var(--glass-light); -webkit-backdrop-filter: var(--glass-blur) saturate(1.5); backdrop-filter: var(--glass-blur) saturate(1.5); color: var(--ink);
   border: 1px solid transparent;
-  box-shadow: 0 0 0 1px var(--stroke), 0 30px 60px -20px rgba(0, 0, 0, 0.28), 0 10px 20px -10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 1px oklch(0 0 0 / 0.06), 0 24px 60px -12px rgba(0, 0, 0, 0.35);
   overscroll-behavior: contain;
   transform-origin: 24px 100%;
   /* Closed: slightly low, small and soft. Exit is a quick 150ms fade-down. */
@@ -365,21 +370,20 @@ ul { list-style: none; }
 .search[data-instant] .pop { transition-duration: 0ms !important; transition-delay: 0ms !important; }
 .search[data-instant] .pop > * { animation: none !important; }
 /* Every popover opens with a serif title, as the brief panel does */
-.pop__title { font-size: 28px; line-height: 38px; letter-spacing: -0.02em; margin-bottom: 12px; }
-.pop__opt { display: flex; align-items: center; justify-content: space-between; width: calc(100% + 24px); margin-inline: -12px; padding: 9px 12px; border-radius: 4px; font-size: 14.5px; text-align: left; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+.pop__title { padding: 8px 12px 6px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pop__opt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border-radius: 6px; font-size: 14.5px; text-align: left; transition: transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
 .pop__opt small { color: var(--muted); font-size: 12.5px; }
 .pop__opt:not(:disabled):active { transform: scale(0.96); }
-.pop__opt[aria-selected='true'] { background: rgba(26, 26, 26, 0.05); }
-@media (hover: hover) and (pointer: fine) { .pop__opt:hover { background: rgba(26, 26, 26, 0.05); } }
-.pop__chips { display: flex; flex-wrap: wrap; gap: 6px 14px; max-width: 420px; }
-.chip { height: 30px; padding: 0 12px; border-radius: 4px; border: 1px solid var(--stroke); font-size: 13px; transition-property: transform, background-color, color, border-color; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
+.pop__opt[aria-selected='true'] { background: var(--mist); }
+@media (hover: hover) and (pointer: fine) { .pop__opt:hover { background: var(--mist); } }
+.pop__chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 8px 8px; max-width: 340px; }
+.chip { height: 34px; padding: 0 14px; border-radius: 4px; border: 1px solid var(--line); font-size: 14px; transition-property: transform, background-color, color, border-color; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
 .chip:not(:disabled):active { transform: scale(0.96); }
 .chip[aria-pressed='true'] { background: var(--ink); color: #fff; border-color: var(--ink); }
-@media (hover: hover) and (pointer: fine) { .chip:not([aria-pressed='true']):hover { border-color: var(--stroke-strong); } }
-.stepper { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 12px 0; font-size: 14.5px; }
-.stepper + .stepper { border-top: 1px solid var(--stroke); }
+@media (hover: hover) and (pointer: fine) { .chip:not([aria-pressed='true']):hover { border-color: var(--ink); } }
+.stepper { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 10px 12px; font-size: 14.5px; }
 .stepper__ctrl { display: flex; align-items: center; gap: 12px; }
-.stepper__ctrl button { width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--stroke); display: grid; place-items: center; font-size: 17px; line-height: 1; transition-property: transform, border-color, opacity; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
+.stepper__ctrl button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--rule); display: grid; place-items: center; font-size: 17px; line-height: 1; transition-property: transform, border-color, opacity; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
 .stepper__ctrl button:not(:disabled):active { transform: scale(0.96); }
 .stepper__ctrl button:disabled { opacity: 0.3; cursor: default; }
 .stepper__ctrl output { min-width: 16px; text-align: center; font-variant-numeric: tabular-nums; }
