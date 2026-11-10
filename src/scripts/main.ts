@@ -264,16 +264,17 @@ if (search) {
   });
 }
 
-/* ---------- Carousel: drag with momentum, friction at the ends, snap to a card ---------- */
+/* ---------- Carousel: loops, drag with momentum, snaps to a card ---------- */
 const carousel = $('[data-carousel]');
 if (carousel) {
   const track = $('[data-track]', carousel)!;
   const cards = $$('.card', track);
+  const n = Number(track.dataset.count) || cards.length; // cards are rendered as three copies
   const prev = $<HTMLButtonElement>('[data-prev]');
   const next = $<HTMLButtonElement>('[data-next]');
-  const last = cards.length - 1;
-  let index = 0;
+  let index = n; // start on the first card of the middle copy
   let step = 0;
+  let settle = 0;
 
   const measure = () => { step = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth; };
   const currentX = () => new DOMMatrixReadOnly(getComputedStyle(track).transform).m41;
@@ -281,17 +282,26 @@ if (carousel) {
     track.style.transition = duration && !reduceMotion ? `transform ${duration}ms cubic-bezier(0.32, 0.72, 0, 1)` : 'none';
     track.style.transform = `translate3d(${x}px, 0, 0)`;
   };
+  const wrap = (i: number) => ((i % n) + n) % n;
+  // Every copy of the current card is marked active, so hopping between copies is invisible.
+  const markActive = () => cards.forEach((card, k) => card.classList.toggle('is-active', k % n === wrap(index)));
+  // After a move ends, hop back into the middle copy without animation.
+  const recentre = () => {
+    if (index >= n && index < 2 * n) return;
+    index = wrap(index) + n;
+    setX(-index * step);
+  };
   const goTo = (i: number, duration = 560) => {
-    index = Math.min(last, Math.max(0, i));
+    window.clearTimeout(settle);
+    index = i;
     setX(-index * step, duration);
-    cards.forEach((card, n) => card.classList.toggle('is-active', n === index));
-    if (prev) prev.disabled = index === 0;
-    if (next) next.disabled = index === last;
+    markActive();
+    settle = window.setTimeout(recentre, reduceMotion ? 0 : duration + 20);
   };
 
   measure();
-  goTo(0, 0);
-  window.addEventListener('resize', () => { measure(); goTo(index, 0); });
+  goTo(index, 0);
+  window.addEventListener('resize', () => { measure(); recentre(); setX(-index * step); });
   prev?.addEventListener('click', () => goTo(index - 1, keyboard ? 0 : 560));
   next?.addEventListener('click', () => goTo(index + 1, keyboard ? 0 : 560));
   carousel.addEventListener('keydown', (e) => {
@@ -311,7 +321,13 @@ if (carousel) {
     pointerId = e.pointerId;
     dragging = false;
     startPointer = e.clientX;
-    startX = currentX(); // pick the track up wherever it is, even mid-animation
+    window.clearTimeout(settle);
+    // Pick the track up wherever it is, even mid-animation, shifted into the middle copy.
+    const x = currentX();
+    const at = Math.round(-x / step);
+    startX = at < n ? x - n * step : at >= 2 * n ? x + n * step : x;
+    index = Math.round(-startX / step);
+    setX(startX);
     samples = [{ x: e.clientX, t: e.timeStamp }];
   });
 
@@ -324,11 +340,7 @@ if (carousel) {
       carousel.setPointerCapture(e.pointerId);
       carousel.classList.add('is-dragging');
     }
-    const min = -last * step;
-    let x = startX + dx;
-    if (x > 0) x *= 0.3; // friction past the first card
-    else if (x < min) x = min + (x - min) * 0.3; // and past the last
-    setX(x);
+    setX(startX + dx);
     samples.push({ x: e.clientX, t: e.timeStamp });
     if (samples.length > 6) samples.shift();
   });
@@ -336,17 +348,17 @@ if (carousel) {
   const release = (e: PointerEvent) => {
     if (e.pointerId !== pointerId) return;
     pointerId = null;
-    if (!dragging) return;
+    if (!dragging) { goTo(Math.round(-currentX() / step), 300); return; }
     dragging = false;
     carousel.classList.remove('is-dragging');
     const first = samples[0];
     const lastSample = samples[samples.length - 1];
     const dt = Math.max(1, lastSample.t - first.t);
     const velocity = (lastSample.x - first.x) / dt; // px per ms
-    const x = currentX();
-    let target = Math.round(-(x + velocity * 220) / step);
+    const from = Math.round(-startX / step);
+    let target = Math.round(-(currentX() + velocity * 220) / step);
     // A quick flick is enough: no need to drag past half a card.
-    if (Math.abs(velocity) > 0.11 && target === index) target += velocity < 0 ? 1 : -1;
+    if (Math.abs(velocity) > 0.11 && target === from) target += velocity < 0 ? 1 : -1;
     goTo(target, 620);
     // The click that follows a drag should not follow a link.
     const swallow = (ev: Event) => { ev.preventDefault(); ev.stopPropagation(); };

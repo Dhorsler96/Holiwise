@@ -15,19 +15,23 @@ const { data } = Astro.props;
   </div>
 
   <div class="carousel" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label={data.heading}>
-    <div class="carousel__track" data-track>
-      {data.destinations.map((d: any, i: number) => (
-        <article class:list={['card', { 'is-active': i === 0 }]} data-inview aria-label={`${i + 1} of ${data.destinations.length}: ${d.title}`}>
-          <div class="card__media" data-wipe style={d.image.lqip ? `background-image:url(${d.image.lqip})` : undefined}>
-            <img src={d.image.src} alt={d.image.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
-          </div>
-          <div class="card__body">
-            <h3 class="card__title">{d.title}</h3>
-            <p class="card__summary">{d.summary}</p>
-            <a class="arrow-link" href="#top" data-ask={d.title}>Ask about this <span>→</span></a>
-          </div>
-        </article>
-      ))}
+    <div class="carousel__track" data-track data-count={data.destinations.length}>
+      {/* Three copies so the carousel loops with a card peeking on both sides. Only the middle copy is exposed to assistive tech. */}
+      {[0, 1, 2].flatMap((copy) => data.destinations.map((d: any, i: number) => {
+        const real = copy === 1;
+        return (
+          <article class:list={['card', { 'is-active': real && i === 0 }]} data-inview aria-hidden={real ? undefined : 'true'} inert={!real} aria-label={real ? `${i + 1} of ${data.destinations.length}: ${d.title}` : undefined}>
+            <div class="card__media" data-wipe style={d.image.lqip ? `background-image:url(${d.image.lqip})` : undefined}>
+              <img src={d.image.src} alt={real ? d.image.alt : ''} loading={real && i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">{d.title}</h3>
+              <p class="card__summary">{d.summary}</p>
+              <a class="arrow-link" href="#top" data-ask={d.title}>Ask about this <span>→</span></a>
+            </div>
+          </article>
+        );
+      }))}
     </div>
   </div>
 </section>
