@@ -33,7 +33,7 @@ export const HOME_QUERY = defineQuery(/* groq */ `
     howItWorks{ heading, steps[]{ _key, title, description, illustration } },
     whereNext{
       heading, intro, ctaLabel,
-      destinations[]->{ _id, title, "slug": slug.current, summary, image{ ${imageFragment} } }
+      destinations[]->{ _id, title, "slug": slug.current, summary, "video": video.asset->url, image{ ${imageFragment} } }
     },
     favourites{ heading, intro, stays[]{ _key, place, title, details, summary, price, image{ ${imageFragment} } } },
     deal{ heading, body, reassurance, stayTitle, eyebrow, benefits[]{ _key, label, value }, priceLabel, price },
@@ -94,6 +94,7 @@ export async function getSiteContent(): Promise<SiteContent> {
                 title: d.title,
                 slug: d.slug,
                 summary: d.summary,
+                video: d.video ?? undefined,
                 image: toImg(d.image, 2000, s.whereNext.destinations[i % s.whereNext.destinations.length].image),
               }))
             : s.whereNext.destinations,

@@ -639,6 +639,19 @@ if (carousel) {
   }, { passive: false });
 }
 
+/* ---------- Where next videos: play while on screen, pause when not ---------- */
+const cardVideos = $$<HTMLVideoElement>('[data-card-video]');
+if (cardVideos.length && !reduceMotion) {
+  for (const v of cardVideos) v.addEventListener('playing', () => v.classList.add('is-playing'), { once: true });
+  const io = new IntersectionObserver((entries) => {
+    for (const { target, isIntersecting } of entries) {
+      const v = target as HTMLVideoElement;
+      if (isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+    }
+  }, { threshold: 0 });
+  cardVideos.forEach((v) => io.observe(v));
+}
+
 /* ---------- Final CTA parallax: transform written straight to the element ---------- */
 if (!reduceMotion) {
   for (const section of $$('[data-parallax]')) {

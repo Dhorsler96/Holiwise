@@ -151,9 +151,11 @@
           "slug": "seychelles",
           "summary": "Granite coves, clear water and very little to do. From the beaches of Mahé to a private island of your own, we’ll match the stay to the pace you want.",
           "image": {
-            "src": "/images/seychelles.jpg",
+            "src": "/images/where-seychelles-poster.jpg",
             "alt": "Two paddleboarders on clear turquoise water"
-          }
+          },
+          "video": "/video/where-seychelles.mp4",
+          "_note": "INTERNAL ONLY: Belmond video used as a placeholder, not licensed for public use."
         },
         {
           "title": "Rhodes",
@@ -178,18 +180,22 @@
           "slug": "corfu",
           "summary": "Green hills dropping into quiet coves on the north-east coast. Take a boat for the day and stop wherever looks good.",
           "image": {
-            "src": "/images/corfu.jpg",
+            "src": "/images/where-corfu-poster.jpg",
             "alt": "A cove on the coast of Corfu"
-          }
+          },
+          "video": "/video/where-corfu.mp4",
+          "_note": "INTERNAL ONLY: Belmond video used as a placeholder, not licensed for public use."
         },
         {
           "title": "Puglia",
           "slug": "puglia",
           "summary": "Masserie among the olive groves, white towns and the clearest sea in Italy. Best explored slowly, with dinner booked for you each night.",
           "image": {
-            "src": "/images/puglia.jpg",
+            "src": "/images/where-puglia-poster.jpg",
             "alt": "Cliffs and clear water on the Puglia coast"
-          }
+          },
+          "video": "/video/where-puglia.mp4",
+          "_note": "INTERNAL ONLY: Belmond video used as a placeholder, not licensed for public use."
         }
       ]
     },
