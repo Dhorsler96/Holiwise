@@ -266,6 +266,7 @@ if (search) {
   const tellValue = $('[data-tell-value]', tellField)!;
   const suggests = $$<HTMLButtonElement>('[data-suggest]', tellField);
   const ghost = $('[data-ghost]', search)!;
+  const briefGhost = $('[data-brief-ghost]', tellField)!;
   const examples: string[] = JSON.parse(ghost.dataset.examples || '[]');
   let example = 0;
   const syncGhost = () => {
@@ -273,6 +274,7 @@ if (search) {
     tellValue.textContent = brief ? `“${brief}”` : '';
     tellValue.classList.toggle('is-set', Boolean(brief));
     ghost.classList.toggle('is-hidden', Boolean(brief));
+    briefGhost.parentElement!.classList.toggle('has-value', tell.value.length > 0);
     const lower = tell.value.toLowerCase();
     for (const chip of suggests) chip.setAttribute('aria-pressed', String(lower.includes(chip.dataset.suggest!.toLowerCase())));
   };
@@ -296,14 +298,17 @@ if (search) {
   const closeBrief = () => { setOpen(null, keyboard); $<HTMLElement>('.field__btn', tellField)!.focus({ preventScroll: true }); };
   $('[data-tell-done]', tellField)!.addEventListener('click', closeBrief);
   tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); closeBrief(); } });
+  // Every few seconds the example changes: in the field while the panel is closed, in the brief box while it's open.
   if (examples.length > 1 && !reduceMotion) {
     window.setInterval(() => {
-      if (document.hidden || tell.value || open === tellField) return;
-      ghost.classList.add('is-out');
+      if (document.hidden || tell.value) return;
+      const shown = open === tellField ? briefGhost : ghost;
+      shown.classList.add('is-out');
       window.setTimeout(() => {
         example = (example + 1) % examples.length;
         ghost.textContent = `“${examples[example]}”`;
-        ghost.classList.remove('is-out');
+        briefGhost.textContent = examples[example];
+        shown.classList.remove('is-out');
       }, 150);
     }, 3600);
   }

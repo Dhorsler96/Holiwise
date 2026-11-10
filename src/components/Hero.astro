@@ -89,7 +89,10 @@ const suggestions: string[] = hero.tellSuggestions ?? [
           <div class="pop__chips">
             {suggestions.map((t) => <button class="chip" type="button" aria-pressed="false" data-suggest={t}>{t}</button>)}
           </div>
-          <textarea name="brief" rows="5" placeholder="Two weeks in Greece in June with the kids, somewhere with a good beach club, adults-only and quiet…" aria-label="Describe the trip you have in mind" data-tell></textarea>
+          <div class="tell__box">
+            <textarea name="brief" rows="5" aria-label="Describe the trip you have in mind" data-tell></textarea>
+            <span class="tell__example" data-brief-ghost aria-hidden="true">{hero.tellUsExamples[0]}</span>
+          </div>
           <div class="tell__foot">
             <button class="link" type="button" data-tell-reset>Reset</button>
             <span class="tell__hint" aria-hidden="true"><kbd>Enter</kbd> to finish</span>
