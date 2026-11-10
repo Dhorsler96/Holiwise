@@ -296,7 +296,7 @@ ul { list-style: none; }
 .field__btn { transition: background-color 150ms ease-out; border-radius: 4px; -webkit-tap-highlight-color: transparent; }
 .field__btn:active .field__value { transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) { .field__btn:hover { background: rgba(255, 255, 255, 0.5); } }
-.field__name { letter-spacing: 0.06em; color: #222; }
+.field__name { letter-spacing: 0.01em; color: #222; }
 .field__value { color: rgba(0, 0, 0, 0.6); transform-origin: left center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition-property: transform, filter, opacity; transition-duration: 150ms; transition-timing-function: ease-out; }
 .field__value.is-swapping { filter: blur(4px); opacity: 0.4; }
 .field__value.is-set { color: var(--ink); }
