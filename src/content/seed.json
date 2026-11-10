@@ -45,7 +45,7 @@
       "headline": "Leave it with us",
       "intro": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and your agent sends three options in minutes.",
       "poster": { "src": "/images/hero-poster.jpg", "alt": "Aerial view of a hotel garden and pool beside a lagoon" },
-      "videoUrl": null,
+      "videoUrl": "/video/hero.mp4",
       "helper": "Not sure where to go? Just tell us, and your agent sends three options",
       "tellUsExamples": [
         "A long weekend somewhere warm…",
