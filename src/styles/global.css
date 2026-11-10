@@ -73,7 +73,7 @@ body, [data-theme='light'] { --bg: #ffffff; --fg: #1a1a1a; --fg-muted: #6b6b6b; 
 /* With JS, sections go transparent and take the body's palette, so the whole page fades together.
    Without JS each section keeps its own colours from the rules above. */
 .js body[data-theme] [data-theme] { --bg: inherit; --fg: inherit; --fg-muted: inherit; --rule: inherit; --surface: inherit; }
-.js body[data-theme] { transition-property: --bg, --fg, --fg-muted, --rule, --surface; transition-duration: 700ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+.js body[data-theme] { transition-property: --bg, --fg, --fg-muted, --rule, --surface; transition-duration: 350ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
 .js .statement, .js .how, .js .where, .js .deal { background: transparent; }
 
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
@@ -146,12 +146,16 @@ ul { list-style: none; }
   background: var(--btn-fill); transform: translateY(101%);
   transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1);
 }
-.btn__label { position: relative; display: block; overflow: hidden; line-height: 1.4; }
-.btn__text { display: block; transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1); }
-.btn__text::after { content: attr(data-text); position: absolute; left: 0; top: 100%; width: 100%; color: var(--btn-fg-hover); }
+/* Rolling label, shared by buttons and text links: the text rolls up to a copy of itself.
+   Buttons colour the copy with their hover colour; links keep currentColor. */
+.roll { position: relative; display: inline-block; overflow: hidden; vertical-align: top; line-height: 1.4; }
+.roll__text { position: relative; display: block; transition: transform 300ms cubic-bezier(0.65, 0, 0.35, 1); }
+.roll__text::after { content: attr(data-text); position: absolute; left: 0; top: 100%; width: 100%; white-space: nowrap; color: var(--roll-color, currentColor); }
+.btn { --roll-color: var(--btn-fg-hover); }
+.js .link.is-rolling::after { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .btn.is-rolling:hover .btn__fill, .btn.is-rolling:focus-visible .btn__fill { transform: translateY(0); transition-duration: 400ms; }
-  .btn.is-rolling:hover .btn__text, .btn.is-rolling:focus-visible .btn__text { transform: translateY(-100%); transition-duration: 400ms; }
+  .is-rolling:hover .roll__text, .is-rolling:focus-visible .roll__text { transform: translateY(-100%); transition-duration: 400ms; }
   .btn--ghost-light.is-rolling:hover { border-color: #fff; }
   .btn:not(.is-rolling):hover { background: var(--btn-fill); color: var(--btn-fg-hover); border-color: var(--btn-fill); }
 }
@@ -166,9 +170,9 @@ ul { list-style: none; }
 @media (hover: hover) and (pointer: fine) { .link:hover::after { transform: scaleX(1); } }
 
 .arrow-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; font-size: 14px; -webkit-tap-highlight-color: transparent; }
-.arrow-link span { display: inline-block; transition: transform 200ms var(--ease-out); }
+.arrow-link__arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 .arrow-link:active { opacity: 0.7; }
-@media (hover: hover) and (pointer: fine) { .arrow-link:hover span { transform: translateX(4px); } }
+@media (hover: hover) and (pointer: fine) { .arrow-link:hover .arrow-link__arrow { transform: translateX(4px); } }
 
 /* ---------- Staged entrances: opacity + 4px blur + 12px rise, 300ms, chunks 100ms apart ---------- */
 .js [data-reveal] {
@@ -529,7 +533,7 @@ ul { list-style: none; }
   .js .statement.is-in .statement__rule { opacity: 1; }
   .link::after { transform: none; opacity: 0; transition: opacity 150ms ease-out; }
   @media (hover: hover) and (pointer: fine) { .link:hover::after { opacity: 1; } }
-  .arrow-link span { transition: none; transform: none !important; }
+  .arrow-link__arrow { transition: none; transform: none !important; }
   .js .opt--l { transform: translate(-65px, 22px) rotate(-8deg) !important; }
   .js .opt--r { transform: translate(65px, 22px) rotate(8deg) !important; }
   .js [data-wipe] { clip-path: none; }
@@ -540,7 +544,8 @@ ul { list-style: none; }
   /* Buttons: the fill fades in place and the label changes colour, no rising or rolling */
   .btn__fill { transform: none !important; opacity: 0; transition: opacity 150ms ease-out !important; }
   .btn.is-rolling:hover .btn__fill { opacity: 1; }
-  .btn__text { transform: none !important; transition: color 150ms ease-out !important; }
-  .btn__text::after { display: none; }
-  .btn.is-rolling:hover .btn__text { color: var(--btn-fg-hover); }
+  .roll__text { transform: none !important; transition: color 150ms ease-out, opacity 150ms ease-out !important; }
+  .roll__text::after { display: none; }
+  .btn.is-rolling:hover .roll__text { color: var(--btn-fg-hover); }
+  .link.is-rolling:hover .roll__text, .arrow-link.is-rolling:hover .roll__text { opacity: 0.6; }
 }

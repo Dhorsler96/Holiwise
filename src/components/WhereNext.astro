@@ -27,7 +27,7 @@ const { data } = Astro.props;
             <div class="card__body">
               <h3 class="card__title">{d.title}</h3>
               <p class="card__summary">{d.summary}</p>
-              <a class="arrow-link" href="#top" data-ask={d.title}>Ask about this <span>→</span></a>
+              <a class="arrow-link" href="#top" data-ask={d.title}>Ask about this <span class="arrow-link__arrow" aria-hidden="true">→</span></a>
             </div>
           </article>
         );

@@ -37,25 +37,36 @@ for (const el of $$('[data-inview]')) {
   observers.get(threshold)!.observe(el);
 }
 
-/* ---------- Buttons: rising fill and rolling label ---------- */
+/* ---------- Hover: rolling labels on every button and text link; buttons also take a rising fill ---------- */
+const makeRoll = (text: string) => {
+  const roll = document.createElement('span');
+  roll.className = 'roll';
+  const inner = document.createElement('span');
+  inner.className = 'roll__text';
+  inner.dataset.text = text;
+  inner.textContent = text;
+  roll.append(inner);
+  return roll;
+};
 for (const btn of $$('.btn')) {
   const fill = document.createElement('span');
   fill.className = 'btn__fill';
   fill.setAttribute('aria-hidden', 'true');
   // The search button swaps its own label to "Sent", so it only takes the fill.
-  if (!btn.matches('[data-submit]')) {
-    const text = btn.textContent!.trim();
-    const label = document.createElement('span');
-    label.className = 'btn__label';
-    const inner = document.createElement('span');
-    inner.className = 'btn__text';
-    inner.dataset.text = text;
-    inner.textContent = text;
-    label.append(inner);
-    btn.replaceChildren(label);
-  }
+  if (!btn.matches('[data-submit]')) btn.replaceChildren(makeRoll(btn.textContent!.trim()));
   btn.prepend(fill);
   btn.classList.add('is-rolling');
+}
+for (const link of $$('.link')) {
+  link.replaceChildren(makeRoll(link.textContent!.trim()));
+  link.classList.add('is-rolling');
+}
+// "Ask about this →": the words roll, the arrow keeps its nudge
+for (const link of $$('.arrow-link')) {
+  const textNode = Array.from(link.childNodes).find((n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim());
+  if (!textNode) continue;
+  textNode.replaceWith(makeRoll(textNode.textContent!.trim()));
+  link.classList.add('is-rolling');
 }
 
 /* ---------- Scroll themes: the section across the middle of the viewport sets the page palette ---------- */
