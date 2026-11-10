@@ -3,6 +3,14 @@ const { hero, destinations } = Astro.props;
 const words = hero.headline.split(' ');
 const places = ['Anywhere', 'Somewhere warm', ...destinations.slice(0, 4).map((d: any) => d.title)];
 const dates = ['Any dates', 'This weekend', 'Next month', 'February half-term', 'Easter', 'Summer'];
+const suggestions: string[] = hero.tellSuggestions ?? [
+  'Somewhere warm in February',
+  'Adults-only and quiet',
+  'A villa for the whole family',
+  'Short flight, great food',
+  'Surprise us',
+];
+const sparkle = '<svg class="sparkle" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4l1.9 5.1L18 11l-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9L11 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M19 2v4M17 4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
 ---
 <section class="hero" id="top" data-theme="dark">
   <div class="hero__media">
@@ -71,12 +79,27 @@ const dates = ['Any dates', 'This weekend', 'Next month', 'February half-term', 
         </div>
       </div>
 
-      <div class="field field--tell">
-        <label class="field__label">
-          <span class="field__name">Or just tell us</span>
-          <input type="text" name="brief" autocomplete="off" aria-label="Or just tell us what you have in mind" data-tell />
+      <div class="field field--tell" data-field="tell">
+        <button class="field__btn" type="button" aria-haspopup="dialog" aria-expanded="false">
+          <span class="field__name"><Fragment set:html={sparkle} />Or just tell us <em class="beta">Beta</em></span>
+          <span class="field__value tell__value" data-tell-value></span>
           <span class="tell__ghost" data-ghost data-examples={JSON.stringify(hero.tellUsExamples)} aria-hidden="true">“{hero.tellUsExamples[0]}”</span>
-        </label>
+        </button>
+        <div class="pop pop--tell" role="dialog" aria-label="Just tell us">
+          <div class="tell__head">
+            <p class="tell__title serif">Just tell us</p>
+            <span class="tell__optional">(optional)</span>
+            <em class="beta">Beta</em>
+          </div>
+          <textarea name="brief" rows="3" placeholder="Describe the trip you have in mind…" aria-label="Describe the trip you have in mind" data-tell></textarea>
+          <div class="pop__chips tell__chips">
+            {suggestions.map((t) => <button class="chip" type="button" aria-pressed="false" data-suggest={t}>{t}</button>)}
+          </div>
+          <div class="tell__foot">
+            <button class="link" type="button" data-tell-reset>Reset</button>
+            <button class="btn btn--dark" type="button" data-tell-done>Done</button>
+          </div>
+        </div>
       </div>
 
       <button class="btn btn--dark search__submit" type="submit" data-submit>

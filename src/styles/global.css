@@ -295,8 +295,28 @@ ul { list-style: none; }
 .field__value.is-swapping { filter: blur(4px); opacity: 0.4; }
 .field__value.is-set { color: var(--ink); }
 .field--tell { flex: 1.35 1 0; }
-.field--tell .field__label { cursor: text; position: relative; }
-.field--tell input { width: 100%; border: 0; background: none; outline: none; padding: 0; font-size: 14px; color: var(--ink); }
+/* "Or just tell us": the field shows the brief (or rotating examples); the panel holds the writing */
+.field--tell .field__btn { position: relative; }
+.field--tell .field__name { display: inline-flex; align-items: center; gap: 6px; }
+.sparkle { flex: none; }
+.tell__value:empty { display: none; }
+/* The rotating example sits where the value would, in flow under the label */
+.field--tell .tell__ghost { position: static; display: block; max-width: 100%; }
+.field--tell .tell__ghost.is-hidden { display: none; }
+.beta { font-style: normal; font-size: 10px; line-height: 1; letter-spacing: 0.04em; padding: 3px 6px; border-radius: 2px; background: var(--ink); color: #fff; }
+.pop--tell { left: auto; right: 0; width: min(440px, calc(100vw - 2 * var(--gutter))); padding: 20px 20px 16px; transform-origin: calc(100% - 24px) 100%; }
+.tell__head { display: flex; align-items: center; gap: 10px; }
+.tell__title { font-size: 26px; line-height: 1; letter-spacing: -0.02em; }
+.tell__optional { font-size: 14px; color: var(--muted); }
+.pop--tell textarea {
+  display: block; width: 100%; min-height: 64px; margin: 16px 0 14px; padding: 0;
+  border: 0; outline: none; resize: none; background: none;
+  font: inherit; font-size: 20px; line-height: 1.35; color: var(--ink);
+}
+.pop--tell textarea::placeholder { color: rgba(0, 0, 0, 0.38); }
+.tell__chips { padding: 0; max-width: none; }
+.tell__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; }
+.tell__foot .link { font-size: 14px; }
 .tell__ghost { position: absolute; left: 32px; right: 12px; bottom: 16px; color: rgba(0, 0, 0, 0.6); pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition-property: opacity, filter, transform; transition-duration: 300ms; transition-timing-function: ease-out; }
 .tell__ghost.is-out { opacity: 0; filter: blur(4px); transform: translateY(-12px); transition-duration: 150ms; }
 .tell__ghost.is-hidden { opacity: 0; transition-duration: 0ms; }

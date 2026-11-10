@@ -124,7 +124,7 @@ window.addEventListener('pointerdown', () => { keyboard = false; }, true);
 const search = $<HTMLFormElement>('[data-search]');
 if (search) {
   const fields = $$('.field[data-field]', search);
-  const tell = $<HTMLInputElement>('[data-tell]', search)!;
+  const tell = $<HTMLTextAreaElement>('[data-tell]', search)!;
   let open: HTMLElement | null = null;
 
   const instantly = (fn: () => void) => {
@@ -167,6 +167,7 @@ if (search) {
     });
     pop.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      if (e.target instanceof HTMLTextAreaElement) return;
       const items = $$<HTMLButtonElement>('button:not(:disabled)', pop);
       const i = items.indexOf(document.activeElement as HTMLButtonElement);
       const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
@@ -257,15 +258,44 @@ if (search) {
     window.addEventListener('resize', () => place(current(), false));
   }
 
-  // "Or just tell us": rotating examples stand in for a placeholder.
+  // "Or just tell us": a panel to write the brief, with suggestions; the field shows what was written.
+  const tellField = fields.find((f) => f.dataset.field === 'tell')!;
+  const tellValue = $('[data-tell-value]', tellField)!;
+  const suggests = $$<HTMLButtonElement>('[data-suggest]', tellField);
   const ghost = $('[data-ghost]', search)!;
   const examples: string[] = JSON.parse(ghost.dataset.examples || '[]');
   let example = 0;
-  const syncGhost = () => ghost.classList.toggle('is-hidden', tell.value.length > 0);
+  const syncGhost = () => {
+    const brief = tell.value.trim().replace(/\s+/g, ' ');
+    tellValue.textContent = brief ? `“${brief}”` : '';
+    tellValue.classList.toggle('is-set', Boolean(brief));
+    ghost.classList.toggle('is-hidden', Boolean(brief));
+    const lower = tell.value.toLowerCase();
+    for (const chip of suggests) chip.setAttribute('aria-pressed', String(lower.includes(chip.dataset.suggest!.toLowerCase())));
+  };
   tell.addEventListener('input', syncGhost);
+  const focusBrief = () => { tell.focus({ preventScroll: true }); tell.setSelectionRange(tell.value.length, tell.value.length); };
+  $('.field__btn', tellField)!.addEventListener('click', () => { if (open === tellField) focusBrief(); });
+  for (const chip of suggests) chip.addEventListener('click', () => {
+    const text = chip.dataset.suggest!;
+    const pressed = chip.getAttribute('aria-pressed') === 'true';
+    if (pressed) {
+      // Take the suggestion back out, along with the separator it brought
+      const i = tell.value.toLowerCase().indexOf(text.toLowerCase());
+      tell.value = (tell.value.slice(0, i) + tell.value.slice(i + text.length)).replace(/^[\s,]+|[\s,]+$/g, '').replace(/,\s*,/g, ',');
+    } else {
+      tell.value = tell.value.trim() ? `${tell.value.trim().replace(/[,.]$/, '')}, ${text.toLowerCase()}` : text;
+    }
+    syncGhost();
+    focusBrief();
+  });
+  $('[data-tell-reset]', tellField)!.addEventListener('click', () => { tell.value = ''; syncGhost(); focusBrief(); });
+  const closeBrief = () => { setOpen(null, keyboard); $<HTMLElement>('.field__btn', tellField)!.focus({ preventScroll: true }); };
+  $('[data-tell-done]', tellField)!.addEventListener('click', closeBrief);
+  tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); closeBrief(); } });
   if (examples.length > 1 && !reduceMotion) {
     window.setInterval(() => {
-      if (document.hidden || tell.value || document.activeElement === tell) return;
+      if (document.hidden || tell.value || open === tellField) return;
       ghost.classList.add('is-out');
       window.setTimeout(() => {
         example = (example + 1) % examples.length;
@@ -278,7 +308,8 @@ if (search) {
   const focusTell = (prefill?: string) => {
     if (prefill !== undefined) { tell.value = prefill; syncGhost(); }
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-    tell.focus({ preventScroll: true });
+    setOpen(tellField, true);
+    focusBrief();
   };
   for (const link of $$('[data-focus-tell]')) link.addEventListener('click', (e) => { e.preventDefault(); focusTell(); });
   for (const link of $$('[data-ask]')) link.addEventListener('click', (e) => {
