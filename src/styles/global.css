@@ -392,7 +392,8 @@ ul { list-style: none; }
 .pop__search::placeholder { color: rgba(0, 0, 0, 0.4); }
 .pop__opt[hidden], .pop__empty[hidden] { display: none; }
 .field[data-field="where"] .pop { overflow-y: auto; }
-.pop__opt--custom { justify-content: flex-start; gap: 4px; }
+.pop__opt--custom { justify-content: flex-start; gap: 4px; white-space: nowrap; }
+.pop__opt--custom q { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .pop__opt--custom q { quotes: '“' '”'; }
 .pop__empty { padding: 10px 12px; font-size: 13px; color: var(--muted); }
 .pop__opt:not(:disabled):active { transform: scale(0.96); }
