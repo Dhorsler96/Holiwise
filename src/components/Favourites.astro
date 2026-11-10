@@ -1,0 +1,22 @@
+---
+/* "Some of our favourites": a grid of stays, from Figma 285:5291. */
+const { data } = Astro.props;
+---
+<section class="favs section" data-theme="light">
+  <div class="favs__head" data-reveal data-inview>
+    <h2 class="favs__title serif">{data.heading}</h2>
+    <p class="favs__intro">{data.intro}</p>
+  </div>
+  <ul class="favs__grid" data-inview data-threshold="0.1">
+    {data.stays.map((s: any, i: number) => (
+      <li class="fav" style={`--i:${i % 3}`}>
+        <div class="fav__media"><img src={s.image.src} alt={s.image.alt} loading="lazy" decoding="async" /></div>
+        <p class="fav__place">{s.place}</p>
+        <h3 class="fav__title serif">{s.title}</h3>
+        <p class="fav__details">{s.details}</p>
+        <p class="fav__summary">{s.summary}</p>
+        <p class="fav__foot">From <b>{s.price}</b></p>
+      </li>
+    ))}
+  </ul>
+</section>

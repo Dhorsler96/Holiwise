@@ -61,6 +61,24 @@ export const homePage = defineType({
       ],
     }),
     defineField({
+      name: 'favourites', type: 'object', group: 'ideas', title: 'Some of our favourites',
+      fields: [
+        defineField({ name: 'heading', type: 'string' }),
+        defineField({ name: 'intro', type: 'text', rows: 2 }),
+        defineField({
+          name: 'stays', type: 'array', validation: (rule) => rule.max(9),
+          of: [defineArrayMember({ type: 'object', name: 'favouriteStay', fields: [
+            defineField({ name: 'place', type: 'string', title: 'Country or region' }),
+            defineField({ name: 'title', type: 'string', title: 'Stay', validation: (rule) => rule.required() }),
+            defineField({ name: 'details', type: 'string', description: 'e.g. 6 nights, 2 guests from' }),
+            defineField({ name: 'summary', type: 'text', rows: 2 }),
+            defineField({ name: 'price', type: 'string', description: 'Shown after "From", e.g. £5,573' }),
+            imageField('image'),
+          ], preview: { select: { title: 'title', subtitle: 'place', media: 'image' } } })],
+        }),
+      ],
+    }),
+    defineField({
       name: 'deal', type: 'object', group: 'value', title: 'Best overall deal',
       fields: [
         defineField({ name: 'heading', type: 'string' }),

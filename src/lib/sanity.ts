@@ -35,6 +35,7 @@ export const HOME_QUERY = defineQuery(/* groq */ `
       heading, intro, ctaLabel,
       destinations[]->{ _id, title, "slug": slug.current, summary, image{ ${imageFragment} } }
     },
+    favourites{ heading, intro, stays[]{ _key, place, title, details, summary, price, image{ ${imageFragment} } } },
     deal{ heading, body, reassurance, stayTitle, eyebrow, benefits[]{ _key, label, value }, priceLabel, price },
     finalCta{ headline, primaryLabel, secondaryLabel, image{ ${imageFragment} } }
   }
@@ -96,6 +97,15 @@ export async function getSiteContent(): Promise<SiteContent> {
                 image: toImg(d.image, 2000, s.whereNext.destinations[i % s.whereNext.destinations.length].image),
               }))
             : s.whereNext.destinations,
+        },
+        favourites: {
+          ...over(s.favourites, home.favourites),
+          stays: home.favourites?.stays?.length
+            ? home.favourites.stays.map((f: any, i: number) => ({
+                ...over(s.favourites.stays[i % s.favourites.stays.length], f),
+                image: toImg(f.image, 1200, s.favourites.stays[i % s.favourites.stays.length].image),
+              }))
+            : s.favourites.stays,
         },
         deal: over(s.deal, home.deal),
         finalCta: { ...over(s.finalCta, home.finalCta), image: toImg(home.finalCta?.image, 2400, s.finalCta.image) },

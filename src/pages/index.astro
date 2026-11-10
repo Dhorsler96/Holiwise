@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import Statement from '../components/Statement.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import WhereNext from '../components/WhereNext.astro';
+import Favourites from '../components/Favourites.astro';
 import Deal from '../components/Deal.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
@@ -20,6 +21,7 @@ const { home, settings } = await getSiteContent();
     <Statement text={home.statement} />
     <HowItWorks data={home.howItWorks} />
     <WhereNext data={home.whereNext} />
+    <Favourites data={home.favourites} />
     <Deal data={home.deal} />
     <FinalCta data={home.finalCta} agentHref={settings.agentHref} />
   </main>
