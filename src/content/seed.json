@@ -200,40 +200,40 @@
       ]
     },
     "deal": {
-      "heading": "Premium is by invitation.",
-      "body": "A private membership for people who travel often. Members are invited by someone who already travels with us, and every trip is looked after by their own agent.",
-      "reassurance": "No membership fee. Entry is by referral.",
-      "ctaLabel": "Request an invitation",
+      "heading": "Premium members pay less.",
+      "body": "Holiwise Premium unlocks member rates below the public price, then adds upgrades, credits and extras to every stay.",
+      "reassurance": "Every price checked against booking direct.",
+      "ctaLabel": "Join Premium",
       "ctaHref": "/premium",
-      "ctaNote": "We reply to every request personally.",
-      "cardTitle": "Holiwise Premium",
-      "badge": "Invite only",
-      "eyebrow": "Every member has",
+      "ctaNote": "Membership from £XX a month",
+      "stayTitle": "Example trip · 6 nights",
+      "eyebrow": "What Premium adds",
       "benefits": [
         {
-          "label": "Your own agent",
-          "value": "One person, start to finish"
+          "label": "Member rate",
+          "value": "Below the public price"
         },
         {
-          "label": "A direct line",
-          "value": "On WhatsApp, whenever you need it"
+          "label": "Suite upgrade",
+          "value": "Ocean view"
         },
         {
-          "label": "Partner privileges",
-          "value": "Upgrades and extras where available"
+          "label": "Hotel credit",
+          "value": "$150 per stay"
         },
         {
-          "label": "First look",
-          "value": "New hotels and openings"
+          "label": "Breakfast daily",
+          "value": "For two"
         },
         {
-          "label": "Invitations to give",
-          "value": "Bring the people you travel with"
+          "label": "Late checkout",
+          "value": "Until 4pm"
         }
       ],
-      "inviteLabel": "Already have an invitation?",
-      "inviteLinkLabel": "Enter your code",
-      "inviteLinkHref": "/premium#invite"
+      "compareLabel": "Booking direct",
+      "comparePrice": "£X,XXX",
+      "priceLabel": "Your Premium price",
+      "price": "£X,XXX"
     },
     "finalCta": {
       "headline": "Wherever you’re going next,\nwe’ll help you out",

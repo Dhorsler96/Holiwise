@@ -93,14 +93,6 @@ if (themed.length) {
     { rootMargin: '-50% 0px -50% 0px' },
   );
   themed.forEach((el) => themeIO.observe(el));
-  // A section marked data-theme-early takes over as soon as its top edge enters from below,
-  // so it never shows the previous section's colour first. Scrolling back up still uses the middle line.
-  const earlyIO = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting && entry.boundingClientRect.top > 0) document.body.dataset.theme = (entry.target as HTMLElement).dataset.theme!;
-    }
-  }, { threshold: 0.001 }); // a sliver must show: a section only touching the screen's edge doesn't count
-  $$('[data-theme-early]').forEach((el) => earlyIO.observe(el));
 }
 
 /* ---------- Nav: solid after the fold, tucks away on the way down ---------- */
