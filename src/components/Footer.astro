@@ -8,14 +8,13 @@ const pay = [['visa-on-dark', 'Visa'], ['mastercard', 'Mastercard'], ['american-
   <div class="footer__top">
     <div>
       <p class="footer__headline serif">{settings.footerHeadline}</p>
-      <p class="footer__tagline">{settings.tagline}</p>
       <div class="footer__ctas">
         <a class="btn btn--light" href={settings.agentHref}>{settings.agentLabel}</a>
         <a class="btn btn--ghost-light" href="/#top" data-focus-tell>Start planning</a>
       </div>
       <p class="footer__contact">
         <a class="link" href={`tel:${settings.phone.replace(/\s/g, '')}`}>{settings.phone}</a>
-        {settings.socials.map((s: any) => <a class="link" href={s.href}>{s.label}</a>)}
+        {settings.socials.map((s: any) => <><span aria-hidden="true">·</span><a class="link" href={s.href}>{s.label}</a></>)}
       </p>
     </div>
     <nav class="footer__cols" aria-label="Footer">
