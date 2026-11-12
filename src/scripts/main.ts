@@ -12,14 +12,14 @@ const nextFrame = (fn: () => void) => requestAnimationFrame(() => requestAnimati
    so it loads once the page is idle; until then, and under reduced motion, text swaps instantly. */
 type Morpher = { set: (text: string) => void };
 const morphers = new Map<HTMLElement, Morpher>();
-const setText = (el: HTMLElement, text: string) => {
+export const setText = (el: HTMLElement, text: string) => {
   const m = morphers.get(el);
   if (m) m.set(text);
   else el.textContent = text;
 };
 if (!reduceMotion) {
   const load = () => import('./calligraph').then(({ morph }) => {
-    for (const el of $$('[data-value], [data-where-label], [data-submit-label], [data-brief-status]')) morphers.set(el, morph(el, { animation: 'snappy' }));
+    for (const el of $$('[data-value], [data-where-label], [data-submit-label], [data-brief-status], [data-morph]')) morphers.set(el, morph(el, { animation: 'snappy' }));
     for (const el of $$('.stepper output')) morphers.set(el, morph(el, { variant: 'number', animation: 'snappy' }));
   });
   if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 2500 });

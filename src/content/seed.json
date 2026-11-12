@@ -2,20 +2,16 @@
   "settings": {
     "nav": [
       {
-        "label": "Destinations",
-        "href": "#where-next"
-      },
-      {
-        "label": "Stories",
-        "href": "#"
+        "label": "About Us",
+        "href": "/about"
       },
       {
         "label": "Premium",
         "href": "/premium"
       },
       {
-        "label": "For companies",
-        "href": "#"
+        "label": "Stays",
+        "href": "/#stays"
       }
     ],
     "inviteLabel": "Have an invite?",
@@ -44,11 +40,11 @@
         "links": [
           {
             "label": "How it works",
-            "href": "#how-it-works"
+            "href": "/#how-it-works"
           },
           {
             "label": "Destinations",
-            "href": "#where-next"
+            "href": "/#where-next"
           },
           {
             "label": "Stories",
@@ -56,7 +52,7 @@
           },
           {
             "label": "Premium",
-            "href": "#"
+            "href": "/premium"
           },
           {
             "label": "For companies",
@@ -101,7 +97,8 @@
     ],
     "companyLine": "Holiwise Ltd · Registered in England & Wales · Company no. 15301867",
     "abtaNumber": "Y6864",
-    "iataLicence": "91205796"
+    "iataLicence": "91205796",
+    "inviteHref": "/premium#invite"
   },
   "home": {
     "hero": {
@@ -318,6 +315,209 @@
           "_note": "INTERNAL ONLY: Belmond image used as a placeholder, not licensed for public use. Replace before launch."
         }
       ]
+    }
+  },
+  "premium": {
+    "meta": {
+      "title": "Holiwise Premium · Membership by invitation",
+      "description": "A private travel service for people who travel often. Your own agent, privileges at the hotels you love, and no membership fee."
+    },
+    "hero": {
+      "headline": "Membership by invitation.",
+      "intro": "A private travel service for people who travel often. Your own agent, privileges at the hotels you love, and no membership fee.",
+      "poster": {
+        "src": "/images/premium-hero.jpg",
+        "alt": "A Four Seasons private jet on the apron at golden hour"
+      },
+      "videoUrl": null,
+      "primaryLabel": "Request an invitation",
+      "secondaryLabel": "Enter your invite code"
+    },
+    "statement": "Our premium membership is how we look after the people who travel with us most. One agent who knows how you like to travel, a direct line on WhatsApp, and partner privileges on every stay.",
+    "includes": {
+      "heading": "Looked after, start to finish.",
+      "intro": "Three things every member has, from the first message to the flight home.",
+      "pillars": [
+        {
+          "title": "Your own agent",
+          "body": "A dedicated travel agent who learns how you like to travel and handles anything travel-related, from a weekend away to a month across three countries.",
+          "points": [
+            "Personal service",
+            "One person, start to finish",
+            "On WhatsApp, whenever you need them"
+          ],
+          "image": {
+            "src": "/images/fav-mallorca.jpg",
+            "alt": ""
+          }
+        },
+        {
+          "title": "Partner privileges",
+          "body": "Member rates at over 1 million stays worldwide, with upgrades, hotel credits and breakfast added where our partners offer them.",
+          "points": [
+            "At the hotels you love",
+            "Upgrades and extras where available",
+            "Every price checked against booking direct"
+          ],
+          "image": {
+            "src": "/images/fav-france.jpg",
+            "alt": ""
+          }
+        },
+        {
+          "title": "By invitation",
+          "body": "Premium grows through the people who already travel with us. Once you are in, you can invite the people you travel with.",
+          "points": [
+            "Exclusive membership",
+            "Entry by referral, no membership fee",
+            "Invitation links to share"
+          ],
+          "image": {
+            "src": "/images/fav-peru.jpg",
+            "alt": ""
+          }
+        }
+      ]
+    },
+    "join": {
+      "heading": "Three steps to your first trip.",
+      "intro": "Most members are invited by a friend. If nobody has invited you yet, request an invitation and we will be in touch.",
+      "steps": [
+        {
+          "title": "Get invited, or ask",
+          "body": "Use the code a member sent you, or request an invitation with a few details about how you travel."
+        },
+        {
+          "title": "A short conversation",
+          "body": "Someone from our team reads every request and replies personally."
+        },
+        {
+          "title": "Meet your agent",
+          "body": "Your agent introduces themselves on WhatsApp. Tell them what you have in mind, and leave it with them."
+        }
+      ]
+    },
+    "request": {
+      "heading": "Request an invitation",
+      "intro": "Tell us a little about you and how you travel. We reply to every request personally.",
+      "heardOptions": [
+        "A friend or member",
+        "Instagram",
+        "LinkedIn",
+        "Press",
+        "Search",
+        "Somewhere else"
+      ],
+      "legal": "By requesting an invitation you agree to our terms and privacy policy.",
+      "submitLabel": "Request an invitation",
+      "thanksTitle": "Thank you. Leave it with us.",
+      "thanksBody": "We read every request personally and will be in touch by email or on WhatsApp."
+    },
+    "quotes": [
+      {
+        "quote": "Really relaxed stay at the Fairmont in Tangier. A special experience while discovering a new culture during Ramadan. Service and hospitality were incredible! Booking process was smooth despite me requesting to change the dates after my initial booking, which is really reassuring.",
+        "name": "Ben",
+        "trip": "Travelled to Morocco"
+      },
+      {
+        "quote": "I had a truly wonderful experience with Holiwise. Everything was perfectly organised, and the attention to detail made the entire trip smooth and stress-free.",
+        "name": "Natalya",
+        "trip": "Travelled to Seychelles"
+      },
+      {
+        "quote": "After booking a hotel with Holiwise last summer, which was super easy and came with great service, I have now booked a flight from Prague to Copenhagen too.",
+        "name": "Kevin",
+        "trip": "Travelled to Copenhagen"
+      },
+      {
+        "quote": "I used their concierge service and it was such a breeze. The concierge was very responsive, attentive and super efficient.",
+        "name": "Angel",
+        "trip": "Travelled to Shanghai"
+      }
+    ],
+    "press": [
+      {
+        "name": "The Independent",
+        "src": "/images/press/independent.png",
+        "w": 246,
+        "h": 17
+      },
+      {
+        "name": "Tech.eu",
+        "src": "/images/press/techeu.png",
+        "w": 75,
+        "h": 56
+      },
+      {
+        "name": "PhocusWire",
+        "src": "/images/press/phocuswire.png",
+        "w": 201,
+        "h": 53
+      },
+      {
+        "name": "Travolution",
+        "src": "/images/press/travolution.png",
+        "w": 165,
+        "h": 39
+      },
+      {
+        "name": "Dagens industri",
+        "src": "/images/press/dagens.png",
+        "w": 211,
+        "h": 39
+      },
+      {
+        "name": "EU-Startups",
+        "src": "/images/press/eustartups.png",
+        "w": 160,
+        "h": 59
+      }
+    ],
+    "faq": {
+      "heading": "Good to know",
+      "intro": "Anything else, message us and a person will reply.",
+      "items": [
+        {
+          "q": "What is Holiwise Premium?",
+          "a": "A private, invitation-only membership. Members get their own travel agent on WhatsApp, member rates at over 1 million stays, and partner privileges like upgrades and breakfast where available."
+        },
+        {
+          "q": "Does membership cost anything?",
+          "a": "No. There is no membership fee. You pay for your trips, at member rates."
+        },
+        {
+          "q": "How can I join Premium?",
+          "a": "Use the invitation a member sent you, or request one with the form on this page. Someone from our team reads every request."
+        },
+        {
+          "q": "How long does it take to hear back about my request?",
+          "a": "We reply to every request personally, by email or on WhatsApp. If a member invited you, have their code to hand."
+        },
+        {
+          "q": "What kind of trips can my agent help with?",
+          "a": "Anything travel-related: a hotel for the weekend, flights, or a longer trip across several places. Simple stays come back quickly; bigger trips get the time they deserve."
+        },
+        {
+          "q": "What are the requirements to join?",
+          "a": "Premium is designed for people who travel often. Tell us a little about how you travel and we will take it from there."
+        },
+        {
+          "q": "Is there Premium for companies?",
+          "a": "Yes. Choose Company on the request form and tell us about the way your team travels."
+        },
+        {
+          "q": "Can I invite friends or family?",
+          "a": "Yes. Members can share invitation links with the people they travel with."
+        },
+        {
+          "q": "Can membership be revoked?",
+          "a": "Membership is personal and non-transferable, and is offered in line with our terms."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Travel, looked after.",
+      "body": "Request an invitation, or use the code a member sent you."
     }
   }
 }

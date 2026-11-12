@@ -1,13 +1,14 @@
 ---
 const { settings } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <header class="nav" data-nav>
   <a class="nav__brand" href="/" aria-label="Holiwise home">HOLIWISE</a>
   <nav class="nav__links" aria-label="Main">
-    {settings.nav.map((item: any) => <a class="link" href={item.href}>{item.label}</a>)}
+    {settings.nav.map((item: any) => <a class="link" href={item.href} aria-current={item.href === path ? 'page' : undefined}>{item.label}</a>)}
   </nav>
   <div class="nav__actions">
-    <a class="link nav__invite" href="#">{settings.inviteLabel}</a>
+    <a class="link nav__invite" href={settings.inviteHref} data-invite-link>{settings.inviteLabel}</a>
     <a class="btn btn--ghost-light" href={settings.agentHref}>{settings.agentLabel}</a>
   </div>
 </header>

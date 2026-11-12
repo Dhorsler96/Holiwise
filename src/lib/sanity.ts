@@ -79,6 +79,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     const s = seed.home;
     return {
       settings: over(seed.settings, settings),
+      premium: seed.premium,
       home: {
         hero: {
           ...over(s.hero, home.hero),

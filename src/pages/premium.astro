@@ -1,0 +1,197 @@
+---
+/* Holiwise Premium, from Figma 347:54 (Week 02). Same motion and interaction language as the
+   homepage: staged reveals, word-by-word headlines, rolling buttons, drawn underlines and a page
+   palette that fades between section themes as you scroll. */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Statement from '../components/Statement.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteContent } from '../lib/sanity';
+import '../styles/premium.css';
+
+const { premium: p, settings } = await getSiteContent();
+const words = (text: string) => text.split(' ');
+const check = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 8.4l2.6 2.6L12 5.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="${dir === 'right' ? 'M1 5h10M7 1l4 4-4 4' : 'M11 5H1M5 1L1 5l4 4'}" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+---
+<Base title={p.meta.title} description={p.meta.description} image={p.hero.poster.src}>
+  <Nav settings={settings} />
+  <main>
+    <!-- 01 Hero -->
+    <section class="phero" id="top" data-theme="dark">
+      <div class="phero__media">
+        <img src={p.hero.poster.src} alt={p.hero.poster.alt} fetchpriority="high" decoding="async" />
+        {p.hero.videoUrl && <video src={p.hero.videoUrl} poster={p.hero.poster.src} muted loop playsinline preload="metadata" data-hero-video aria-hidden="true"></video>}
+      </div>
+      <div class="phero__copy">
+        <h1 class="phero__title serif" aria-label={p.hero.headline}>
+          <span class="mask" aria-hidden="true">{words(p.hero.headline).map((w, i, a) => <><span style={`--i:${i}`}>{w}</span>{i < a.length - 1 ? ' ' : ''}</>)}</span>
+        </h1>
+        <p class="phero__intro">{p.hero.intro}</p>
+        <div class="phero__actions">
+          <a class="btn btn--light" href="#request" data-to-request>{p.hero.primaryLabel}</a>
+          <a class="btn btn--ghost-light" href="#invite" data-to-invite>{p.hero.secondaryLabel}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Statement -->
+    <Statement text={p.statement} theme="sage" size="sm" />
+
+    <!-- 03 What membership includes -->
+    <section class="pm pm-inc" data-theme="light">
+      <div class="pm-head" data-inview>
+        <h2 class="pm-title serif"><span class="mask">{words(p.includes.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+        <p class="pm-intro" data-reveal data-inview style="--i:2">{p.includes.intro}</p>
+      </div>
+      <ul class="pillars" data-stagger data-inview data-threshold="0.15">
+        {p.includes.pillars.map((pl: any, i: number) => (
+          <li class="pillar" style={`--i:${i}`}>
+            <div class="pillar__media"><img src={pl.image.src} alt={pl.image.alt} loading="lazy" decoding="async" /></div>
+            <div class="pillar__body">
+              <h3 class="pillar__title serif">{pl.title}</h3>
+              <p class="pillar__text">{pl.body}</p>
+              <ul class="pillar__points">{pl.points.map((pt: string) => <li><Fragment set:html={check} />{pt}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 04 How to join -->
+    <section class="pm pm-join" data-theme="dark">
+      <div class="pm-head" data-inview>
+        <h2 class="pm-title serif"><span class="mask">{words(p.join.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+        <p class="pm-intro" data-reveal data-inview style="--i:2">{p.join.intro}</p>
+      </div>
+      <ol class="psteps" data-stagger data-inview data-threshold="0.2">
+        {p.join.steps.map((s: any, i: number) => (
+          <li class="pstep" style={`--i:${i}`}>
+            <span class="pstep__n">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="pstep__title serif">{s.title}</h3>
+              <p class="pstep__text">{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- 06 Request an invitation -->
+    <section class="pm pm-req" id="request" data-theme="dark">
+      <div class="pm-req__grid">
+        <div class="pm-head" data-inview>
+          <h2 class="pm-title serif"><span class="mask">{words(p.request.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+          <p class="pm-intro" data-reveal data-inview style="--i:2">{p.request.intro}</p>
+        </div>
+
+        <div class="preq" data-reveal data-inview data-threshold="0.1" style="--i:1">
+          <form class="pform" data-invite-form novalidate>
+            <div class="pform__seg" role="group" aria-label="Applying as">
+              <button class="chip" type="button" aria-pressed="true" data-seg="individual">Individual</button>
+              <button class="chip" type="button" aria-pressed="false" data-seg="company">Company</button>
+            </div>
+            <div class="pform__row">
+              <label class="pfield"><span class="pfield__label">First name</span><input name="firstName" type="text" autocomplete="given-name" placeholder="Enter your first name" required data-error="Please add your first name" /><span class="pfield__err" aria-live="polite"></span></label>
+              <label class="pfield"><span class="pfield__label">Last name</span><input name="lastName" type="text" autocomplete="family-name" placeholder="Enter your last name" required data-error="Please add your last name" /><span class="pfield__err" aria-live="polite"></span></label>
+            </div>
+            <div class="pform__row">
+              <label class="pfield"><span class="pfield__label">Email</span><input name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@email.com" required data-error="Please add an email we can reply to" /><span class="pfield__err" aria-live="polite"></span></label>
+              <label class="pfield"><span class="pfield__label">Phone, for WhatsApp</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+44 7700 900000" /><span class="pfield__err" aria-live="polite"></span></label>
+            </div>
+            <div class="pform__row">
+              <label class="pfield"><span class="pfield__label" data-morph data-occupation-label>Occupation</span><input name="occupation" type="text" autocomplete="organization-title" placeholder="What you do" data-occupation /><span class="pfield__err" aria-live="polite"></span></label>
+              <label class="pfield" data-invite-field><span class="pfield__label">Invite code (optional)</span><input id="invite" name="inviteCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="If a member invited you" /><span class="pfield__err" aria-live="polite"></span></label>
+            </div>
+            <div class="pform__group" role="group" aria-labelledby="travel-label">
+              <span class="pfield__label" id="travel-label">How do you usually travel?</span>
+              <div class="pform__chips">
+                {['For leisure', 'For work', 'Both'].map((t) => <button class="chip" type="button" aria-pressed="false" data-travel={t}>{t}</button>)}
+              </div>
+            </div>
+            <label class="pfield"><span class="pfield__label">How did you hear about us?</span>
+              <span class="pselect">
+                <select name="heard">
+                  <option value="" selected>Select one</option>
+                  {p.request.heardOptions.map((o: string) => <option>{o}</option>)}
+                </select>
+              </span>
+            </label>
+            <button class="btn btn--light pform__submit" type="submit" data-submit><span data-morph data-submit-text>{p.request.submitLabel}</span></button>
+            <p class="pform__legal">{p.request.legal}</p>
+          </form>
+
+          <div class="pthanks" data-thanks hidden>
+            <span class="pthanks__dot"><Fragment set:html={check} /></span>
+            <h3 class="pthanks__title serif" tabindex="-1" data-thanks-title>{p.request.thanksTitle}</h3>
+            <p class="pthanks__text">{p.request.thanksBody}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 What members say -->
+    <section class="pm pm-quotes" data-theme="butter">
+      <div class="pquotes" data-quotes role="region" aria-roledescription="carousel" aria-label="What members say" tabindex="0" data-reveal data-inview>
+        <div class="pquotes__stage" aria-live="polite">
+          {p.quotes.map((q: any, i: number) => (
+            <figure class:list={['pquote', i === 0 && 'is-active']} aria-roledescription="slide" aria-label={`${i + 1} of ${p.quotes.length}`} aria-hidden={i === 0 ? undefined : 'true'} data-quote>
+              <blockquote class="pquote__text serif">“{q.quote}”</blockquote>
+              <figcaption class="pquote__who">
+                <span class="pquote__avatar" aria-hidden="true">{q.name.charAt(0)}</span>
+                <span><b>{q.name}</b><small>{q.trip}</small></span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <div class="pquotes__ctrl">
+          <div class="pquotes__dots">
+            {p.quotes.map((q: any, i: number) => <button class="pquotes__dot" type="button" aria-label={`Show review ${i + 1}, from ${q.name}`} aria-current={i === 0 ? 'true' : 'false'} data-dot={i}></button>)}
+          </div>
+          <div class="pquotes__arrows">
+            <button class="pquotes__arrow" type="button" aria-label="Previous review" data-prev><Fragment set:html={chevron('left')} /></button>
+            <button class="pquotes__arrow" type="button" aria-label="Next review" data-next><Fragment set:html={chevron('right')} /></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 As featured in -->
+    <section class="pm pm-press" data-theme="light">
+      <p class="pm-eyebrow" data-reveal data-inview>As featured in</p>
+      <ul class="press" data-stagger data-inview data-threshold="0.4">
+        {p.press.map((l: any, i: number) => <li style={`--i:${i}`}><img src={l.src} alt={l.name} width={l.w} height={l.h} loading="lazy" decoding="async" /></li>)}
+      </ul>
+    </section>
+
+    <!-- 09 FAQ -->
+    <section class="pm pm-faq" data-theme="mist">
+      <div class="pm-faq__grid">
+        <div class="pm-head" data-inview>
+          <h2 class="pm-title serif"><span class="mask">{words(p.faq.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+          <p class="pm-intro" data-reveal data-inview style="--i:2">{p.faq.intro}</p>
+        </div>
+        <div class="faq" data-faq data-stagger data-inview data-threshold="0.1">
+          {p.faq.items.map((it: any, i: number) => (
+            <div class:list={['faq__item', i === 0 && 'is-open']} style={`--i:${Math.min(i, 6)}`}>
+              <h3><button class="faq__q" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-${i}`} id={`faq-q-${i}`}><span>{it.q}</span><span class="faq__icon" aria-hidden="true"></span></button></h3>
+              <div class="faq__a" id={`faq-${i}`} role="region" aria-labelledby={`faq-q-${i}`}><div><p>{it.a}</p></div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 Closing CTA -->
+    <section class="pm pm-cta" data-theme="green">
+      <h2 class="pm-cta__title serif" data-inview data-threshold="0.4"><span class="mask">{words(p.cta.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+      <p class="pm-cta__text" data-reveal data-inview style="--i:3">{p.cta.body}</p>
+      <div class="pm-cta__actions" data-reveal data-inview style="--i:4">
+        <a class="btn btn--light" href="#request" data-to-request>{p.hero.primaryLabel}</a>
+        <a class="btn btn--ghost-light" href="#invite" data-to-invite>{p.hero.secondaryLabel}</a>
+      </div>
+    </section>
+  </main>
+  <Footer settings={settings} />
+  <script>import '../scripts/premium.ts';</script>
+</Base>
