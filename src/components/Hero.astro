@@ -1,15 +1,9 @@
 ---
 const { hero, destinations } = Astro.props;
 const words = hero.headline.split(' ');
-const places = ['Anywhere', 'Somewhere warm', ...destinations.slice(0, 4).map((d: any) => d.title)];
-const dates = ['Any dates', 'This weekend', 'Next month', 'February half-term', 'Easter', 'Summer'];
-const suggestions: string[] = hero.tellSuggestions ?? [
-  'Somewhere warm in February',
-  'Adults-only and quiet',
-  'Surprise me',
-  'A villa for the whole family',
-  'Short flight, great food',
-];
+// Search is a place and real dates (11 Nov call): the places we can show options for, then popular cities.
+const places = [...destinations.map((d: any) => d.title), 'Paris', 'Rome', 'Lisbon', 'Dubai'];
+const suggestions: string[] = hero.tellSuggestions ?? ['Flights and a hotel', 'A hotel in one city', 'A special occasion', 'Several stops, one trip', 'Not sure yet'];
 ---
 <section class="hero" id="top" data-theme="dark">
   <div class="hero__media">
@@ -37,13 +31,13 @@ const suggestions: string[] = hero.tellSuggestions ?? [
       <div class="field" data-field="where">
         <button class="field__btn" type="button" aria-haspopup="listbox" aria-expanded="false">
           <span class="field__name" data-where-label>Where</span>
-          <span class="field__value" data-value>Anywhere</span>
+          <span class="field__value" data-value>Search a city or hotel</span>
         </button>
         <div class="pop" role="listbox" aria-label="Where">
-          <p class="pop__title">Start with a place, or a feeling</p>
-          <input class="pop__search" type="text" autocomplete="off" placeholder="Search a place, or type a feeling" aria-label="Search a place, or type a feeling" data-where-search />
+          <p class="pop__title">Where are you going?</p>
+          <input class="pop__search" type="text" autocomplete="off" placeholder="Search a city or hotel" aria-label="Search a city or hotel" data-where-search />
           <button class="pop__opt pop__opt--custom" type="button" role="option" aria-selected="false" data-opt="" data-opt-custom hidden></button>
-          {places.map((p, i) => <button class="pop__opt" type="button" role="option" aria-selected={i === 0 ? 'true' : 'false'} data-opt={p}>{p}</button>)}
+          {places.map((p) => <button class="pop__opt" type="button" role="option" aria-selected="false" data-opt={p}>{p}</button>)}
           <p class="pop__empty" data-where-empty hidden>Nothing in the list yet, but your agent can find it.</p>
         </div>
       </div>
@@ -51,12 +45,18 @@ const suggestions: string[] = hero.tellSuggestions ?? [
       <div class="field" data-field="when">
         <button class="field__btn" type="button" aria-haspopup="true" aria-expanded="false">
           <span class="field__name">When</span>
-          <span class="field__value" data-value>Any dates</span>
+          <span class="field__value" data-value>Add dates</span>
         </button>
-        <div class="pop" aria-label="When">
-          <p class="pop__title">Roughly when?</p>
-          <div class="pop__chips">
-            {dates.map((d, i) => <button class="chip" type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-opt={d}>{d}</button>)}
+        <div class="pop pop--dates" aria-label="When">
+          <p class="pop__title">Your dates</p>
+          <div class="dates">
+            <label class="dates__f"><span>Check in</span><input type="date" data-date-in /></label>
+            <label class="dates__f"><span>Check out</span><input type="date" data-date-out /></label>
+          </div>
+          <div class="dates__foot">
+            <span class="dates__nights" data-nights>Pick your dates</span>
+            <button class="link" type="button" data-dates-clear>Clear</button>
+            <button class="btn btn--dark" type="button" data-dates-done>Done</button>
           </div>
         </div>
       </div>
@@ -83,12 +83,12 @@ const suggestions: string[] = hero.tellSuggestions ?? [
 
       <div class="field field--tell" data-field="tell">
         <button class="field__btn" type="button" aria-haspopup="dialog" aria-expanded="false">
-          <span class="field__name">Or just tell us</span>
+          <span class="field__name">Or tell your agent</span>
           <span class="field__value tell__value" data-tell-value></span>
           <span class="tell__ghost" data-ghost data-examples={JSON.stringify(hero.tellUsExamples)} aria-hidden="true">“{hero.tellUsExamples[0]}”</span>
         </button>
         <div class="pop pop--tell" role="dialog" aria-labelledby="tell-title">
-          <p class="pop__title serif" id="tell-title">Where are you thinking</p>
+          <p class="pop__title serif" id="tell-title">Tell your agent</p>
           <div class="pop__chips">
             {suggestions.map((t) => <button class="chip" type="button" aria-pressed="false" data-suggest={t}>{t}</button>)}
           </div>
@@ -98,8 +98,8 @@ const suggestions: string[] = hero.tellSuggestions ?? [
           </div>
           <div class="tell__foot">
             <button class="link" type="button" data-tell-reset>Reset</button>
-            <span class="tell__hint" aria-hidden="true"><kbd>Enter</kbd> to finish</span>
-            <button class="btn btn--dark" type="button" data-tell-done>Done</button>
+            <span class="tell__hint">Replies on WhatsApp · a hotel in minutes, bigger trips within a few hours</span>
+            <button class="btn btn--dark" type="button" data-tell-done>Send to agent</button>
           </div>
         </div>
       </div>

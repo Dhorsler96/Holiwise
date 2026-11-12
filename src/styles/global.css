@@ -740,7 +740,41 @@ ul { list-style: none; }
 .brief__price b { font-weight: 500; font-size: 16px; color: var(--ink); }
 
 .brief__refine { display: flex; align-items: center; gap: 12px; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--stroke); opacity: 0; transition: opacity 300ms ease-out 300ms; }
-.brief.is-done .brief__refine { opacity: 1; }
+.brief[data-stage='options'] .brief__refine { opacity: 1; }
+.brief:not([data-stage='options']) .brief__refine, .brief[data-stage='handoff'] .brief__options { display: none; }
+
+/* Handed to the agent: what happens next, how long, and where the reply arrives */
+@keyframes brief-in { from { opacity: 0; transform: translateY(12px); filter: blur(4px); } }
+.brief__next { display: none; margin-top: 28px; }
+.brief[data-stage='handoff'] .brief__next { display: block; }
+.brief__steps { margin: 12px 0 0; padding: 0; list-style: none; }
+.brief__step { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 16px; padding: 16px 0; border-top: 1px solid var(--stroke); font-size: 14px; line-height: 1.4; }
+.brief__n { font-size: 13px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.brief__step-text { display: flex; flex-direction: column; gap: 2px; }
+.brief__step-text b { font-weight: 500; }
+.brief__step-text span, .brief__when { color: var(--muted); }
+.brief__when { font-size: 13px; text-align: right; white-space: nowrap; }
+.brief__reply { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding-top: 20px; border-top: 1px solid var(--stroke); }
+.brief__channel { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 14px; color: var(--muted); }
+.brief__channel .chip { height: 32px; padding: 0 12px; font-size: 13px; color: var(--ink); border-color: var(--stroke); }
+.brief__channel .chip[aria-pressed='true'] { color: #fff; }
+.brief__actions { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+.brief__actions [hidden] { display: none; }
+.brief[data-stage='handoff'] :is(.brief__eyebrow, .brief__step, .brief__reply) { animation: brief-in 300ms ease-out backwards; }
+.brief[data-stage='handoff'] .brief__next > .brief__eyebrow { animation-delay: 60ms; }
+.brief[data-stage='handoff'] .brief__step { animation-delay: calc(140ms + var(--n) * 100ms); }
+.brief[data-stage='handoff'] .brief__reply { animation-delay: 460ms; }
+
+/* When: check-in and check-out */
+.pop--dates { width: 340px; }
+.dates { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 12px 10px; }
+.dates__f { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); }
+.dates__f input { height: 40px; padding: 0 10px; border: 1px solid var(--stroke); border-radius: 4px; background: transparent; outline: none; font: inherit; font-size: 14px; color: var(--ink); transition: border-color 150ms ease-out; }
+.dates__f input:focus { border-color: var(--stroke-strong); }
+.dates__foot { display: flex; align-items: center; gap: 16px; padding: 10px 12px 4px; border-top: 1px solid var(--stroke); }
+.dates__nights { margin-right: auto; font-size: 13px; color: var(--muted); }
+.dates__foot .link { font-size: 14px; }
+.dates__foot .btn { height: 34px; padding: 0 14px; }
 .brief__refine input { flex: 1; min-width: 0; height: 40px; padding: 0 14px; border: 1px solid var(--stroke); border-radius: 4px; background: transparent; outline: none; font: inherit; font-size: 14px; color: var(--ink); transition: border-color 150ms ease-out; }
 .brief__refine input:focus { border-color: var(--stroke-strong); }
 .brief__whatsapp { font-size: 13px; white-space: nowrap; }
@@ -749,8 +783,15 @@ ul { list-style: none; }
   .brief__options { grid-template-columns: 1fr; }
   .brief__refine { flex-wrap: wrap; }
   .brief__whatsapp { width: 100%; }
+  /* Timing sits under each step, and the progress line gives the status its room */
+  .brief__step { grid-template-columns: 24px minmax(0, 1fr); row-gap: 4px; }
+  .brief__when { grid-column: 2; text-align: left; }
+  .brief__progress { display: none; }
+  .brief__agent-text { min-width: 0; }
+  .brief__actions { width: 100%; justify-content: space-between; }
 }
 @media (prefers-reduced-motion: reduce) {
   .brief__sheet, .brief__option { transform: none !important; filter: none !important; transition-property: opacity !important; transition-delay: 0ms !important; }
+  .brief[data-stage='handoff'] :is(.brief__eyebrow, .brief__step, .brief__reply) { animation-name: fade-in; }
   .brief__progress i { transition: none; }
 }

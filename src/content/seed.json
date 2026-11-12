@@ -103,18 +103,25 @@
   "home": {
     "hero": {
       "headline": "Leave it with us",
-      "intro": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and your agent sends three options in minutes.",
+      "intro": "Experience the world effortlessly. Tell us where and when, and your agent takes it from there, on WhatsApp.",
       "poster": {
         "src": "/images/hero-poster.jpg",
         "alt": "Aerial view of a hotel garden and pool beside a lagoon"
       },
       "videoUrl": "/video/hero.mp4",
-      "helper": "Not sure where to go? Just tell us, and your agent sends three options",
+      "helper": "Planning something bigger? Tell your agent, and they’ll reply on WhatsApp",
       "tellUsExamples": [
-        "A long weekend somewhere warm…",
-        "Two weeks in Greece in June, a bit of sailing…",
-        "Somewhere special for our anniversary…",
-        "Skiing in February, six of us…"
+        "Four nights in Paris, 12–16 March…",
+        "Two weeks in Greece in June with the kids…",
+        "A suite in Rome for our anniversary, late May…",
+        "Flights and a hotel in Dubai over half-term…"
+      ],
+      "tellSuggestions": [
+        "Flights and a hotel",
+        "A hotel in one city",
+        "A special occasion",
+        "Several stops, one trip",
+        "Not sure yet"
       ]
     },
     "statement": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and we’ll find you options in minutes.",

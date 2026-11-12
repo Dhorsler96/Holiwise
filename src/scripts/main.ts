@@ -129,7 +129,7 @@ window.addEventListener('keydown', () => { keyboard = true; }, true);
 window.addEventListener('pointerdown', () => { keyboard = false; }, true);
 
 /* ---------- Brief flow (prototype): the sheet that answers a written brief ---------- */
-let openBrief: ((brief: string, parts: string[], returnFocus: HTMLElement) => void) | null = null;
+let openBrief: ((brief: string, parts: string[], returnFocus: HTMLElement, place?: string) => void) | null = null;
 const flow = $('[data-brief]');
 if (flow) {
   const sheet = $('.brief__sheet', flow)!;
@@ -139,6 +139,47 @@ if (flow) {
   const bar = $('[data-brief-bar]', flow)!;
   const cards = $$('[data-option]', flow);
   const refine = $<HTMLFormElement>('[data-brief-refine]', flow)!;
+  const steps = $$('.brief__step', flow);
+  const example = $<HTMLButtonElement>('[data-brief-example]', flow)!;
+  const channels = $$<HTMLButtonElement>('[data-channel]', flow);
+  let channel = 'WhatsApp';
+  // From the 11 Nov call: a hotel in one place comes back in minutes; weeks away, several stops,
+  // flights or an occasion is a bigger trip, which takes a few hours and arrives as a PDF.
+  type Mode = 'options' | 'hotel' | 'trip';
+  let mode: Mode = 'options';
+  let place = '';
+  const known = cards.map((c) => c.dataset.option!.toLowerCase());
+  const BIG = /\b(weeks?|fortnight|month|several|stops|multi|tour|road ?trip|itinerary|island[- ]hopping|safari|flights?|occasion|anniversary|honeymoon|wedding|not sure)\b/i;
+  const classify = (text: string, where: string): Mode => {
+    const nights = Number(text.match(/(\d+)\s*nights?/i)?.[1] ?? 0);
+    if (BIG.test(text) || nights >= 8) return 'trip';
+    const hay = `${text} ${where}`.toLowerCase();
+    return known.some((k) => hay.includes(k)) ? 'options' : 'hotel';
+  };
+  const on = () => (channel === 'email' ? 'By email' : 'On WhatsApp');
+  const fillSteps = () => {
+    const rows = mode === 'trip'
+      ? [
+          ['Albin reads your brief', 'A person, not an algorithm, looks at what you’ve asked for.', 'Now'],
+          ['A quick question, if anything’s unclear', 'Usually about budget, rooms or flight times.', on()],
+          ['Your itinerary, as a PDF', 'Hotels, flights and prices for the whole trip, ready to book or tweak.', 'Within a few hours'],
+        ]
+      : [
+          ['Albin reads your brief', 'A person, not an algorithm, looks at what you’ve asked for.', 'Now'],
+          ['Rates and rooms checked', 'Every price checked against booking direct.', 'Now'],
+          ['Three hotel options', `${channel === 'email' ? 'Sent by email' : 'Sent on WhatsApp'}. Pick one, or tell Albin what to change.`, 'In a few minutes'],
+        ];
+    steps.forEach((li, i) => {
+      $('[data-step-title]', li)!.textContent = rows[i][0];
+      $('[data-step-text]', li)!.textContent = rows[i][1];
+      $('[data-step-when]', li)!.textContent = rows[i][2];
+    });
+  };
+  for (const c of channels) c.addEventListener('click', () => {
+    channel = c.dataset.channel!;
+    channels.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    fillSteps();
+  });
   let timers: number[] = [];
   let lastFocus: HTMLElement | null = null;
   let briefText = '';
@@ -162,24 +203,45 @@ if (flow) {
     return scored.sort((a, b) => b.score - a.score).slice(0, 3).map((s) => s.card);
   };
 
+  const showOptions = (where: string, text: string) => {
+    const picks = choose(briefText, where);
+    const list = picks[0].parentElement!;
+    picks.forEach((card, n) => { card.hidden = false; card.classList.toggle('is-pick', n === 0); card.style.setProperty('--n', String(n)); list.append(card); });
+    setText(status, text);
+    flow.classList.add('is-done');
+    flow.dataset.stage = 'options';
+    requestAnimationFrame(() => requestAnimationFrame(() => picks.forEach((c) => c.classList.add('is-in'))));
+  };
+
   const run = (where: string) => {
     clearTimers();
     flow.classList.remove('is-done');
+    flow.dataset.stage = 'working';
     cards.forEach((c) => { c.classList.remove('is-in'); c.hidden = true; });
     bar.style.transform = 'scaleX(0)';
     setText(status, 'Reading your brief');
     later(120, () => { bar.style.transform = 'scaleX(0.3)'; });
+    if (mode !== 'options') {
+      // Handed to the agent: say what happens next, how long it takes and where the reply arrives
+      later(1100, () => { bar.style.transform = 'scaleX(1)'; });
+      later(1700, () => {
+        fillSteps();
+        example.hidden = mode !== 'trip';
+        setText(status, mode === 'trip' ? 'Planning your trip. This takes a few hours.' : 'Finding your hotel. Options in a few minutes.');
+        flow.classList.add('is-done');
+        flow.dataset.stage = 'handoff';
+      });
+      return;
+    }
     later(1100, () => { setText(status, 'Checking prices and availability'); bar.style.transform = 'scaleX(0.7)'; });
     later(2300, () => { setText(status, 'Choosing three options'); bar.style.transform = 'scaleX(1)'; });
-    later(3300, () => {
-      const picks = choose(briefText, where);
-      const list = picks[0].parentElement!;
-      picks.forEach((card, n) => { card.hidden = false; card.classList.toggle('is-pick', n === 0); card.style.setProperty('--n', String(n)); list.append(card); });
-      setText(status, 'Three options, ready when you are');
-      flow.classList.add('is-done');
-      requestAnimationFrame(() => requestAnimationFrame(() => picks.forEach((c) => c.classList.add('is-in'))));
-    });
+    later(3300, () => showOptions(where, 'Three options, ready when you are'));
   };
+  // For the review: what a bigger trip looks like when the agent's options arrive later
+  example.addEventListener('click', () => {
+    showOptions(place, `Three options, also sent ${channel === 'email' ? 'by email' : 'to WhatsApp'} as a PDF`);
+    sheet.focus({ preventScroll: true });
+  });
 
   const close = () => {
     clearTimers();
@@ -189,9 +251,11 @@ if (flow) {
     lastFocus?.focus({ preventScroll: true });
   };
 
-  openBrief = (brief, parts, returnFocus) => {
+  openBrief = (brief, parts, returnFocus, where = '') => {
     lastFocus = returnFocus;
     briefText = brief;
+    place = where;
+    mode = classify(brief, where);
     latest = '';
     round = 0;
     quote.textContent = `“${brief.replace(/[.…]+$/, '')}”`;
@@ -202,7 +266,7 @@ if (flow) {
     sheet.scrollTop = 0;
     requestAnimationFrame(() => requestAnimationFrame(() => flow.classList.add('is-open')));
     sheet.focus({ preventScroll: true });
-    run(parts[0]);
+    run(where);
   };
 
   for (const el of $$('[data-brief-close]', flow)) el.addEventListener('click', close);
@@ -227,7 +291,8 @@ if (flow) {
     quote.textContent = `“${briefText.replace(/[.…]+$/, '')}”`;
     input.value = '';
     round++;
-    run(tags.firstElementChild?.textContent ?? '');
+    mode = 'options';
+    run(place);
   });
 }
 
@@ -236,6 +301,9 @@ const search = $<HTMLFormElement>('[data-search]');
 if (search) {
   const fields = $$('.field[data-field]', search);
   const tell = $<HTMLTextAreaElement>('[data-tell]', search)!;
+  // Search is a place and real dates; these are the empty states
+  const WHERE_EMPTY = 'Search a city or hotel';
+  const FLIGHT_EMPTY = 'London → Where to?';
   let open: HTMLElement | null = null;
 
   const instantly = (fn: () => void) => {
@@ -277,7 +345,7 @@ if (search) {
     btn.addEventListener('click', () => {
       const willOpen = open !== field;
       setOpen(willOpen ? field : null, keyboard);
-      if (willOpen && keyboard) $<HTMLElement>('button', pop)?.focus();
+      if (willOpen && keyboard) $<HTMLElement>('input, button', pop)?.focus();
     });
     pop.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -296,7 +364,7 @@ if (search) {
     if (!opt.dataset.opt) return;
     const picked = opt.hasAttribute('data-opt-custom') ? null : opt;
     $$('[data-opt]', where).forEach((o) => o.setAttribute('aria-selected', String(o === picked)));
-    setValue(where, opt.dataset.opt!, picked === $$('[data-opt]:not([data-opt-custom])', where)[0]);
+    setValue(where, opt.dataset.opt!);
     setOpen(null, keyboard);
     $<HTMLElement>('.field__btn', where)!.focus({ preventScroll: true });
   }));
@@ -344,14 +412,53 @@ if (search) {
     whereSearch.focus({ preventScroll: true });
   });
 
-  // When
+  const whereSet = () => Boolean(where.dataset.current) && where.dataset.current !== WHERE_EMPTY && where.dataset.current !== FLIGHT_EMPTY;
+
+  // When: real check-in and check-out dates; the field shows the range and the nights
   const when = fields.find((f) => f.dataset.field === 'when')!;
-  $$('[data-opt]', when).forEach((chip, i) => chip.addEventListener('click', () => {
-    $$('[data-opt]', when).forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
-    setValue(when, chip.dataset.opt!, i === 0);
+  const dateIn = $<HTMLInputElement>('[data-date-in]', when)!;
+  const dateOut = $<HTMLInputElement>('[data-date-out]', when)!;
+  const nightsLabel = $('[data-nights]', when)!;
+  const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const parse = (v: string) => { const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d); };
+  const month = (d: Date) => d.toLocaleString('en-GB', { month: 'short' });
+  const range = (a: Date, b: Date) => (a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
+    ? `${a.getDate()}–${b.getDate()} ${month(b)}`
+    : `${a.getDate()} ${month(a)} – ${b.getDate()} ${month(b)}`);
+  dateIn.min = iso(new Date());
+  dateOut.min = dateIn.min;
+  const syncDates = () => {
+    if (dateIn.value) {
+      const after = parse(dateIn.value);
+      after.setDate(after.getDate() + 1);
+      dateOut.min = iso(after);
+      if (dateOut.value && dateOut.value <= dateIn.value) dateOut.value = '';
+    }
+    if (dateIn.value && dateOut.value) {
+      const a = parse(dateIn.value);
+      const b = parse(dateOut.value);
+      const n = Math.round((b.getTime() - a.getTime()) / 864e5);
+      const nights = `${n} night${n === 1 ? '' : 's'}`;
+      nightsLabel.textContent = nights;
+      when.dataset.range = range(a, b);
+      when.dataset.stay = String(n);
+      setValue(when, `${range(a, b)} · ${nights}`);
+    } else {
+      nightsLabel.textContent = dateIn.value ? 'Now your check-out' : 'Pick your dates';
+      delete when.dataset.range;
+      setValue(when, 'Add dates', true);
+    }
+  };
+  dateIn.addEventListener('change', () => {
+    syncDates();
+    if (dateIn.value && !dateOut.value) { dateOut.focus(); try { dateOut.showPicker?.(); } catch { /* not every browser allows it */ } }
+  });
+  dateOut.addEventListener('change', syncDates);
+  $('[data-dates-clear]', when)!.addEventListener('click', () => { dateIn.value = ''; dateOut.value = ''; dateOut.min = dateIn.min; syncDates(); dateIn.focus(); });
+  $('[data-dates-done]', when)!.addEventListener('click', () => {
     setOpen(null, keyboard);
     $<HTMLElement>('.field__btn', when)!.focus({ preventScroll: true });
-  }));
+  });
 
   // Who
   const who = fields.find((f) => f.dataset.field === 'who')!;
@@ -401,8 +508,7 @@ if (search) {
       place(btn, animate);
       const flights = btn.dataset.tab === 'flights';
       setText($('[data-where-label]', where)!, flights ? 'From → To' : 'Where');
-      const current = where.dataset.current;
-      if (!current || current === 'Anywhere' || current === 'London → Anywhere') setValue(where, flights ? 'London → Anywhere' : 'Anywhere', true);
+      if (!whereSet()) setValue(where, flights ? FLIGHT_EMPTY : WHERE_EMPTY, true);
     };
     tabButtons.forEach((btn) => btn.addEventListener('click', () => select(btn, !keyboard && !reduceMotion)));
     tabs.addEventListener('keydown', (e) => {
@@ -451,9 +557,14 @@ if (search) {
     focusBrief();
   });
   $('[data-tell-reset]', tellField)!.addEventListener('click', () => { tell.value = ''; syncGhost(); focusBrief(); });
-  const closeBrief = () => { setOpen(null, keyboard); $<HTMLElement>('.field__btn', tellField)!.focus({ preventScroll: true }); };
-  $('[data-tell-done]', tellField)!.addEventListener('click', closeBrief);
-  tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); closeBrief(); } });
+  // "Send to agent" (or Enter) sends the brief straight away; an empty brief keeps the cursor in the box
+  const sendBrief = () => {
+    if (!tell.value.trim()) { focusBrief(); return; }
+    setOpen(null, true);
+    search.requestSubmit();
+  };
+  $('[data-tell-done]', tellField)!.addEventListener('click', sendBrief);
+  tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBrief(); } });
   // Every few seconds the example changes: in the field while the panel is closed, in the brief box while it's open.
   if (examples.length > 1 && !reduceMotion) {
     window.setInterval(() => {
@@ -507,17 +618,28 @@ if (search) {
 
   search.addEventListener('submit', (e) => {
     e.preventDefault();
+    const brief = tell.value.trim();
+    const place = whereSet() ? where.dataset.current! : '';
+    // A search needs a place and dates: open whichever is missing. A written brief can go straight to the agent.
+    if (!brief && !place) {
+      setOpen(where, true);
+      whereSearch.value = '';
+      filterWhere();
+      whereSearch.focus({ preventScroll: true });
+      return;
+    }
+    if (!brief && !when.dataset.range) { setOpen(when, true); dateIn.focus({ preventScroll: true }); return; }
     setOpen(null, true);
-    const parts = [where.dataset.current || 'Anywhere', when.dataset.current || 'Any dates', who.dataset.current || '2 guests'];
-    // Every search opens the brief flow. With nothing written, the brief is phrased from the fields.
+    const guests = who.dataset.current || '2 guests';
+    const parts = [place, when.dataset.range ? when.dataset.current! : '', guests].filter(Boolean);
     if (openBrief) {
-      const [w, d, g] = parts;
-      const composed = `${w === 'Anywhere' ? 'Anywhere' : w}, ${d === 'Any dates' ? 'whenever suits' : d.charAt(0).toLowerCase() + d.slice(1)}, for ${g}`;
-      openBrief(tell.value.trim() || composed, parts, submit);
+      const flights = $('[data-tab="flights"]')?.getAttribute('aria-selected') === 'true';
+      const composed = `${flights ? `Flights from London and a hotel in ${place}` : `A hotel in ${place}`}, ${when.dataset.range} (${when.dataset.stay} nights), for ${guests}`;
+      openBrief(brief || composed, parts, submit, place);
       return;
     }
     $('[data-toast-body]', toast)!.textContent = tell.value.trim() ? `“${tell.value.trim()}”` : parts.join(' · ');
-    $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will send three options.';
+    $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will be in touch on WhatsApp.';
     // "Search" morphs to "Sent" and back, the same way the field values change
     const label = $('[data-submit-label]', submit)!;
     setText(label, 'Sent');

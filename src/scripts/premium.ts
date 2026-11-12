@@ -68,7 +68,7 @@ if (form) {
     const company = b.dataset.seg === 'company';
     setText(occupationLabel, company ? 'Company' : 'Occupation');
     occupation.placeholder = company ? 'Company name' : 'What you do';
-    occupation.autocomplete = company ? 'organization' : 'organization-title';
+    occupation.setAttribute('autocomplete', company ? 'organization' : 'organization-title');
   });
 
   // How you travel: pick one, or tap it again to clear.
