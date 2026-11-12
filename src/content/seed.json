@@ -415,24 +415,46 @@
     },
     "quotes": [
       {
-        "quote": "Really relaxed stay at the Fairmont in Tangier. A special experience while discovering a new culture during Ramadan. Service and hospitality were incredible! Booking process was smooth despite me requesting to change the dates after my initial booking, which is really reassuring.",
+        "title": "Relaxed stay at the Fairmont in Tangier",
+        "date": "31 Mar 2025",
         "name": "Ben",
-        "trip": "Travelled to Morocco"
+        "trip": "Travelled to Morocco",
+        "quote": "Really relaxed stay at the Fairmont in Tangier. A special experience while discovering a new culture during Ramadan. Service and hospitality were incredible! Booking process was smooth despite me requesting to change the dates after my initial booking which is really reassuring."
       },
       {
-        "quote": "I had a truly wonderful experience with Holiwise. Everything was perfectly organised, and the attention to detail made the entire trip smooth and stress-free.",
+        "title": "Highly recommend Holiwise",
+        "date": "02 Jun 2025",
         "name": "Natalya",
-        "trip": "Travelled to Seychelles"
+        "trip": "Travelled to Seychelles",
+        "quote": "I had a truly wonderful experience with Holiwise! Everything was perfectly organized, and the attention to detail made the entire trip smooth and stress-free. A special highlight was the booking at the Four Seasons Resort Seychelles at Desroches Island. It was absolutely amazing and exceeded all expectations. The team was friendly, responsive, and clearly passionate about creating memorable travel experiences."
       },
       {
-        "quote": "After booking a hotel with Holiwise last summer, which was super easy and came with great service, I have now booked a flight from Prague to Copenhagen too.",
+        "title": "Trip to Copenhagen",
+        "date": "17 Jun 2025",
         "name": "Kevin",
-        "trip": "Travelled to Copenhagen"
+        "trip": "Travelled to Copenhagen",
+        "quote": "After booking a hotel with Holiwise last summer, which was super easy and came with great service, I’ve now booked a flight from Prague to Copenhagen. As a still somewhat price sensitive traveler, I appreciated that Holiwise not only made the process seamless but also offered the best price."
       },
       {
-        "quote": "I used their concierge service and it was such a breeze. The concierge was very responsive, attentive and super efficient.",
+        "title": "Exceeded all expectations and beyond!",
+        "date": "06 Aug 2025",
         "name": "Angel",
-        "trip": "Travelled to Shanghai"
+        "trip": "Travelled to Shanghai",
+        "quote": "I used their concierge service and wow it was such a breeze! The concierge was very responsive, attentive and super efficient. I booked all my hotels within the same day… and at much better prices than other websites! I will use Holiwise for all my future vacations and I highly recommend!"
+      },
+      {
+        "title": "Great booking experience",
+        "date": "31 May 2025",
+        "name": "Kevin",
+        "trip": "Travelled to Madrid",
+        "quote": "I’ve had the pleasure of booking hotels through Holiwise for several of my trips this year, and I’ll definitely continue using their service in the future. The selection has been excellent for my destinations (Madrid, Milan, and Belgrade), and the support during the booking process has been outstanding. If you’re looking for everything you could wish for when planning your travels, I highly recommend Holiwise."
+      },
+      {
+        "title": "Hotel bookings",
+        "date": "13 Aug 2025",
+        "name": "Qalbee",
+        "trip": "Travelled to Singapore",
+        "quote": "Recommendation from a friend, and honestly, I pretty much knew what I wanted going in. The agent, Kristian, helped by finding competitive hotel prices and making sure everything lined up. Overall, I’m really happy with the service and would definitely recommend it!"
       }
     ],
     "press": [

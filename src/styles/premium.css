@@ -120,6 +120,8 @@
 .pquote { grid-area: 1 / 1; margin: 0; opacity: 0; transform: translateY(12px); filter: blur(4px); visibility: hidden; transition: opacity 300ms ease-out, transform 300ms ease-out, filter 300ms ease-out, visibility 0s linear 300ms; }
 .pquote.is-active { opacity: 1; transform: none; filter: none; visibility: visible; transition-delay: 120ms, 120ms, 120ms, 0s; }
 .pquote__text { max-width: 1160px; margin: 0; font-size: clamp(24px, 2.5vw, 36px); line-height: 1.11; letter-spacing: -0.02em; text-wrap: pretty; }
+/* The longest reviews run a step smaller so every slide fits about the same height */
+.pquote--long .pquote__text { font-size: clamp(22px, 2.1vw, 30px); line-height: 1.15; }
 .pquote__who { display: flex; align-items: center; gap: 12px; margin-top: 40px; }
 .pquote__avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #191919; color: #fff; font-size: 14px; }
 .pquote__who b { display: block; font-size: 14px; font-weight: 500; }

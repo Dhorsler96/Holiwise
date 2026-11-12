@@ -135,7 +135,7 @@ const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox=
       <div class="pquotes" data-quotes role="region" aria-roledescription="carousel" aria-label="What members say" tabindex="0" data-reveal data-inview>
         <div class="pquotes__stage" aria-live="polite">
           {p.quotes.map((q: any, i: number) => (
-            <figure class:list={['pquote', i === 0 && 'is-active']} aria-roledescription="slide" aria-label={`${i + 1} of ${p.quotes.length}`} aria-hidden={i === 0 ? undefined : 'true'} data-quote>
+            <figure class:list={['pquote', i === 0 && 'is-active', q.quote.length > 340 && 'pquote--long']} aria-roledescription="slide" aria-label={`${i + 1} of ${p.quotes.length}`} aria-hidden={i === 0 ? undefined : 'true'} data-quote>
               <blockquote class="pquote__text serif">“{q.quote}”</blockquote>
               <figcaption class="pquote__who">
                 <span class="pquote__avatar" aria-hidden="true">{q.name.charAt(0)}</span>
