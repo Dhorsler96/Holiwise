@@ -171,3 +171,13 @@
 
 /* Office addresses: one line where it fits, breaking only between the parts */
 .awhere__addr { margin-top: 12px; font-style: normal; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
+/* A small copy icon right after the address; it turns into a tick once copied */
+.awhere__copy { position: relative; display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -6px 0 -6px 4px; vertical-align: middle; border-radius: 4px; color: var(--fg-muted); transition: color 150ms ease-out, background-color 150ms ease-out, transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+.awhere__copy::after { content: ''; position: absolute; inset: -8px; }
+@media (hover: hover) and (pointer: fine) { .awhere__copy:hover { color: var(--fg); background: rgba(0, 0, 0, 0.05); } }
+.awhere__copy:active { transform: scale(0.92); }
+.awhere__copy svg { grid-area: 1 / 1; transition: opacity 150ms ease-out, transform 200ms var(--ease-out); }
+.awhere__copy-done { opacity: 0; transform: scale(0.6); }
+.awhere__copy.is-copied { color: var(--fg); }
+.awhere__copy.is-copied .awhere__copy-icon { opacity: 0; transform: scale(0.6); }
+.awhere__copy.is-copied .awhere__copy-done { opacity: 1; transform: none; }

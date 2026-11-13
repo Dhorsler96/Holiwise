@@ -49,3 +49,23 @@ if (counters && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) 
     requestAnimationFrame(tick);
   }, { threshold: 0.4 }).observe(counters);
 }
+
+/* Office addresses: the icon copies the address, showing a tick for a moment */
+document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+  const status = btn.closest('address')?.querySelector<HTMLElement>('[data-copy-status]');
+  let timer = 0;
+  btn.addEventListener('click', async () => {
+    const text = btn.dataset.copy!;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = Object.assign(document.createElement('textarea'), { value: text });
+      area.style.cssText = 'position:fixed;opacity:0';
+      document.body.append(area); area.select(); document.execCommand('copy'); area.remove();
+    }
+    btn.classList.add('is-copied');
+    if (status) status.textContent = 'Address copied';
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => { btn.classList.remove('is-copied'); if (status) status.textContent = ''; }, 1600);
+  });
+});

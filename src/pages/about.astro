@@ -114,7 +114,12 @@ const layers = ['far', 'mid', 'near'] as const;
           <li style={`--i:${i}`}>
             <div class="awhere__img"><img src={o.image} alt={o.alt} loading="lazy" decoding="async" data-focus /></div>
             <h3 class="serif">{o.city}</h3>
-            <address class="awhere__addr">{o.address.map((line: string, i: number) => <>{i > 0 && ', '}<span class="nowrap">{line}</span></>)}</address>
+            <address class="awhere__addr">{o.address.map((line: string, i: number, all: string[]) => <>{i > 0 && ', '}<span class="nowrap">{line}{i === all.length - 1 && (
+              <button class="awhere__copy" type="button" data-copy={all.join(', ')} aria-label={`Copy the ${o.city} address`} title="Copy address">
+                <svg class="awhere__copy-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" /><path d="M9.5 2.5v-.5A1.5 1.5 0 0 0 8 .5H2A1.5 1.5 0 0 0 .5 2v6A1.5 1.5 0 0 0 2 9.5h.5" stroke="currentColor" /></svg>
+                <svg class="awhere__copy-done" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+            )}</span></>)}<span class="sr-only" aria-live="polite" data-copy-status></span></address>
           </li>
         ))}
       </ul>
