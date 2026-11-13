@@ -355,8 +355,8 @@
             "On WhatsApp, whenever you need them"
           ],
           "image": {
-            "src": "/images/fav-mallorca.jpg",
-            "alt": ""
+            "src": "/images/premium-agent.jpg",
+            "alt": "A hotel pool among palms and cypress trees"
           }
         },
         {
@@ -368,8 +368,8 @@
             "Every price checked against booking direct"
           ],
           "image": {
-            "src": "/images/fav-france.jpg",
-            "alt": ""
+            "src": "/images/premium-privileges.jpg",
+            "alt": "A guest reading in a hotel garden below wooded hills"
           }
         },
         {
@@ -381,8 +381,8 @@
             "Invitation links to share"
           ],
           "image": {
-            "src": "/images/fav-peru.jpg",
-            "alt": ""
+            "src": "/images/premium-invitation.jpg",
+            "alt": "Vineyards running down to a village at dusk"
           }
         }
       ]

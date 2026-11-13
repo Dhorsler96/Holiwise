@@ -168,6 +168,14 @@
 .pm-cta__text { margin-top: 24px; font-size: 18px; line-height: 1.3; color: var(--fg-muted); }
 .pm-cta__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 24px; }
 
+/* Fixed-height bands on desktop, content centred (Figma 347:54) */
+@media (min-width: 961px) {
+  .pm-quotes, .pm-press, .pm-cta { display: flex; flex-direction: column; justify-content: center; }
+  .pm-quotes { min-height: 776px; }
+  .pm-press { min-height: 441px; }
+  .pm-cta { min-height: 661px; }
+}
+
 /* ---------- Smaller screens ---------- */
 @media (max-width: 960px) {
   .pillars, .psteps { grid-template-columns: 1fr; }

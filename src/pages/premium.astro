@@ -15,7 +15,7 @@ const check = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-
 const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="${dir === 'right' ? 'M1 5h10M7 1l4 4-4 4' : 'M11 5H1M5 1L1 5l4 4'}" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 ---
 <Base title={p.meta.title} description={p.meta.description} image={p.hero.poster.src}>
-  <Nav settings={settings} />
+  <Nav settings={settings} showInvite={false} />
   <main>
     <!-- 01 Hero -->
     <section class="phero" id="top" data-theme="dark">
@@ -156,14 +156,6 @@ const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox=
       </div>
     </section>
 
-    <!-- 08 As featured in -->
-    <section class="pm pm-press" data-theme="light">
-      <p class="pm-eyebrow" data-reveal data-inview>As featured in</p>
-      <ul class="press" data-stagger data-inview data-threshold="0.4">
-        {p.press.map((l: any, i: number) => <li style={`--i:${i}`}><img src={l.src} alt={l.name} width={l.w} height={l.h} loading="lazy" decoding="async" /></li>)}
-      </ul>
-    </section>
-
     <!-- 09 FAQ -->
     <section class="pm pm-faq" data-theme="mist">
       <div class="pm-faq__grid">
@@ -180,6 +172,14 @@ const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox=
           ))}
         </div>
       </div>
+    </section>
+
+    <!-- 08 As featured in -->
+    <section class="pm pm-press" data-theme="light">
+      <p class="pm-eyebrow" data-reveal data-inview>As featured in</p>
+      <ul class="press" data-stagger data-inview data-threshold="0.4">
+        {p.press.map((l: any, i: number) => <li style={`--i:${i}`}><img src={l.src} alt={l.name} width={l.w} height={l.h} loading="lazy" decoding="async" /></li>)}
+      </ul>
     </section>
 
     <!-- 10 Closing CTA -->
