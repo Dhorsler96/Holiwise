@@ -583,7 +583,7 @@ ul { list-style: none; }
 .carousel.is-dragging { cursor: grabbing; }
 .carousel__track { display: flex; gap: var(--gap); padding-inline: calc((100vw - var(--card)) / 2); width: max-content; will-change: transform; }
 .card { width: var(--card); flex: none; user-select: none; }
-.card__media { position: relative; aspect-ratio: 1108 / 614; border-radius: 10px; overflow: hidden; background: #d9d9d9 center / cover no-repeat; }
+.card__media { position: relative; aspect-ratio: 1108 / 614; border-radius: 4px; overflow: hidden; background: #d9d9d9 center / cover no-repeat; }
 .card__media::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--image-outline); pointer-events: none; }
 .card__media img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; transform: scale(1.06); transition: transform 900ms var(--ease-out); }
 .card__media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; opacity: 0; transition: opacity 600ms ease-out; }
