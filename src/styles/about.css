@@ -10,20 +10,31 @@
    back and move slowest. */
 .ahero {
   --u: calc(max(100vw, 900px) / 1440);
-  --tile: calc(1440 * var(--u));
+  --tile: calc(1480 * var(--u));
   position: relative; height: 100svh; min-height: 620px; max-height: 900px;
   display: grid; place-items: center; overflow: hidden;
   background: #191919; color: #fff;
 }
-.drift { position: absolute; inset: 0; }
+.drift {
+  position: absolute; inset: 0;
+  -webkit-mask-image: radial-gradient(ellipse 34% 30% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 45%, #000 100%);
+  mask-image: radial-gradient(ellipse 34% 30% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 45%, #000 100%);
+}
+@media (max-width: 700px) {
+  .drift {
+    -webkit-mask-image: radial-gradient(ellipse 70% 26% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 50%, #000 100%);
+    mask-image: radial-gradient(ellipse 70% 26% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 50%, #000 100%);
+  }
+}
 .drift__layer {
   position: absolute; inset: 0 auto 0 0; width: calc(2 * var(--tile));
   display: flex; transform: translate3d(calc(-1 * var(--tile)), 0, 0);
   animation: drift var(--speed) linear infinite; will-change: transform;
 }
-.drift__layer--far { --speed: 150s; --depth: 8; }
-.drift__layer--mid { --speed: 110s; --depth: 16; }
-.drift__layer--near { --speed: 80s; --depth: 28; }
+.drift__layer { --speed: 110s; }
+.drift__layer--far { --depth: 8; }
+.drift__layer--mid { --depth: 16; }
+.drift__layer--near { --depth: 28; }
 @keyframes drift { to { transform: translate3d(0, 0, 0); } }
 .ahero.is-paused .drift__layer { animation-play-state: paused; }
 .drift__tile { position: relative; flex: none; width: var(--tile); height: 100%; }
