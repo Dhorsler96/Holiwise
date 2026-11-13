@@ -135,7 +135,7 @@
 .awhere__offices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .awhere__offices li { display: flex; flex-direction: column; }
 /* Office photos still to come: a quiet placeholder, as in Figma */
-.awhere__img { aspect-ratio: 650 / 420; border-radius: 16px; background: #f2f2f2; overflow: hidden; }
+.awhere__img { aspect-ratio: 650 / 420; border-radius: 4px; background: #f2f2f2; overflow: hidden; }
 .awhere__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* Office photos come into focus with their card, a beat behind the stagger */
 .js .awhere__img [data-focus] { transition-delay: calc(var(--i, 0) * 90ms + 150ms); }
