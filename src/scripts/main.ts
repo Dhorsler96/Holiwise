@@ -4,6 +4,22 @@ const root = document.documentElement;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = <T extends HTMLElement>(sel: string, el: ParentNode = document) => el.querySelector<T>(sel);
 const $$ = <T extends HTMLElement>(sel: string, el: ParentNode = document) => Array.from(el.querySelectorAll<T>(sel));
+
+/** Phones, where the search popovers open as bottom sheets */
+const phoneSheet = () => window.matchMedia('(max-width: 600px)').matches;
+/** iOS ignores overflow: hidden, so on phones the page is pinned in place while a sheet is open */
+let pinnedY = 0;
+const pinPage = (on: boolean) => {
+  if (!phoneSheet()) return;
+  const b = document.body.style;
+  if (on) {
+    pinnedY = window.scrollY;
+    Object.assign(b, { position: 'fixed', top: `-${pinnedY}px`, left: '0', right: '0' });
+  } else {
+    Object.assign(b, { position: '', top: '', left: '', right: '' });
+    window.scrollTo({ top: pinnedY, behavior: 'instant' as ScrollBehavior });
+  }
+};
 const nextFrame = (fn: () => void) => requestAnimationFrame(() => requestAnimationFrame(fn));
 
 /* ---------- Text transitions (Calligraph) ----------
@@ -312,6 +328,8 @@ if (search) {
       search.classList.toggle('is-open', Boolean(field));
       // Freeze the page behind an open popover, keeping the scrollbar's space so nothing shifts
       if (field && !root.classList.contains('is-locked')) root.style.setProperty('--sbw', `${window.innerWidth - root.clientWidth}px`);
+      if (field && !root.classList.contains('is-locked')) pinPage(true);
+      if (!field && root.classList.contains('is-locked')) pinPage(false);
       root.classList.toggle('is-locked', Boolean(field));
     };
     // Switching between fields, or opening with the keyboard, skips the animation.
@@ -398,7 +416,8 @@ if (search) {
     pop.style.width = '';
     pop.style.height = `${pop.offsetHeight}px`;
     pop.style.width = `${pop.offsetWidth}px`;
-    whereSearch.focus({ preventScroll: true });
+    // On phones the keyboard would cover the list and shove the sheet about: wait for a tap in the box
+    if (!phoneSheet()) whereSearch.focus({ preventScroll: true });
   });
 
   const whereSet = () => Boolean(where.dataset.current) && where.dataset.current !== WHERE_EMPTY && where.dataset.current !== FLIGHT_EMPTY;
@@ -749,7 +768,7 @@ if (search) {
   };
   tell.addEventListener('input', syncGhost);
   const focusBrief = () => { tell.focus({ preventScroll: true }); tell.setSelectionRange(tell.value.length, tell.value.length); };
-  $('.field__btn', tellField)!.addEventListener('click', () => { if (open === tellField) focusBrief(); });
+  $('.field__btn', tellField)!.addEventListener('click', () => { if (open === tellField && !phoneSheet()) focusBrief(); });
   for (const chip of suggests) chip.addEventListener('click', () => {
     const text = chip.dataset.suggest!;
     const pressed = chip.getAttribute('aria-pressed') === 'true';
@@ -789,7 +808,7 @@ if (search) {
 
   const focusTell = (prefill?: string) => {
     if (prefill !== undefined) { tell.value = prefill; syncGhost(); }
-    const open = () => { setOpen(tellField, true); focusBrief(); };
+    const open = () => { setOpen(tellField, true); if (!phoneSheet()) focusBrief(); };
     if (window.scrollY < 2 || reduceMotion) { window.scrollTo({ top: 0 }); open(); return; }
     // Scroll up first; the panel (and the scroll lock) waits until the page has arrived
     let done = false;
@@ -832,7 +851,7 @@ if (search) {
       setOpen(where, true);
       whereSearch.value = '';
       filterWhere();
-      whereSearch.focus({ preventScroll: true });
+      if (!phoneSheet()) whereSearch.focus({ preventScroll: true });
       return;
     }
     if (!brief && !when.dataset.range) { setOpen(when, true); render(); placeWhen(); if (dateMode === 'dates') focusCalendar(); return; }
@@ -1065,20 +1084,24 @@ if (menu && burger) {
 const vv = window.visualViewport;
 if (vv) {
   const root = document.documentElement;
+  // Only lift a sheet while someone is typing in it; otherwise it sits on the bottom edge
+  const typing = () => { const el = document.activeElement as HTMLElement | null; return Boolean(el?.matches('input, textarea') && el.closest('.pop')); };
   const sync = () => {
-    const kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    const kb = typing() ? Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) : 0;
     root.style.setProperty('--kb', `${kb}px`);
-    root.style.setProperty('--vvh', `${Math.round(vv.height)}px`);
+    root.style.setProperty('--vvh', `${Math.round(typing() ? vv.height : window.innerHeight)}px`);
     root.classList.toggle('has-kb', kb > 80);
   };
   vv.addEventListener('resize', sync);
   vv.addEventListener('scroll', sync);
+  document.addEventListener('focusout', () => window.setTimeout(sync, 0));
   sync();
-  // Once the keyboard is up, bring the focused field and the send button into view inside the sheet
+  // Once the keyboard is up, bring the field and the send button into view inside the sheet
   document.addEventListener('focusin', (e) => {
     const el = e.target as HTMLElement;
     const sheet = el.closest<HTMLElement>('.pop');
     if (!sheet || !el.matches('input, textarea')) return;
+    sync();
     window.setTimeout(() => { sync(); sheet.scrollTop = sheet.scrollHeight; }, 350);
   });
 }
