@@ -114,13 +114,7 @@ const layers = ['far', 'mid', 'near'] as const;
           <li style={`--i:${i}`}>
             <div class="awhere__img"><img src={o.image} alt={o.alt} loading="lazy" decoding="async" data-focus /></div>
             <h3 class="serif">{o.city}</h3>
-            <div class="awhere__addr">
-              <address>{o.address.map((line: string, i: number) => <>{i > 0 && <br />}{line}</>)}</address>
-              <button class="awhere__copy" type="button" data-copy={o.address.join(', ')} aria-label={`Copy the ${o.city} address`}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" /><path d="M9.5 2.5v-.5A1.5 1.5 0 0 0 8 .5H2A1.5 1.5 0 0 0 .5 2v6A1.5 1.5 0 0 0 2 9.5h.5" stroke="currentColor" /></svg>
-                <span data-copy-label>Copy address</span>
-              </button>
-            </div>
+            <address class="awhere__addr">{o.address.map((line: string, i: number) => <>{i > 0 && ', '}<span class="nowrap">{line}</span></>)}</address>
           </li>
         ))}
       </ul>
