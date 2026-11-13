@@ -8,10 +8,6 @@
       {
         "label": "Premium",
         "href": "/premium"
-      },
-      {
-        "label": "Stays",
-        "href": "/#stays"
       }
     ],
     "inviteLabel": "Have an invite?",
