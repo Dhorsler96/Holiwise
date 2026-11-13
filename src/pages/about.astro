@@ -1,0 +1,47 @@
+---
+/* About Holiwise, from Figma 350:78 (Week 02). Started with the hero (393:3687):
+   photos drift slowly to the right in three layers, new ones arriving from the left. */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteContent } from '../lib/sanity';
+import '../styles/about.css';
+
+const { about: a, settings } = await getSiteContent();
+const words = (text: string) => text.split(' ');
+const layers = ['far', 'mid', 'near'] as const;
+---
+<Base title={a.meta.title} description={a.meta.description} image={a.hero.photos[a.hero.photos.length - 1].src}>
+  <Nav settings={settings} />
+  <main>
+    <!-- 01 Hero: drifting photos -->
+    <section class="ahero" id="top" data-theme="dark" data-drift>
+      <div class="drift" aria-hidden="true">
+        {layers.map((layer) => (
+          <div class={`drift__layer drift__layer--${layer}`}>
+            {[0, 1].map(() => (
+              <div class="drift__tile">
+                {a.hero.photos.filter((ph: any) => ph.layer === layer).map((ph: any, i: number) => (
+                  <span class="drift__photo" style={`--x:${ph.x}; --y:${ph.y}; --w:${ph.w}; --h:${ph.h}; --o:${ph.o}; --i:${i}`}>
+                    <img src={ph.src} alt="" loading="eager" decoding="async" draggable="false" />
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div class="ahero__copy">
+        <h1 class="ahero__title serif" aria-label={a.hero.headline}>
+          <span class="mask" aria-hidden="true">{words(a.hero.headline).map((w, i, all) => <><span style={`--i:${i}`}>{w}</span>{i < all.length - 1 ? ' ' : ''}</>)}</span>
+        </h1>
+        <p class="ahero__intro">{a.hero.intro}</p>
+        <div class="ahero__actions">
+          <a class="btn btn--light" href={settings.agentHref}>{a.hero.ctaLabel}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer settings={settings} />
+  <script>import '../scripts/about.ts';</script>
+</Base>

@@ -80,6 +80,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     return {
       settings: over(seed.settings, settings),
       premium: seed.premium,
+      about: seed.about,
       home: {
         hero: {
           ...over(s.hero, home.hero),

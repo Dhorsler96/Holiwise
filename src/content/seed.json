@@ -549,5 +549,100 @@
       "heading": "Travel, looked after.",
       "body": "Request an invitation, or use the code a member sent you."
     }
+  },
+  "about": {
+    "meta": {
+      "title": "About Holiwise · Travel, looked after by people",
+      "description": "A travel agency of real people in London and Stockholm, with technology we built ourselves working quietly behind every trip."
+    },
+    "hero": {
+      "headline": "Travel, looked after by people.",
+      "intro": "We help you experience the world effortlessly. A travel agency of real people in London and Stockholm, with technology we built ourselves working quietly behind every trip.",
+      "ctaLabel": "Message an agent",
+      "_note": "Hero photos from Figma 393:3687. Several are Belmond images used as internal placeholders: not licensed for public use.",
+      "photos": [
+        {
+          "src": "/images/about/about-dinner.jpg",
+          "x": 346,
+          "y": 281,
+          "w": 90,
+          "h": 113,
+          "o": 0.1,
+          "layer": "far"
+        },
+        {
+          "src": "/images/about/about-village-pool.jpg",
+          "x": 195,
+          "y": 13,
+          "w": 169,
+          "h": 212,
+          "o": 0.2,
+          "layer": "far"
+        },
+        {
+          "src": "/images/about/about-garden.jpg",
+          "x": 889,
+          "y": 506,
+          "w": 221,
+          "h": 277,
+          "o": 0.2,
+          "layer": "far"
+        },
+        {
+          "src": "/images/about/about-plate.jpg",
+          "x": 542,
+          "y": 551,
+          "w": 90,
+          "h": 113,
+          "o": 0.5,
+          "layer": "mid"
+        },
+        {
+          "src": "/images/about/about-beach-villas.jpg",
+          "x": 852,
+          "y": 64,
+          "w": 107,
+          "h": 133,
+          "o": 0.7,
+          "layer": "mid"
+        },
+        {
+          "src": "/images/about/about-loungers.jpg",
+          "x": 1306,
+          "y": 75,
+          "w": 143,
+          "h": 178,
+          "o": 1,
+          "layer": "near"
+        },
+        {
+          "src": "/images/about/about-vineyard.jpg",
+          "x": 125,
+          "y": 472,
+          "w": 221,
+          "h": 296,
+          "o": 1,
+          "layer": "near"
+        },
+        {
+          "src": "/images/about/about-terrace.jpg",
+          "x": -11,
+          "y": 189,
+          "w": 136,
+          "h": 171,
+          "o": 1,
+          "layer": "near"
+        },
+        {
+          "src": "/images/about/about-arch.jpg",
+          "x": 1189,
+          "y": 337,
+          "w": 216,
+          "h": 270,
+          "o": 1,
+          "layer": "near"
+        }
+      ]
+    }
   }
 }

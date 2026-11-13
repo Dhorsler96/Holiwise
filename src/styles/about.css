@@ -1,0 +1,63 @@
+/* ------------------------------------------------------------------
+   About Holiwise (Figma 350:78). Builds on global.css.
+------------------------------------------------------------------- */
+
+/* ---------- 01 Hero: photos drift to the right ----------
+   The Figma frame is 1440 x 720. One design unit (--u) scales with the screen,
+   never below a size that keeps the photos legible on phones. Each layer holds two
+   copies of the layout side by side and slides one copy's width to the right, so
+   new photos keep arriving from the left with no seam. Faint photos sit further
+   back and move slowest. */
+.ahero {
+  --u: calc(max(100vw, 900px) / 1440);
+  --tile: calc(1440 * var(--u));
+  position: relative; height: 100svh; min-height: 620px; max-height: 900px;
+  display: grid; place-items: center; overflow: hidden;
+  background: #191919; color: #fff;
+}
+.drift { position: absolute; inset: 0; }
+.drift__layer {
+  position: absolute; inset: 0 auto 0 0; width: calc(2 * var(--tile));
+  display: flex; transform: translate3d(calc(-1 * var(--tile)), 0, 0);
+  animation: drift var(--speed) linear infinite; will-change: transform;
+}
+.drift__layer--far { --speed: 150s; }
+.drift__layer--mid { --speed: 110s; }
+.drift__layer--near { --speed: 80s; }
+@keyframes drift { to { transform: translate3d(0, 0, 0); } }
+.ahero.is-paused .drift__layer { animation-play-state: paused; }
+.drift__tile { position: relative; flex: none; width: var(--tile); height: 100%; }
+.drift__photo {
+  position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) / 720 * 100%);
+  width: calc(var(--w) * var(--u)); height: calc(var(--h) * var(--u)); opacity: var(--o);
+}
+.drift__photo img { width: 100%; height: 100%; object-fit: cover; user-select: none; }
+/* Photos come into focus on load, one after another */
+.js .drift__photo img { opacity: 0; filter: blur(12px); transition: opacity 900ms ease-out, filter 900ms ease-out; transition-delay: calc(200ms + var(--i) * 120ms); }
+.js.is-loaded .drift__photo img { opacity: 1; filter: none; }
+/* A soft dark pool behind the words, so photos passing underneath never fight the headline */
+/* A blurred shape rather than a gradient: smooth on dark screens, with no banding rings */
+.ahero::after {
+  content: ''; position: absolute; left: 22%; right: 22%; top: 34%; bottom: 34%; pointer-events: none;
+  border-radius: 50%; background: rgba(25, 25, 25, 0.82); filter: blur(60px);
+}
+@media (max-width: 700px) { .ahero::after { left: 0; right: 0; top: 30%; bottom: 30%; } }
+.ahero__copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 0 var(--gutter); text-align: center; }
+.ahero__title { font-size: clamp(42px, 4.45vw, 64px); line-height: 0.95; letter-spacing: -0.02em; }
+.js .ahero__title .mask > span { transition-delay: calc(120ms + var(--i) * 80ms); }
+.js.is-loaded .ahero__title .mask > span { opacity: 1; transform: none; filter: none; }
+.ahero__intro { max-width: 600px; font-size: 14px; line-height: 20px; text-wrap: balance; }
+.js .ahero__intro, .js .ahero__actions {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out;
+}
+.js .ahero__intro { transition-delay: 440ms; }
+.js .ahero__actions { transition-delay: 540ms; }
+.js.is-loaded .ahero__intro, .js.is-loaded .ahero__actions { opacity: 1; transform: none; filter: none; }
+
+/* Reduced motion: the photos hold still where Figma places them */
+@media (prefers-reduced-motion: reduce) {
+  .drift__layer { animation: none; }
+  .js .drift__photo img { filter: none; transition: opacity 300ms ease-out; transition-delay: 0ms; }
+  .js .ahero__intro, .js .ahero__actions { transform: none; filter: none; }
+}
