@@ -726,26 +726,26 @@
           {
             "name": "Albin Eriksson Lippe",
             "role": "Co-Founder and CEO",
-            "image": "/images/about/team-albin.jpg"
+            "image": "/images/about/team-2-1.jpg"
           },
           {
             "name": "Kristian Lexeklint",
             "role": "Co-Founder and CFO",
-            "image": "/images/about/team-kristian.jpg"
+            "image": "/images/about/team-2-2.jpg"
           },
           {
             "name": "Apurva Amin",
             "role": "Co-Founder and CTO",
-            "image": "/images/about/team-apurva.jpg"
+            "image": "/images/about/team-2-3.jpg"
           },
           {
             "name": "Maria Ancheta",
             "role": "Founding Engineer",
-            "image": "/images/about/team-maria.jpg"
+            "image": "/images/about/team-2-4.jpg"
           }
         ]
       ],
-      "_note": "PLACEHOLDER: stock portraits under real names, and the second row repeats the first (Figma 350:160). Replace with Holiwise’s own photos and the wider team before anything is shared outside."
+      "_note": "PLACEHOLDER: stock portraits under real names; the second row has new photos (Figma 386:3409) but still repeats the first row’s names. Replace with Holiwise’s own photos and the wider team before anything is shared outside."
     },
     "where": {
       "eyebrow": "Where we are",
@@ -754,15 +754,17 @@
         {
           "city": "London",
           "body": "Our home base, and where most of the travel team sits.",
-          "placeholder": "Image: London, quiet street or studio"
+          "image": "/images/about/office-london.jpg",
+          "alt": "A leafy courtyard with people having lunch at small white tables"
         },
         {
           "city": "Stockholm",
           "body": "Where much of our technology is built.",
-          "placeholder": "Image: Stockholm, quiet street or studio"
+          "image": "/images/about/office-stockholm.jpg",
+          "alt": "A bright double-height lobby with a timber ceiling and a wide staircase"
         }
       ],
-      "_note": "Office photos still to come; copy lines are drafts to confirm with Holiwise."
+      "_note": "Office photos from Figma 350:232/350:237 are stand-ins to confirm with Holiwise; copy lines are drafts."
     },
     "cta": {
       "heading": "Ready when you are.",

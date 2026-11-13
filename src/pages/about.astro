@@ -112,7 +112,7 @@ const layers = ['far', 'mid', 'near'] as const;
       <ul class="awhere__offices" data-stagger data-inview data-threshold="0.2">
         {a.where.offices.map((o: any, i: number) => (
           <li style={`--i:${i}`}>
-            <div class="awhere__img"><span>{o.placeholder}</span></div>
+            <div class="awhere__img"><img src={o.image} alt={o.alt} loading="lazy" decoding="async" data-focus /></div>
             <h3 class="serif">{o.city}</h3>
             <p>{o.body}</p>
           </li>
