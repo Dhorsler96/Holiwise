@@ -105,8 +105,8 @@
 .am-intro { margin-top: 14px; max-width: 520px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
 
 /* ---------- 03 Fast facts (green): numbers count up as they arrive ---------- */
-/* 124px above and below; faint keylines top and bottom: a third of the theme rule colour, so faint white on the green, fading with the page palette (Figma 402:3861) */
-.afacts { padding-block: clamp(88px, 8.62vw, 124px); border-top: 1px solid rgba(255, 255, 255, 0.16); border-bottom: 1px solid rgba(255, 255, 255, 0.16); border-color: color-mix(in srgb, var(--rule) 32%, transparent); }
+/* 124px above and below; faint keylines top and bottom: a sixth of the theme rule colour, so a whisper of white on the green, fading with the page palette (Figma 402:3861) */
+.afacts { padding-block: clamp(88px, 8.62vw, 124px); border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 1px solid rgba(255, 255, 255, 0.08); border-color: color-mix(in srgb, var(--rule) 16%, transparent); }
 .afacts .am-eyebrow { color: var(--fg); }
 .afacts__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 40px; }
 .afacts__list li { display: flex; flex-direction: column; gap: 8px; padding-top: 24px; }
