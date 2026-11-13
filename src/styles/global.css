@@ -1023,3 +1023,19 @@ ul { list-style: none; }
 @media (pointer: coarse) {
   input, textarea, select, .pop--tell textarea, .pfield input, .pselect select, .brief__refine input { font-size: 16px; }
 }
+
+/* ---------- Scroll cue at the foot of each hero ---------- */
+.scrollcue { position: absolute; left: 50%; bottom: 18px; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 6px 12px; transform: translateX(-50%); color: #fff; -webkit-tap-highlight-color: transparent; transition: opacity 400ms ease-out, transform 400ms var(--ease-out); }
+.scrollcue__label { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.8; }
+.scrollcue__track { position: relative; width: 1px; height: 32px; overflow: hidden; background: rgba(255, 255, 255, 0.28); }
+.scrollcue__track i { position: absolute; left: 0; top: 0; width: 1px; height: 12px; background: #fff; animation: scrollcue 2200ms var(--ease-in-out) infinite; }
+@keyframes scrollcue { 0% { transform: translateY(-12px); } 60%, 100% { transform: translateY(32px); } }
+@media (hover: hover) and (pointer: fine) { .scrollcue:hover .scrollcue__label { opacity: 1; } }
+/* Arrives after the hero has settled, and steps aside once the page moves */
+.js .scrollcue { opacity: 0; transform: translate(-50%, 6px); }
+.js.is-loaded .scrollcue { opacity: 1; transform: translateX(-50%); transition-delay: 1200ms; }
+.js.is-loaded.is-scrolled .scrollcue { opacity: 0; transform: translate(-50%, 6px); pointer-events: none; transition-delay: 0ms; }
+@media (prefers-reduced-motion: reduce) { .scrollcue__track i { animation: none; top: 10px; } }
+/* Homepage: the search bar rises a little on desktop to make room; on phones the hero flows into the page */
+@media (min-width: 901px) { .hero__search { bottom: 76px; } }
+@media (max-width: 900px) { .scrollcue--home { display: none; } }

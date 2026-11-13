@@ -1,0 +1,9 @@
+---
+/* "Scroll" cue at the foot of a hero: a dot travels down a thin line. Fades once the page moves;
+   tapping it glides to the next section (main.ts). */
+const { className = '' } = Astro.props;
+---
+<a class={`scrollcue ${className}`} href="#" data-scrollcue aria-label="Scroll to the next section">
+  <span class="scrollcue__label">Scroll</span>
+  <span class="scrollcue__track" aria-hidden="true"><i></i></span>
+</a>

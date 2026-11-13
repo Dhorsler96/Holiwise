@@ -1105,3 +1105,17 @@ if (vv) {
     window.setTimeout(() => { sync(); sheet.scrollTop = sheet.scrollHeight; }, 350);
   });
 }
+
+/* ---------- Scroll cue: fades once the page moves, glides to the next section on tap ---------- */
+{
+  const root = document.documentElement;
+  const mark = () => root.classList.toggle('is-scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', mark, { passive: true });
+  mark();
+  $$('[data-scrollcue]').forEach((cue) => cue.addEventListener('click', (e) => {
+    e.preventDefault();
+    const next = cue.closest('section')?.nextElementSibling as HTMLElement | null;
+    const top = next ? next.getBoundingClientRect().top + window.scrollY : window.innerHeight;
+    window.scrollTo({ top, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }));
+}

@@ -1,4 +1,5 @@
 ---
+import ScrollCue from './ScrollCue.astro';
 const { hero, destinations } = Astro.props;
 const words = hero.headline.split(' ');
 // Search is a place and real dates (11 Nov call): the places we can show options for, then popular cities.
@@ -137,6 +138,7 @@ const suggestions: string[] = hero.tellSuggestions ?? ['Flights and a hotel', 'A
 
     <a class="search__helper link" href="#" data-focus-tell>{hero.helper} →</a>
   </div>
+  <ScrollCue className="scrollcue--home" />
 </section>
 
 <div class="toast" role="status" aria-live="polite" data-toast>
