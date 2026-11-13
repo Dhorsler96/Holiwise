@@ -15,13 +15,6 @@
 .pm-intro { margin-top: 14px; max-width: 520px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); text-wrap: pretty; }
 .pm-eyebrow { font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); text-align: center; }
 
-/* Children of [data-stagger] enter one after another, 100ms apart, when the list comes into view */
-.js [data-stagger] > * {
-  opacity: 0; transform: translateY(12px); filter: blur(4px);
-  transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out;
-  transition-delay: calc(var(--i, 0) * 100ms);
-}
-.js [data-stagger].is-in > * { opacity: 1; transform: none; filter: none; }
 
 /* ---------- 01 Hero ---------- */
 .phero { position: relative; height: 100svh; min-height: 620px; max-height: 900px; color: #fff; overflow: hidden; background: #111; }

@@ -655,6 +655,121 @@
         "alt": "Three women standing together in a sitting room in front of a painting"
       },
       "_note": "Photo from Figma 402:3813 is a placeholder: swap for the Holiwise team before launch."
+    },
+    "facts": {
+      "eyebrow": "Fast facts",
+      "items": [
+        {
+          "value": 8,
+          "suffix": "M+",
+          "label": "trips created"
+        },
+        {
+          "value": 1,
+          "suffix": "M+",
+          "label": "stays listed"
+        },
+        {
+          "value": 50,
+          "suffix": "K+",
+          "label": "travel destinations"
+        },
+        {
+          "value": 120,
+          "suffix": "+",
+          "label": "countries travelled to"
+        }
+      ]
+    },
+    "how": {
+      "eyebrow": "How we work",
+      "heading": "People first, technology behind them.",
+      "intro": "What you can expect every time you travel with us.",
+      "principles": [
+        {
+          "title": "A person, not a portal",
+          "body": "Every trip has a named agent behind it. You talk to a person on WhatsApp, from the first message to the flight home."
+        },
+        {
+          "title": "Quiet technology",
+          "body": "Our own technology does the searching and matching in the background, so your agent can spend their time on the details that make a trip."
+        }
+      ]
+    },
+    "team": {
+      "eyebrow": "The team",
+      "heading": "Meet our leadership team",
+      "rows": [
+        [
+          {
+            "name": "Albin Eriksson Lippe",
+            "role": "Co-Founder and CEO",
+            "image": "/images/about/team-albin.jpg"
+          },
+          {
+            "name": "Kristian Lexeklint",
+            "role": "Co-Founder and CFO",
+            "image": "/images/about/team-kristian.jpg"
+          },
+          {
+            "name": "Apurva Amin",
+            "role": "Co-Founder and CTO",
+            "image": "/images/about/team-apurva.jpg"
+          },
+          {
+            "name": "Maria Ancheta",
+            "role": "Founding Engineer",
+            "image": "/images/about/team-maria.jpg"
+          }
+        ],
+        [
+          {
+            "name": "Albin Eriksson Lippe",
+            "role": "Co-Founder and CEO",
+            "image": "/images/about/team-albin.jpg"
+          },
+          {
+            "name": "Kristian Lexeklint",
+            "role": "Co-Founder and CFO",
+            "image": "/images/about/team-kristian.jpg"
+          },
+          {
+            "name": "Apurva Amin",
+            "role": "Co-Founder and CTO",
+            "image": "/images/about/team-apurva.jpg"
+          },
+          {
+            "name": "Maria Ancheta",
+            "role": "Founding Engineer",
+            "image": "/images/about/team-maria.jpg"
+          }
+        ]
+      ],
+      "_note": "PLACEHOLDER: stock portraits under real names, and the second row repeats the first (Figma 350:160). Replace with Holiwise’s own photos and the wider team before anything is shared outside."
+    },
+    "where": {
+      "eyebrow": "Where we are",
+      "heading": "London and Stockholm",
+      "offices": [
+        {
+          "city": "London",
+          "body": "Our home base, and where most of the travel team sits.",
+          "placeholder": "Image: London, quiet street or studio"
+        },
+        {
+          "city": "Stockholm",
+          "body": "Where much of our technology is built.",
+          "placeholder": "Image: Stockholm, quiet street or studio"
+        }
+      ],
+      "_note": "Office photos still to come; copy lines are drafts to confirm with Holiwise."
+    },
+    "cta": {
+      "heading": "Ready when you are.",
+      "body": "Tell us where and when, and leave it with us.",
+      "primaryLabel": "Message an agent",
+      "secondaryLabel": "Request a Premium invitation",
+      "secondaryHref": "/premium#request"
     }
   }
 }

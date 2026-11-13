@@ -196,6 +196,14 @@ ul { list-style: none; }
 }
 .js [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
 
+/* Children of [data-stagger] enter one after another, 100ms apart, when the list comes into view */
+.js [data-stagger] > * {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out;
+  transition-delay: calc(var(--i, 0) * 100ms);
+}
+.js [data-stagger].is-in > * { opacity: 1; transform: none; filter: none; }
+
 /* Word-by-word text */
 .words .w { display: inline-block; }
 /* The statement is a long sentence, so its words run 28ms apart rather than the 80ms used for short headlines. */
@@ -663,7 +671,7 @@ ul { list-style: none; }
 
 /* ---------- Reduced motion: keep fades, drop movement ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal], .js .words .w, .js .mask > span, .js .chat .seq, .js .opt, .js .booking, .js .booking li, .js .note,
+  .js [data-reveal], .js [data-stagger] > *, .js .words .w, .js .mask > span, .js .chat .seq, .js .opt, .js .booking, .js .booking li, .js .note,
   .js .deal__row, .js .deal__invite, .js .hero__intro, .js .hero__search, .js .nav > *, .js .fan__chip,
   .pop, .toast, .tell__ghost, .tell__example, .search__submit span, .field__value, .statement__rule, .hero__title, .hero__intro {
     transform: none !important; filter: none !important; transition-property: opacity !important; transition-duration: 300ms !important;
