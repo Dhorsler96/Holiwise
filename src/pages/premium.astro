@@ -178,7 +178,7 @@ const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox=
     <section class="pm pm-press" data-theme="light">
       <p class="pm-eyebrow" data-reveal data-inview>As featured in</p>
       <ul class="press" data-stagger data-inview data-threshold="0.4">
-        {p.press.map((l: any, i: number) => <li style={`--i:${i}`}><img src={l.src} alt={l.name} width={l.w} height={l.h} loading="lazy" decoding="async" /></li>)}
+        {p.press.map((l: any, i: number) => <li style={`--i:${i}`}><span class="press-logo" role="img" aria-label={l.name} style={`--logo:url(${l.src}); --w:${l.w}; --h:${l.h}`}></span></li>)}
       </ul>
     </section>
 

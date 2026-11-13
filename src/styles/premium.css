@@ -133,8 +133,6 @@
 /* ---------- 08 As featured in ---------- */
 .pm-press { padding-block: 80px; }
 .press { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px 52px; margin-top: 32px; }
-.press img { height: auto; opacity: 0.4; transition: opacity 200ms ease-out; }
-@media (hover: hover) and (pointer: fine) { .press li:hover img { opacity: 0.7; } }
 
 /* ---------- 09 FAQ ---------- */
 .pm-faq__grid { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 727px); justify-content: space-between; align-items: start; gap: 60px; }
@@ -181,7 +179,6 @@
   .preq { padding: 28px 20px; }
   .pthanks { inset: 28px 20px; }
   .press { gap: 28px 36px; }
-  .press img { transform: scale(0.8); }
   .phero__actions .btn { flex: 1 1 100%; }
 }
 

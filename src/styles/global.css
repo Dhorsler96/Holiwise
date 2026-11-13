@@ -204,6 +204,17 @@ ul { list-style: none; }
 }
 .js [data-stagger].is-in > * { opacity: 1; transform: none; filter: none; }
 
+/* Press logos: each logo is a shape filled with the text colour, so they are dark on light
+   sections, white on dark ones, and fade between the two with the page palette */
+.press-logo {
+  display: block; width: calc(var(--w) * 1px); height: calc(var(--h) * 1px); max-width: 100%;
+  background-color: var(--fg); opacity: 0.4;
+  -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat;
+  transition: opacity 200ms ease-out;
+}
+@media (hover: hover) and (pointer: fine) { li:hover > .press-logo { opacity: 0.7; } }
+@media (max-width: 600px) { .press-logo { width: calc(var(--w) * 0.8px); height: calc(var(--h) * 0.8px); } }
+
 /* Word-by-word text */
 .words .w { display: inline-block; }
 /* The statement is a long sentence, so its words run 28ms apart rather than the 80ms used for short headlines. */
