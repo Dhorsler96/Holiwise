@@ -650,10 +650,6 @@
         "So we built a travel agency that does the planning for you. Tell your agent where and when, and they come back with a few options that fit. Behind them, technology we built ourselves matches hotels and rooms to how you like to travel, so your agent’s time goes on you.",
         "Simple stays come back quickly. Bigger trips, with flights, several stops and a few weeks away, get the time they deserve. For people who travel often there is Holiwise Premium: your own agent, member rates at over 1 million stays, and partner privileges on every trip. It’s by invitation."
       ],
-      "link": {
-        "label": "Discover Premium",
-        "href": "/premium"
-      },
       "image": {
         "src": "/images/about/about-story.jpg",
         "alt": "Three women standing together in a sitting room in front of a painting"

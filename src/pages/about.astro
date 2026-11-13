@@ -53,9 +53,6 @@ const layers = ['far', 'mid', 'near'] as const;
         </div>
         <div class="astory__text">
           {a.story.paragraphs.map((t: string, i: number) => <p data-reveal data-inview style={`--i:${i + 1}`}>{t}</p>)}
-          <p data-reveal data-inview style={`--i:${a.story.paragraphs.length + 1}`}>
-            <a class="arrow-link" href={a.story.link.href}><span class="arrow-link__text">{a.story.link.label}</span> <span class="arrow-link__arrow" aria-hidden="true">→</span></a>
-          </p>
         </div>
       </div>
     </section>
