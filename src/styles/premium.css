@@ -112,16 +112,17 @@
 .pquotes__dots { display: flex; align-items: center; gap: 1px; padding: 4px; border-radius: 100px; background: rgba(0, 0, 0, 0.05); }
 /* The active dot stretches into a pill that fills over the slide's time, so the carousel reads as a timer.
    The fill freezes while someone hovers or reads; when it completes, the next review shows (premium.ts). */
-.pquotes { --quote-time: 7000ms; }
-.pquotes__dot { position: relative; width: 14px; height: 32px; margin-block: -9px; transition: width 400ms var(--ease-out); -webkit-tap-highlight-color: transparent; }
-.pquotes__dot[aria-current='true'] { width: 36px; }
-.pquotes__dot::before, .pquotes__dot::after { content: ''; position: absolute; top: 13px; left: 4px; height: 6px; border-radius: 3px; }
-.pquotes__dot::before { right: 4px; background: #424242; opacity: 0.3; transition: opacity 200ms ease-out; }
-.pquotes__dot::after { width: calc(100% - 8px); background: #262626; opacity: 0; transition: opacity 200ms ease-out; }
+.pquotes { --quote-time: 5000ms; --dot-ease: cubic-bezier(0.65, 0, 0.35, 1); }
+.pquotes__dot { position: relative; width: 14px; height: 32px; margin-block: -9px; transition: width 560ms var(--dot-ease); -webkit-tap-highlight-color: transparent; }
+.pquotes__dot[aria-current='true'] { width: 30px; }
+.pquotes__dot::before, .pquotes__dot::after { content: ''; position: absolute; top: 13px; left: 4px; right: 4px; height: 6px; border-radius: 3px; }
+.pquotes__dot::before { background: #424242; opacity: 0.3; }
+/* The fill is revealed with a clip (smooth, keeps the rounded ends) from a dot to the full pill */
+.pquotes__dot::after { background: #262626; opacity: 0; clip-path: inset(0 0 0 0 round 3px); transition: opacity 240ms ease-out; }
 .pquotes__dot[aria-current='true']::after { opacity: 1; }
 .pquotes.is-timing .pquotes__dot[aria-current='true']::after { animation: pquote-fill var(--quote-time) linear both; }
 .pquotes.is-held .pquotes__dot[aria-current='true']::after { animation-play-state: paused; }
-@keyframes pquote-fill { from { width: 6px; } to { width: calc(100% - 8px); } }
+@keyframes pquote-fill { from { clip-path: inset(0 calc(100% - 6px) 0 0 round 3px); } to { clip-path: inset(0 0 0 0 round 3px); } }
 @media (hover: hover) and (pointer: fine) { .pquotes__dot:not([aria-current='true']):hover::before { opacity: 0.6; } }
 .pquotes__arrows { display: flex; gap: 8px; }
 .pquotes__arrow { width: 44px; height: 44px; border-radius: 4px; display: grid; place-items: center; color: var(--ink); transition-property: transform, background-color; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
