@@ -1,0 +1,183 @@
+/* ------------------------------------------------------------------
+   About Holiwise (Figma 350:78). Builds on global.css.
+------------------------------------------------------------------- */
+
+/* ---------- 01 Hero: photos drift to the right ----------
+   The Figma frame is 1440 x 720. One design unit (--u) scales with the screen,
+   never below a size that keeps the photos legible on phones. Each layer holds two
+   copies of the layout side by side and slides one copy's width to the right, so
+   new photos keep arriving from the left with no seam. Faint photos sit further
+   back and move slowest. */
+.ahero {
+  --u: calc(max(100vw, 900px) / 1440);
+  --tile: calc(1480 * var(--u));
+  position: relative; height: 100svh; min-height: 620px; max-height: 900px;
+  display: grid; place-items: center; overflow: hidden;
+  background: #191919; color: #fff;
+}
+.drift {
+  position: absolute; inset: 0;
+  -webkit-mask-image: radial-gradient(ellipse 34% 30% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 45%, #000 100%);
+  mask-image: radial-gradient(ellipse 34% 30% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 45%, #000 100%);
+}
+@media (max-width: 700px) {
+  .drift {
+    -webkit-mask-image: radial-gradient(ellipse 70% 26% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 50%, #000 100%);
+    mask-image: radial-gradient(ellipse 70% 26% at 50% 50%, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.12) 50%, #000 100%);
+  }
+}
+.drift__layer {
+  position: absolute; inset: 0 auto 0 0; width: calc(2 * var(--tile));
+  display: flex; transform: translate3d(calc(-1 * var(--tile)), 0, 0);
+  animation: drift var(--speed) linear infinite; will-change: transform;
+}
+.drift__layer { --speed: 110s; }
+.drift__layer--far { --depth: 8; }
+.drift__layer--mid { --depth: 16; }
+.drift__layer--near { --depth: 28; }
+@keyframes drift { to { transform: translate3d(0, 0, 0); } }
+.ahero.is-paused .drift__layer { animation-play-state: paused; }
+.drift__tile { position: relative; flex: none; width: var(--tile); height: 100%; }
+/* Pointer depth: each layer leans away from the cursor by its depth (main thread writes --mx/--my, -1 to 1).
+   It sits on the tiles, so it adds to the layer's drift rather than replacing it. */
+.drift__tile, .ahero__copy { transform: translate3d(calc(var(--mx, 0) * var(--depth, 0) * -1px), calc(var(--my, 0) * var(--depth, 0) * -0.6px), 0); }
+.ahero__copy { --depth: -5; }
+.drift__photo {
+  position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) / 720 * 100%);
+  width: calc(var(--w) * var(--u)); height: calc(var(--h) * var(--u)); opacity: var(--o);
+}
+.drift__photo img { width: 100%; height: 100%; object-fit: cover; user-select: none; }
+/* Photos come into focus on load, one after another */
+.js .drift__photo img { opacity: 0; filter: blur(12px); transition: opacity 900ms ease-out, filter 900ms ease-out; transition-delay: calc(200ms + var(--i) * 120ms); }
+.js.is-loaded .drift__photo img { opacity: 1; filter: none; }
+/* A soft dark pool behind the words, so photos passing underneath never fight the headline */
+/* A blurred shape rather than a gradient: smooth on dark screens, with no banding rings */
+.ahero::after {
+  content: ''; position: absolute; left: 22%; right: 22%; top: 34%; bottom: 34%; pointer-events: none;
+  border-radius: 50%; background: rgba(25, 25, 25, 0.82); filter: blur(60px);
+}
+@media (max-width: 700px) { .ahero::after { left: 0; right: 0; top: 30%; bottom: 30%; } }
+.ahero__copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 0 var(--gutter); text-align: center; }
+.ahero__title { font-size: clamp(42px, 4.45vw, 64px); line-height: 0.95; letter-spacing: -0.02em; }
+.js .ahero__title .mask > span { transition-delay: calc(120ms + var(--i) * 80ms); }
+.js.is-loaded .ahero__title .mask > span { opacity: 1; transform: none; filter: none; }
+.ahero__intro { max-width: 600px; font-size: 14px; line-height: 20px; text-wrap: balance; }
+.js .ahero__intro, .js .ahero__actions {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out;
+}
+.js .ahero__intro { transition-delay: 440ms; }
+.js .ahero__actions { transition-delay: 540ms; }
+.js.is-loaded .ahero__intro, .js.is-loaded .ahero__actions { opacity: 1; transform: none; filter: none; }
+
+/* Reduced motion: the photos hold still where Figma places them */
+@media (prefers-reduced-motion: reduce) {
+  .drift__layer { animation: none; }
+  .js .drift__photo img { filter: none; transition: opacity 300ms ease-out; transition-delay: 0ms; }
+  .js .ahero__intro, .js .ahero__actions { transform: none; filter: none; }
+}
+
+/* ---------- 02 Our story (Figma 402:3771) ---------- */
+.am { background: var(--bg); color: var(--fg); padding: clamp(80px, 8.4vw, 120px) var(--gutter); }
+.js .am { background: transparent; }
+/* The lead arrives word by word, like the homepage statement */
+.astory__lead { max-width: 1096px; font-size: clamp(24px, 2.25vw, 32px); line-height: 1.05; letter-spacing: -0.01em; text-wrap: pretty; }
+/* The photo leads (725 x 828), the words sit level with its top (Figma 402:3912) */
+.astory__row { display: grid; grid-template-columns: minmax(0, 725px) minmax(0, 1fr); gap: 32px; margin-top: clamp(48px, 5.6vw, 80px); align-items: start; }
+/* The photo comes into focus where it sits and settles from a slight zoom: no slide */
+.astory__media { aspect-ratio: 725 / 828; border-radius: 4px; overflow: hidden; background: #f2f2f2; }
+.astory__media img { width: 100%; height: 100%; object-fit: cover; outline: 1px solid var(--image-outline); outline-offset: -1px; transform: scale(1.06); transition: opacity 700ms ease-out, filter 700ms ease-out, transform 1400ms var(--ease-out); }
+.js .astory__media.is-in [data-focus] { opacity: 1; filter: none; transform: scale(1); }
+.astory__text { display: flex; flex-direction: column; gap: 28px; max-width: 563px; }
+.astory__text p { font-size: 15px; line-height: 1.5; color: var(--fg-muted); text-wrap: pretty; }
+.astory__text .arrow-link { color: var(--fg); }
+@media (max-width: 900px) {
+  .astory__row { grid-template-columns: 1fr; gap: 28px; margin-top: 40px; }
+  .astory__text { gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .astory__media img { transform: none; transition: opacity 300ms ease-out; } }
+
+/* ---------- Shared section parts ---------- */
+.am-head { max-width: 640px; margin-bottom: 40px; }
+.am-eyebrow { font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); }
+.am-head .am-title { margin-top: 14px; }
+.am-title { font-size: clamp(30px, 2.8vw, 40px); line-height: 1.05; letter-spacing: -0.01em; }
+.am-intro { margin-top: 14px; max-width: 520px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
+
+/* ---------- 03 Fast facts (green): numbers count up as they arrive ---------- */
+/* 124px above and below; faint keylines top and bottom: a sixth of the theme rule colour, so a whisper of white on the green, fading with the page palette (Figma 402:3861) */
+.afacts { padding-block: clamp(88px, 8.62vw, 124px); border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 1px solid rgba(255, 255, 255, 0.08); border-color: color-mix(in srgb, var(--rule) 16%, transparent); }
+.afacts .am-eyebrow { color: var(--fg); }
+.afacts__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 40px; }
+.afacts__list li { display: flex; flex-direction: column; gap: 8px; padding-top: 24px; }
+.afacts__n { font-size: clamp(52px, 5vw, 72px); line-height: 0.95; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.afacts__label { font-size: 15px; line-height: 1.5; }
+
+/* ---------- 04 How we work (dark) ---------- */
+/* More room around the principles, and a keyline into the team below (Figma 402:3848) */
+.ahow { padding-block: clamp(112px, 12.23vw, 176px); border-bottom: 1px solid #2b2b2b; }
+.ahow__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ahow__cards li { display: flex; flex-direction: column; gap: 12px; padding: 32px; border-radius: 4px; background: var(--surface); }
+.ahow__cards h3 { font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
+.ahow__cards p { max-width: 362px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
+
+/* ---------- 05 Leadership team (dark) ---------- */
+.ateam__row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.ateam__row + .ateam__row { margin-top: 40px; }
+.ateam__person { display: flex; flex-direction: column; }
+.ateam__photo { aspect-ratio: 315 / 400; border-radius: 4px; overflow: hidden; background: #353535; }
+.ateam__photo img { width: 100%; height: 100%; object-fit: cover; outline: 1px solid var(--image-outline-dark); outline-offset: -1px; transition: transform 900ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .ateam__person:hover .ateam__photo img { transform: scale(1.03); } }
+.ateam__name { margin-top: 16px; font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
+.ateam__role { margin-top: 4px; font-size: 14px; line-height: 20px; color: var(--fg-muted); }
+
+/* ---------- 07 Where we are (light) ---------- */
+.awhere__offices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.awhere__offices li { display: flex; flex-direction: column; }
+/* Office photos still to come: a quiet placeholder, as in Figma */
+.awhere__img { aspect-ratio: 650 / 420; border-radius: 4px; background: #f2f2f2; overflow: hidden; }
+.awhere__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Office photos come into focus with their card, a beat behind the stagger */
+.js .awhere__img [data-focus] { transition-delay: calc(var(--i, 0) * 90ms + 150ms); }
+.js .awhere__offices.is-in [data-focus] { opacity: 1; filter: none; }
+.awhere__offices h3 { margin-top: 16px; font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
+.awhere__offices p { margin-top: 16px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
+
+/* ---------- 08 As featured in (light) ---------- */
+.apress { padding-block: 80px; text-align: center; }
+.apress__logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px 52px; margin-top: 32px; }
+
+/* ---------- 10 Closing CTA (green) ---------- */
+.acta { display: flex; flex-direction: column; align-items: center; text-align: center; padding-block: clamp(96px, 9.7vw, 140px); }
+.acta__title { font-size: clamp(34px, 3.35vw, 48px); line-height: 1.02; letter-spacing: -0.02em; }
+.acta__text { margin-top: 24px; font-size: 18px; line-height: 1.3; color: var(--fg-muted); }
+.acta__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 24px; }
+
+/* Desktop bands at the Figma heights, content centred */
+@media (min-width: 961px) {
+  .apress, .acta { display: flex; flex-direction: column; justify-content: center; }
+  .apress { min-height: 441px; }
+  .acta { min-height: 661px; }
+}
+
+@media (max-width: 960px) {
+  .afacts__list, .ateam__row { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
+  .ahow__cards, .awhere__offices { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .apress__logos { gap: 28px 36px; }
+  .acta__actions .btn { flex: 1 1 100%; }
+}
+
+/* Office addresses: one line where it fits, breaking only between the parts */
+.awhere__addr { margin-top: 12px; font-style: normal; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
+/* A small copy icon right after the address; it turns into a tick once copied */
+.awhere__copy { position: relative; display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -6px 0 -6px 4px; vertical-align: middle; border-radius: 4px; color: var(--fg-muted); transition: color 150ms ease-out, background-color 150ms ease-out, transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+.awhere__copy::after { content: ''; position: absolute; inset: -8px; }
+@media (hover: hover) and (pointer: fine) { .awhere__copy:hover { color: var(--fg); background: rgba(0, 0, 0, 0.05); } }
+.awhere__copy:active { transform: scale(0.92); }
+.awhere__copy svg { grid-area: 1 / 1; transition: opacity 150ms ease-out, transform 200ms var(--ease-out); }
+.awhere__copy-done { opacity: 0; transform: scale(0.6); }
+.awhere__copy.is-copied { color: var(--fg); }
+.awhere__copy.is-copied .awhere__copy-icon { opacity: 0; transform: scale(0.6); }
+.awhere__copy.is-copied .awhere__copy-done { opacity: 1; transform: none; }

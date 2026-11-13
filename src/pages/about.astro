@@ -1,0 +1,148 @@
+---
+/* About Holiwise, from Figma 350:78 (Week 02). Started with the hero (393:3687):
+   photos drift slowly to the right in three layers, new ones arriving from the left. */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteContent } from '../lib/sanity';
+import '../styles/about.css';
+
+const { about: a, premium, settings } = await getSiteContent();
+const words = (text: string) => text.split(' ');
+const layers = ['far', 'mid', 'near'] as const;
+---
+<Base title={a.meta.title} description={a.meta.description} image={a.hero.photos[a.hero.photos.length - 1].src}>
+  <Nav settings={settings} />
+  <main>
+    <!-- 01 Hero: drifting photos -->
+    <section class="ahero" id="top" data-theme="dark" data-drift>
+      <div class="drift" aria-hidden="true">
+        {layers.map((layer) => (
+          <div class={`drift__layer drift__layer--${layer}`}>
+            {[0, 1].map(() => (
+              <div class="drift__tile">
+                {a.hero.photos.filter((ph: any) => ph.layer === layer).map((ph: any, i: number) => (
+                  <span class="drift__photo" style={`--x:${ph.x}; --y:${ph.y}; --w:${ph.w}; --h:${ph.h}; --o:${ph.o}; --i:${i}`}>
+                    <img src={ph.src} alt="" loading="eager" decoding="async" draggable="false" />
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div class="ahero__copy">
+        <h1 class="ahero__title serif" aria-label={a.hero.headline}>
+          <span class="mask" aria-hidden="true">{words(a.hero.headline).map((w, i, all) => <><span style={`--i:${i}`}>{w}</span>{i < all.length - 1 ? ' ' : ''}</>)}</span>
+        </h1>
+        <p class="ahero__intro">{a.hero.intro}</p>
+        <div class="ahero__actions">
+          <a class="btn btn--light" href={settings.agentHref}>{a.hero.ctaLabel}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Our story (Figma 402:3771) -->
+    <section class="am astory" data-theme="light">
+      <p class="astory__lead serif words" aria-label={a.story.lead} data-inview data-threshold="0.3">
+        {words(a.story.lead).map((w, i) => <><span class="w" style={`--i:${i}`} aria-hidden="true">{w}</span>{' '}</>)}
+      </p>
+      <div class="astory__row">
+        <div class="astory__media" data-inview data-threshold="0.2">
+          <img src={a.story.image.src} alt={a.story.image.alt} loading="lazy" decoding="async" data-focus />
+        </div>
+        <div class="astory__text">
+          {a.story.paragraphs.map((t: string, i: number) => <p data-reveal data-inview style={`--i:${i + 1}`}>{t}</p>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Fast facts: the numbers count up as they arrive -->
+    <section class="am afacts" data-theme="green">
+      <p class="am-eyebrow" data-reveal data-inview>{a.facts.eyebrow}</p>
+      <ul class="afacts__list" data-stagger data-inview data-threshold="0.4" data-count>
+        {a.facts.items.map((f: any, i: number) => (
+          <li style={`--i:${i}`}>
+            <span class="afacts__n serif" aria-label={`${f.value}${f.suffix}`}><span data-count-to={f.value} aria-hidden="true">{f.value}</span><span aria-hidden="true">{f.suffix}</span></span>
+            <span class="afacts__label">{f.label}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 04 How we work -->
+    <section class="am ahow" data-theme="dark">
+      <div class="am-head" data-inview>
+        <p class="am-eyebrow">{a.how.eyebrow}</p>
+        <h2 class="am-title serif"><span class="mask">{words(a.how.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+        <p class="am-intro" data-reveal data-inview style="--i:3">{a.how.intro}</p>
+      </div>
+      <ul class="ahow__cards" data-stagger data-inview data-threshold="0.3">
+        {a.how.principles.map((p: any, i: number) => (
+          <li style={`--i:${i}`}><h3 class="serif">{p.title}</h3><p>{p.body}</p></li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 05 Leadership team -->
+    <section class="am ateam" data-theme="dark">
+      <div class="am-head" data-inview>
+        <p class="am-eyebrow">{a.team.eyebrow}</p>
+        <h2 class="am-title serif"><span class="mask">{words(a.team.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+      </div>
+      {a.team.rows.map((row: any[]) => (
+        <ul class="ateam__row" data-stagger data-inview data-threshold="0.15">
+          {row.map((m: any, i: number) => (
+            <li class="ateam__person" style={`--i:${i}`}>
+              <div class="ateam__photo"><img src={m.image} alt={m.name} loading="lazy" decoding="async" /></div>
+              <h3 class="ateam__name serif">{m.name}</h3>
+              <p class="ateam__role">{m.role}</p>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </section>
+
+    <!-- 07 Where we are -->
+    <section class="am awhere" data-theme="light">
+      <div class="am-head" data-inview>
+        <p class="am-eyebrow">{a.where.eyebrow}</p>
+        <h2 class="am-title serif"><span class="mask">{words(a.where.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+      </div>
+      <ul class="awhere__offices" data-stagger data-inview data-threshold="0.2">
+        {a.where.offices.map((o: any, i: number) => (
+          <li style={`--i:${i}`}>
+            <div class="awhere__img"><img src={o.image} alt={o.alt} loading="lazy" decoding="async" data-focus /></div>
+            <h3 class="serif">{o.city}</h3>
+            <address class="awhere__addr">{o.address.map((line: string, i: number, all: string[]) => <>{i > 0 && ', '}<span class="nowrap">{line}{i === all.length - 1 && (
+              <button class="awhere__copy" type="button" data-copy={all.join(', ')} aria-label={`Copy the ${o.city} address`} title="Copy address">
+                <svg class="awhere__copy-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" /><path d="M9.5 2.5v-.5A1.5 1.5 0 0 0 8 .5H2A1.5 1.5 0 0 0 .5 2v6A1.5 1.5 0 0 0 2 9.5h.5" stroke="currentColor" /></svg>
+                <svg class="awhere__copy-done" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+            )}</span></>)}<span class="sr-only" aria-live="polite" data-copy-status></span></address>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 08 As featured in -->
+    <section class="am apress" data-theme="light">
+      <p class="am-eyebrow" data-reveal data-inview>As featured in</p>
+      <ul class="apress__logos" data-stagger data-inview data-threshold="0.4">
+        {premium.press.map((l: any, i: number) => <li style={`--i:${i}`}><span class="press-logo" role="img" aria-label={l.name} style={`--logo:url(${l.src}); --w:${l.w}; --h:${l.h}`}></span></li>)}
+      </ul>
+    </section>
+
+    <!-- 10 Closing CTA -->
+    <section class="am acta" data-theme="green">
+      <h2 class="acta__title serif" data-inview data-threshold="0.4"><span class="mask">{words(a.cta.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
+      <p class="acta__text" data-reveal data-inview style="--i:3">{a.cta.body}</p>
+      <div class="acta__actions" data-reveal data-inview style="--i:4">
+        <a class="btn btn--light" href={settings.agentHref}>{a.cta.primaryLabel}</a>
+        <a class="btn btn--ghost-light" href={a.cta.secondaryHref}>{a.cta.secondaryLabel}</a>
+      </div>
+    </section>
+  </main>
+  <Footer settings={settings} />
+  <script>import '../scripts/about.ts';</script>
+</Base>

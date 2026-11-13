@@ -2,7 +2,7 @@
 /* "Some of our favourites": a grid of stays, from Figma 285:5291. */
 const { data } = Astro.props;
 ---
-<section class="favs section" data-theme="light">
+<section class="favs section" id="stays" data-theme="light">
   <div class="favs__head" data-reveal data-inview>
     <h2 class="favs__title serif">{data.heading}</h2>
     <p class="favs__intro">{data.intro}</p>

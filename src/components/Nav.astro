@@ -1,13 +1,35 @@
 ---
+import Login from './Login.astro';
 const { settings } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// On the Premium page the member button scrolls to the request form; elsewhere it goes there
+const onPremium = path === '/premium';
+const requestHref = onPremium ? '#request' : '/premium#request';
 ---
 <header class="nav" data-nav>
   <a class="nav__brand" href="/" aria-label="Holiwise home">HOLIWISE</a>
   <nav class="nav__links" aria-label="Main">
-    {settings.nav.map((item: any) => <a class="link" href={item.href}>{item.label}</a>)}
+    {settings.nav.map((item: any) => <a class="link" href={item.href} aria-current={item.href === path ? 'page' : undefined}>{item.label}</a>)}
   </nav>
   <div class="nav__actions">
-    <a class="link nav__invite" href="#">{settings.inviteLabel}</a>
-    <a class="btn btn--ghost-light" href={settings.agentHref}>{settings.agentLabel}</a>
+    <a class="link nav__login" href="#login" data-login-open>Log in</a>
+    <a class="btn btn--ghost-light" href={requestHref} data-to-request={onPremium ? '' : undefined}>Become a member</a>
+    <button class="nav__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu" data-menu-toggle>
+      <span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
   </div>
 </header>
+
+<!-- Small screens: the page links, log in and contact in a full-screen panel under the nav -->
+<div class="menu" id="menu" data-menu inert>
+  <nav class="menu__links" aria-label="Menu">
+    <a class="menu__link serif" href="/" aria-current={path === '/' ? 'page' : undefined} style="--i:0">Home</a>
+    {settings.nav.map((item: any, i: number) => <a class="menu__link serif" href={item.href} aria-current={item.href === path ? 'page' : undefined} style={`--i:${i + 1}`}>{item.label}</a>)}
+  </nav>
+  <div class="menu__foot" style={`--i:${settings.nav.length + 1}`}>
+    <a class="btn btn--light" href="#login" data-login-open>Log in</a>
+    <a class="btn btn--ghost-light" href={settings.agentHref}>{settings.agentLabel}</a>
+    <a class="menu__phone link" href={`tel:${settings.phone.replace(/\s/g, '')}`}>{settings.phone}</a>
+  </div>
+</div>
+<Login requestHref={requestHref} />

@@ -5,17 +5,18 @@ const year = new Date().getFullYear();
 const pay = [['visa-on-dark', 'Visa'], ['mastercard', 'Mastercard'], ['american-express', 'American Express'], ['apple-pay-on-dark', 'Apple Pay'], ['google-pay-on-dark', 'Google Pay']];
 ---
 <footer class="footer" data-theme="dark">
+  <!-- Figma 402:3923: brand on the left; links top right with the HOLIWISE mark settled beneath them -->
   <div class="footer__top">
-    <div>
+    <div class="footer__brand">
       <p class="footer__headline serif">{settings.footerHeadline}</p>
       <p class="footer__tagline">{settings.tagline}</p>
       <div class="footer__ctas">
         <a class="btn btn--light" href={settings.agentHref}>{settings.agentLabel}</a>
-        <a class="btn btn--ghost-light" href="#top" data-focus-tell>Start planning</a>
+        <a class="btn btn--ghost-light" href="/#top" data-focus-tell>Start planning</a>
       </div>
       <p class="footer__contact">
         <a class="link" href={`tel:${settings.phone.replace(/\s/g, '')}`}>{settings.phone}</a>
-        {settings.socials.map((s: any) => <a class="link" href={s.href}>{s.label}</a>)}
+        {settings.socials.map((s: any) => <><span aria-hidden="true">·</span><a class="link" href={s.href}>{s.label}</a></>)}
       </p>
     </div>
     <nav class="footer__cols" aria-label="Footer">
@@ -26,9 +27,8 @@ const pay = [['visa-on-dark', 'Visa'], ['mastercard', 'Mastercard'], ['american-
         </div>
       ))}
     </nav>
+    <div class="footer__markwrap" data-inview data-threshold="0.3"><p class="footer__mark" aria-hidden="true" data-wipe>HOLIWISE</p></div>
   </div>
-
-  <div data-inview data-threshold="0.3"><p class="footer__mark" aria-hidden="true" data-wipe>HOLIWISE</p></div>
 
   <div class="footer__trust">
     <div class="footer__trust-l">
@@ -44,5 +44,5 @@ const pay = [['visa-on-dark', 'Visa'], ['mastercard', 'Mastercard'], ['american-
     </ul>
   </div>
 
-  <div class="footer__bottom"><span>{settings.companyLine}</span><span>© {year} Holiwise Ltd</span></div>
+  <div class="footer__bottom"><span>{settings.companyLine.split(' · ').map((part: string, i: number) => <>{i > 0 && ' · '}<span class="nowrap">{part}</span></>)}</span><span>© {year} Holiwise Ltd</span></div>
 </footer>

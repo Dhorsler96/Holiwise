@@ -1,7 +1,9 @@
 ---
-/* Prototype: what happens after someone sends a brief from "Or just tell us".
-   A sheet shows the brief, the agent working on it, then three options.
-   Front-end only: matching is by keyword and prices are placeholders. */
+/* Prototype: what happens after a search or a brief (11 Nov call).
+   A short trip comes back as three options straight away. A long trip (8+ nights, weeks, several
+   stops, flights) goes to the agent: the sheet says what happens next, how long it takes and where
+   the reply arrives. Front-end only: matching is by keyword
+   and prices are placeholders. */
 const { destinations, agentHref } = Astro.props;
 
 const stays: Record<string, { stay: string; details: string; why: string; tags: string[] }> = {
@@ -60,6 +62,29 @@ const options = destinations.filter((d: any) => stays[d.title]).map((d: any) => 
       <span class="brief__progress" aria-hidden="true"><i data-brief-bar></i></span>
     </div>
 
+    <div class="brief__next" data-brief-next>
+      <p class="brief__eyebrow">What happens next</p>
+      <ol class="brief__steps">
+        {[0, 1, 2].map((i) => (
+          <li class="brief__step" style={`--n:${i}`}>
+            <span class="brief__n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="brief__step-text"><b data-step-title></b><span data-step-text></span></span>
+            <span class="brief__when" data-step-when></span>
+          </li>
+        ))}
+      </ol>
+      <div class="brief__reply">
+        <div class="brief__channel" role="group" aria-label="Where should Albin reply?">
+          <span>Albin will reply on</span>
+          <button class="chip" type="button" aria-pressed="true" data-channel="WhatsApp">WhatsApp</button>
+          <button class="chip" type="button" aria-pressed="false" data-channel="email">Email</button>
+        </div>
+        <div class="brief__actions">
+          <button class="btn btn--dark" type="button" data-brief-close>Done</button>
+        </div>
+      </div>
+    </div>
+
     <ol class="brief__options" data-brief-options>
       {options.map((o: any) => (
         <li class="brief__option" data-option={o.title} data-tags={o.tags.join(' ')} hidden>
@@ -79,7 +104,7 @@ const options = destinations.filter((d: any) => stays[d.title]).map((d: any) => 
     <form class="brief__refine" data-brief-refine>
       <input type="text" name="refine" autocomplete="off" placeholder="Not quite right? Tell Albin what to change" aria-label="Tell Albin what to change" />
       <button class="btn btn--dark" type="submit">Send</button>
-      <a class="link brief__whatsapp" href={agentHref}>Or message on WhatsApp</a>
+      <a class="link brief__whatsapp" href={agentHref}>Or continue on WhatsApp</a>
     </form>
   </div>
 </div>

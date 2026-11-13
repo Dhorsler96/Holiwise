@@ -2,20 +2,12 @@
   "settings": {
     "nav": [
       {
-        "label": "Destinations",
-        "href": "#where-next"
-      },
-      {
-        "label": "Stories",
-        "href": "#"
+        "label": "About Us",
+        "href": "/about"
       },
       {
         "label": "Premium",
         "href": "/premium"
-      },
-      {
-        "label": "For companies",
-        "href": "#"
       }
     ],
     "inviteLabel": "Have an invite?",
@@ -44,11 +36,11 @@
         "links": [
           {
             "label": "How it works",
-            "href": "#how-it-works"
+            "href": "/#how-it-works"
           },
           {
             "label": "Destinations",
-            "href": "#where-next"
+            "href": "/#where-next"
           },
           {
             "label": "Stories",
@@ -56,7 +48,7 @@
           },
           {
             "label": "Premium",
-            "href": "#"
+            "href": "/premium"
           },
           {
             "label": "For companies",
@@ -101,23 +93,31 @@
     ],
     "companyLine": "Holiwise Ltd · Registered in England & Wales · Company no. 15301867",
     "abtaNumber": "Y6864",
-    "iataLicence": "91205796"
+    "iataLicence": "91205796",
+    "inviteHref": "/premium#invite"
   },
   "home": {
     "hero": {
       "headline": "Leave it with us",
-      "intro": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and your agent sends three options in minutes.",
+      "intro": "Experience the world effortlessly. Tell us where and when, and your agent takes it from there, on WhatsApp.",
       "poster": {
         "src": "/images/hero-poster.jpg",
         "alt": "Aerial view of a hotel garden and pool beside a lagoon"
       },
       "videoUrl": "/video/hero.mp4",
-      "helper": "Not sure where to go? Just tell us, and your agent sends three options",
+      "helper": "Planning something bigger? Tell your agent, and they’ll reply on WhatsApp",
       "tellUsExamples": [
-        "A long weekend somewhere warm…",
-        "Two weeks in Greece in June, a bit of sailing…",
-        "Somewhere special for our anniversary…",
-        "Skiing in February, six of us…"
+        "Four nights in Paris, 12–16 March…",
+        "Two weeks in Greece in June with the kids…",
+        "A suite in Rome for our anniversary, late May…",
+        "Flights and a hotel in Dubai over half-term…"
+      ],
+      "tellSuggestions": [
+        "Flights and a hotel",
+        "A hotel in one city",
+        "A special occasion",
+        "Several stops, one trip",
+        "Not sure yet"
       ]
     },
     "statement": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and we’ll find you options in minutes.",
@@ -318,6 +318,464 @@
           "_note": "INTERNAL ONLY: Belmond image used as a placeholder, not licensed for public use. Replace before launch."
         }
       ]
+    }
+  },
+  "premium": {
+    "meta": {
+      "title": "Holiwise Premium · Membership by invitation",
+      "description": "A private travel service for people who travel often. Your own agent, privileges at the hotels you love, and no membership fee."
+    },
+    "hero": {
+      "headline": "Membership by invitation.",
+      "intro": "A private travel service for people who travel often. Your own agent, privileges at the hotels you love, and no membership fee.",
+      "poster": {
+        "src": "/images/premium-hero.jpg",
+        "alt": "A Four Seasons private jet on the apron at golden hour"
+      },
+      "videoUrl": "/video/premium-hero.mp4",
+      "primaryLabel": "Request an invitation",
+      "secondaryLabel": "Enter your invite code",
+      "_note": "Four Seasons footage supplied for the design review: confirm usage rights before launch."
+    },
+    "statement": "Our premium membership is how we look after the people who travel with us most. One agent who knows how you like to travel, a direct line on WhatsApp, and partner privileges on every stay.",
+    "includes": {
+      "heading": "Looked after, start to finish.",
+      "intro": "Three things every member has, from the first message to the flight home.",
+      "pillars": [
+        {
+          "title": "Your own agent",
+          "body": "A dedicated travel agent who learns how you like to travel and handles anything travel-related, from a weekend away to a month across three countries.",
+          "points": [
+            "Personal service",
+            "One person, start to finish",
+            "On WhatsApp, whenever you need them"
+          ],
+          "image": {
+            "src": "/images/premium-agent.jpg",
+            "alt": "A hotel pool among palms and cypress trees"
+          }
+        },
+        {
+          "title": "Partner privileges",
+          "body": "Member rates at over 1 million stays worldwide, with upgrades, hotel credits and breakfast added where our partners offer them.",
+          "points": [
+            "At the hotels you love",
+            "Upgrades and extras where available",
+            "Every price checked against booking direct"
+          ],
+          "image": {
+            "src": "/images/premium-privileges.jpg",
+            "alt": "A guest reading in a hotel garden below wooded hills"
+          }
+        },
+        {
+          "title": "By invitation",
+          "body": "Premium grows through the people who already travel with us. Once you are in, you can invite the people you travel with.",
+          "points": [
+            "Exclusive membership",
+            "Entry by referral, no membership fee",
+            "Invitation links to share"
+          ],
+          "image": {
+            "src": "/images/premium-invitation.jpg",
+            "alt": "Vineyards running down to a village at dusk"
+          }
+        }
+      ]
+    },
+    "join": {
+      "heading": "Three steps to your first trip.",
+      "intro": "Most members are invited by a friend. If nobody has invited you yet, request an invitation and we will be in touch.",
+      "steps": [
+        {
+          "title": "Get invited, or ask",
+          "body": "Use the code a member sent you, or request an invitation with a few details about how you travel."
+        },
+        {
+          "title": "A short conversation",
+          "body": "Someone from our team reads every request and replies personally."
+        },
+        {
+          "title": "Meet your agent",
+          "body": "Your agent introduces themselves on WhatsApp. Tell them what you have in mind, and leave it with them."
+        }
+      ]
+    },
+    "request": {
+      "heading": "Request an invitation",
+      "intro": "Tell us a little about you and how you travel. We reply to every request personally.",
+      "heardOptions": [
+        "A friend or member",
+        "Instagram",
+        "LinkedIn",
+        "Press",
+        "Search",
+        "Somewhere else"
+      ],
+      "legal": "By requesting an invitation you agree to our terms and privacy policy.",
+      "submitLabel": "Request an invitation",
+      "thanksTitle": "Thank you. Leave it with us.",
+      "thanksBody": "We read every request personally and will be in touch by email or on WhatsApp."
+    },
+    "quotes": [
+      {
+        "title": "Relaxed stay at the Fairmont in Tangier",
+        "date": "31 Mar 2025",
+        "name": "Ben",
+        "trip": "Travelled to Morocco",
+        "quote": "Really relaxed stay at the Fairmont in Tangier. A special experience while discovering a new culture during Ramadan. Service and hospitality were incredible! Booking process was smooth despite me requesting to change the dates after my initial booking which is really reassuring."
+      },
+      {
+        "title": "Highly recommend Holiwise",
+        "date": "02 Jun 2025",
+        "name": "Natalya",
+        "trip": "Travelled to Seychelles",
+        "quote": "I had a truly wonderful experience with Holiwise! Everything was perfectly organized, and the attention to detail made the entire trip smooth and stress-free. A special highlight was the booking at the Four Seasons Resort Seychelles at Desroches Island. It was absolutely amazing and exceeded all expectations. The team was friendly, responsive, and clearly passionate about creating memorable travel experiences."
+      },
+      {
+        "title": "Trip to Copenhagen",
+        "date": "17 Jun 2025",
+        "name": "Kevin",
+        "trip": "Travelled to Copenhagen",
+        "quote": "After booking a hotel with Holiwise last summer, which was super easy and came with great service, I’ve now booked a flight from Prague to Copenhagen. As a still somewhat price sensitive traveler, I appreciated that Holiwise not only made the process seamless but also offered the best price."
+      },
+      {
+        "title": "Exceeded all expectations and beyond!",
+        "date": "06 Aug 2025",
+        "name": "Angel",
+        "trip": "Travelled to Shanghai",
+        "quote": "I used their concierge service and wow it was such a breeze! The concierge was very responsive, attentive and super efficient. I booked all my hotels within the same day… and at much better prices than other websites! I will use Holiwise for all my future vacations and I highly recommend!"
+      },
+      {
+        "title": "Great booking experience",
+        "date": "31 May 2025",
+        "name": "Kevin",
+        "trip": "Travelled to Madrid",
+        "quote": "I’ve had the pleasure of booking hotels through Holiwise for several of my trips this year, and I’ll definitely continue using their service in the future. The selection has been excellent for my destinations (Madrid, Milan, and Belgrade), and the support during the booking process has been outstanding. If you’re looking for everything you could wish for when planning your travels, I highly recommend Holiwise."
+      },
+      {
+        "title": "Hotel bookings",
+        "date": "13 Aug 2025",
+        "name": "Qalbee",
+        "trip": "Travelled to Singapore",
+        "quote": "Recommendation from a friend, and honestly, I pretty much knew what I wanted going in. The agent, Kristian, helped by finding competitive hotel prices and making sure everything lined up. Overall, I’m really happy with the service and would definitely recommend it!"
+      }
+    ],
+    "press": [
+      {
+        "name": "The Independent",
+        "src": "/images/press/independent.png",
+        "w": 246,
+        "h": 17
+      },
+      {
+        "name": "Tech.eu",
+        "src": "/images/press/techeu.png",
+        "w": 75,
+        "h": 56
+      },
+      {
+        "name": "PhocusWire",
+        "src": "/images/press/phocuswire.png",
+        "w": 201,
+        "h": 53
+      },
+      {
+        "name": "Travolution",
+        "src": "/images/press/travolution.png",
+        "w": 165,
+        "h": 39
+      },
+      {
+        "name": "Dagens industri",
+        "src": "/images/press/dagens.png",
+        "w": 211,
+        "h": 39
+      },
+      {
+        "name": "EU-Startups",
+        "src": "/images/press/eustartups.png",
+        "w": 160,
+        "h": 59
+      }
+    ],
+    "faq": {
+      "heading": "Good to know",
+      "intro": "Anything else, message us and a person will reply.",
+      "items": [
+        {
+          "q": "What is Holiwise Premium?",
+          "a": "A private, invitation-only membership. Members get their own travel agent on WhatsApp, member rates at over 1 million stays, and partner privileges like upgrades and breakfast where available."
+        },
+        {
+          "q": "Does membership cost anything?",
+          "a": "No. There is no membership fee. You pay for your trips, at member rates."
+        },
+        {
+          "q": "How can I join Premium?",
+          "a": "Use the invitation a member sent you, or request one with the form on this page. Someone from our team reads every request."
+        },
+        {
+          "q": "How long does it take to hear back about my request?",
+          "a": "We reply to every request personally, by email or on WhatsApp. If a member invited you, have their code to hand."
+        },
+        {
+          "q": "What kind of trips can my agent help with?",
+          "a": "Anything travel-related: a hotel for the weekend, flights, or a longer trip across several places. Simple stays come back quickly; bigger trips get the time they deserve."
+        },
+        {
+          "q": "What are the requirements to join?",
+          "a": "Premium is designed for people who travel often. Tell us a little about how you travel and we will take it from there."
+        },
+        {
+          "q": "Is there Premium for companies?",
+          "a": "Yes. Choose Company on the request form and tell us about the way your team travels."
+        },
+        {
+          "q": "Can I invite friends or family?",
+          "a": "Yes. Members can share invitation links with the people they travel with."
+        },
+        {
+          "q": "Can membership be revoked?",
+          "a": "Membership is personal and non-transferable, and is offered in line with our terms."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "Travel, looked after.",
+      "body": "Request an invitation, or use the code a member sent you."
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "About Holiwise · Travel, looked after by people",
+      "description": "A travel agency of real people in London and Stockholm, with technology we built ourselves working quietly behind every trip."
+    },
+    "hero": {
+      "headline": "Travel, looked after by people.",
+      "intro": "We help you experience the world effortlessly. A travel agency of real people in London and Stockholm, with technology we built ourselves working quietly behind every trip.",
+      "ctaLabel": "Message an agent",
+      "_note": "Hero photos from Figma 393:3687. Several are Belmond images used as internal placeholders: not licensed for public use.",
+      "photos": [
+        {
+          "src": "/images/about/about-dinner.jpg",
+          "x": 346,
+          "y": 281,
+          "w": 90,
+          "h": 113,
+          "o": 0.1,
+          "layer": "far"
+        },
+        {
+          "src": "/images/about/about-village-pool.jpg",
+          "x": 195,
+          "y": 13,
+          "w": 169,
+          "h": 212,
+          "o": 0.2,
+          "layer": "far"
+        },
+        {
+          "src": "/images/about/about-garden.jpg",
+          "x": 889,
+          "y": 506,
+          "w": 221,
+          "h": 277,
+          "o": 0.2,
+          "layer": "far"
+        },
+        {
+          "src": "/images/about/about-plate.jpg",
+          "x": 542,
+          "y": 551,
+          "w": 90,
+          "h": 113,
+          "o": 0.5,
+          "layer": "mid"
+        },
+        {
+          "src": "/images/about/about-beach-villas.jpg",
+          "x": 852,
+          "y": 64,
+          "w": 107,
+          "h": 133,
+          "o": 0.7,
+          "layer": "mid"
+        },
+        {
+          "src": "/images/about/about-loungers.jpg",
+          "x": 1306,
+          "y": 75,
+          "w": 143,
+          "h": 178,
+          "o": 1,
+          "layer": "near"
+        },
+        {
+          "src": "/images/about/about-vineyard.jpg",
+          "x": 125,
+          "y": 472,
+          "w": 221,
+          "h": 296,
+          "o": 1,
+          "layer": "near"
+        },
+        {
+          "src": "/images/about/about-terrace.jpg",
+          "x": -11,
+          "y": 189,
+          "w": 136,
+          "h": 171,
+          "o": 1,
+          "layer": "near"
+        },
+        {
+          "src": "/images/about/about-arch.jpg",
+          "x": 1189,
+          "y": 337,
+          "w": 216,
+          "h": 270,
+          "o": 1,
+          "layer": "near"
+        }
+      ]
+    },
+    "story": {
+      "lead": "If you’re reading this, it’s probably because you love to travel. So do we. We’re frequent travellers based in London and Stockholm, with backgrounds at Goldman Sachs, Spotify, Microsoft and Barclays. Over years of travelling, we found the trip was always the best part, and the planning, with a dozen tabs open to research, compare and book, the worst.",
+      "paragraphs": [
+        "So we built a travel agency that does the planning for you. Tell your agent where and when, and they come back with a few options that fit. Behind them, technology we built ourselves matches hotels and rooms to how you like to travel, so your agent’s time goes on you.",
+        "Simple stays come back quickly. Bigger trips, with flights, several stops and a few weeks away, get the time they deserve. For people who travel often there is Holiwise Premium: your own agent, member rates at over 1 million stays, and partner privileges on every trip. It’s by invitation."
+      ],
+      "image": {
+        "src": "/images/about/about-story.jpg",
+        "alt": "Three women standing together in a sitting room in front of a painting"
+      },
+      "_note": "Photo from Figma 402:3813 is a placeholder: swap for the Holiwise team before launch."
+    },
+    "facts": {
+      "eyebrow": "Fast facts",
+      "items": [
+        {
+          "value": 8,
+          "suffix": "M+",
+          "label": "trips created"
+        },
+        {
+          "value": 1,
+          "suffix": "M+",
+          "label": "stays listed"
+        },
+        {
+          "value": 50,
+          "suffix": "K+",
+          "label": "travel destinations"
+        },
+        {
+          "value": 120,
+          "suffix": "+",
+          "label": "countries travelled to"
+        }
+      ]
+    },
+    "how": {
+      "eyebrow": "How we work",
+      "heading": "People first, technology behind them.",
+      "intro": "What you can expect every time you travel with us.",
+      "principles": [
+        {
+          "title": "A person, not a portal",
+          "body": "Every trip has a named agent behind it. You talk to a person on WhatsApp, from the first message to the flight home."
+        },
+        {
+          "title": "Quiet technology",
+          "body": "Our own technology does the searching and matching in the background, so your agent can spend their time on the details that make a trip."
+        }
+      ]
+    },
+    "team": {
+      "eyebrow": "The team",
+      "heading": "Meet our leadership team",
+      "rows": [
+        [
+          {
+            "name": "Albin Eriksson Lippe",
+            "role": "Co-Founder and CEO",
+            "image": "/images/about/team-albin.jpg"
+          },
+          {
+            "name": "Kristian Lexeklint",
+            "role": "Co-Founder and CFO",
+            "image": "/images/about/team-kristian.jpg"
+          },
+          {
+            "name": "Apurva Amin",
+            "role": "Co-Founder and CTO",
+            "image": "/images/about/team-apurva.jpg"
+          },
+          {
+            "name": "Maria Ancheta",
+            "role": "Founding Engineer",
+            "image": "/images/about/team-maria.jpg"
+          }
+        ],
+        [
+          {
+            "name": "Albin Eriksson Lippe",
+            "role": "Co-Founder and CEO",
+            "image": "/images/about/team-2-1.jpg"
+          },
+          {
+            "name": "Kristian Lexeklint",
+            "role": "Co-Founder and CFO",
+            "image": "/images/about/team-2-2.jpg"
+          },
+          {
+            "name": "Apurva Amin",
+            "role": "Co-Founder and CTO",
+            "image": "/images/about/team-2-3.jpg"
+          },
+          {
+            "name": "Maria Ancheta",
+            "role": "Founding Engineer",
+            "image": "/images/about/team-2-4.jpg"
+          }
+        ]
+      ],
+      "_note": "PLACEHOLDER: stock portraits under real names; the second row has new photos (Figma 386:3409) but still repeats the first row’s names. Replace with Holiwise’s own photos and the wider team before anything is shared outside."
+    },
+    "where": {
+      "eyebrow": "Where we are",
+      "heading": "London and Stockholm",
+      "offices": [
+        {
+          "city": "London",
+          "image": "/images/about/office-london.jpg",
+          "alt": "A leafy courtyard with people having lunch at small white tables",
+          "address": [
+            "14 Hanway Place",
+            "London W1T 1HR",
+            "United Kingdom"
+          ]
+        },
+        {
+          "city": "Stockholm",
+          "image": "/images/about/office-stockholm.jpg",
+          "alt": "A bright double-height lobby with a timber ceiling and a wide staircase",
+          "address": [
+            "Birger Jarlsgatan 22",
+            "114 34 Stockholm",
+            "Sweden"
+          ]
+        }
+      ],
+      "_note": "PLACEHOLDER addresses (made up for layout) and stand-in office photos: replace with Holiwise’s real office details before launch."
+    },
+    "cta": {
+      "heading": "Ready when you are.",
+      "body": "Tell us where and when, and leave it with us.",
+      "primaryLabel": "Message an agent",
+      "secondaryLabel": "Request a Premium invitation",
+      "secondaryHref": "/premium#request"
     }
   }
 }

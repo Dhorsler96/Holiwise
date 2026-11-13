@@ -4,6 +4,22 @@ const root = document.documentElement;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = <T extends HTMLElement>(sel: string, el: ParentNode = document) => el.querySelector<T>(sel);
 const $$ = <T extends HTMLElement>(sel: string, el: ParentNode = document) => Array.from(el.querySelectorAll<T>(sel));
+
+/** Phones, where the search popovers open as bottom sheets */
+const phoneSheet = () => window.matchMedia('(max-width: 600px)').matches;
+/** iOS ignores overflow: hidden, so on phones the page is pinned in place while a sheet is open */
+let pinnedY = 0;
+const pinPage = (on: boolean) => {
+  if (!phoneSheet()) return;
+  const b = document.body.style;
+  if (on) {
+    pinnedY = window.scrollY;
+    Object.assign(b, { position: 'fixed', top: `-${pinnedY}px`, left: '0', right: '0' });
+  } else {
+    Object.assign(b, { position: '', top: '', left: '', right: '' });
+    window.scrollTo({ top: pinnedY, behavior: 'instant' as ScrollBehavior });
+  }
+};
 const nextFrame = (fn: () => void) => requestAnimationFrame(() => requestAnimationFrame(fn));
 
 /* ---------- Text transitions (Calligraph) ----------
@@ -12,14 +28,14 @@ const nextFrame = (fn: () => void) => requestAnimationFrame(() => requestAnimati
    so it loads once the page is idle; until then, and under reduced motion, text swaps instantly. */
 type Morpher = { set: (text: string) => void };
 const morphers = new Map<HTMLElement, Morpher>();
-const setText = (el: HTMLElement, text: string) => {
+export const setText = (el: HTMLElement, text: string) => {
   const m = morphers.get(el);
   if (m) m.set(text);
   else el.textContent = text;
 };
 if (!reduceMotion) {
   const load = () => import('./calligraph').then(({ morph }) => {
-    for (const el of $$('[data-value], [data-where-label], [data-submit-label], [data-brief-status]')) morphers.set(el, morph(el, { animation: 'snappy' }));
+    for (const el of $$('[data-value], [data-where-label], [data-submit-label], [data-brief-status], [data-morph]')) morphers.set(el, morph(el, { animation: 'snappy' }));
     for (const el of $$('.stepper output')) morphers.set(el, morph(el, { variant: 'number', animation: 'snappy' }));
   });
   if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 2500 });
@@ -32,8 +48,12 @@ window.setTimeout(() => root.classList.add('is-settled'), 1600);
 
 const heroVideo = $<HTMLVideoElement>('[data-hero-video]');
 if (heroVideo && !reduceMotion) {
-  heroVideo.addEventListener('canplay', () => heroVideo.classList.add('is-ready'), { once: true });
-  heroVideo.play().catch(() => {});
+  // Fade the video in once it's actually playing. A cached video can start before this script runs,
+  // so check its state as well as listening for the event.
+  const ready = () => heroVideo.classList.add('is-ready');
+  heroVideo.addEventListener('playing', ready, { once: true });
+  heroVideo.play().then(ready).catch(() => {});
+  if (!heroVideo.paused && heroVideo.readyState >= 3) ready();
 }
 
 /* ---------- Scroll reveals: once, then the observer lets go ---------- */
@@ -129,7 +149,7 @@ window.addEventListener('keydown', () => { keyboard = true; }, true);
 window.addEventListener('pointerdown', () => { keyboard = false; }, true);
 
 /* ---------- Brief flow (prototype): the sheet that answers a written brief ---------- */
-let openBrief: ((brief: string, parts: string[], returnFocus: HTMLElement) => void) | null = null;
+let openBrief: ((brief: string, parts: string[], returnFocus: HTMLElement, place?: string) => void) | null = null;
 const flow = $('[data-brief]');
 if (flow) {
   const sheet = $('.brief__sheet', flow)!;
@@ -139,6 +159,38 @@ if (flow) {
   const bar = $('[data-brief-bar]', flow)!;
   const cards = $$('[data-option]', flow);
   const refine = $<HTMLFormElement>('[data-brief-refine]', flow)!;
+  const steps = $$('.brief__step', flow);
+  const channels = $$<HTMLButtonElement>('[data-channel]', flow);
+  let channel = 'WhatsApp';
+  // A short trip gets three options straight away. A long one (8+ nights, weeks away, several stops,
+  // flights or an occasion) goes to the agent: the sheet says what happens next, how long it takes
+  // and where the reply arrives (11 Nov call).
+  type Mode = 'options' | 'trip';
+  let mode: Mode = 'options';
+  let place = '';
+  const LONG = /\b(weeks?|fortnight|month|several|stops|multi|tour|road ?trip|itinerary|island[- ]hopping|safari|flights?|occasion|anniversary|honeymoon|wedding|not sure)\b/i;
+  const classify = (text: string): Mode => {
+    const nights = Number(text.match(/(\d+)\s*nights?/i)?.[1] ?? 0);
+    return LONG.test(text) || nights >= 8 ? 'trip' : 'options';
+  };
+  const on = () => (channel === 'email' ? 'By email' : 'On WhatsApp');
+  const fillSteps = () => {
+    const rows = [
+      ['Albin reads your brief', 'A person, not an algorithm, looks at what you’ve asked for.', 'Now'],
+      ['A quick question, if anything’s unclear', 'Usually about budget, rooms or flight times.', on()],
+      ['Your itinerary, as a PDF', 'Hotels, flights and prices for the whole trip, ready to book or tweak.', 'Within a few hours'],
+    ];
+    steps.forEach((li, i) => {
+      $('[data-step-title]', li)!.textContent = rows[i][0];
+      $('[data-step-text]', li)!.textContent = rows[i][1];
+      $('[data-step-when]', li)!.textContent = rows[i][2];
+    });
+  };
+  for (const c of channels) c.addEventListener('click', () => {
+    channel = c.dataset.channel!;
+    channels.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    fillSteps();
+  });
   let timers: number[] = [];
   let lastFocus: HTMLElement | null = null;
   let briefText = '';
@@ -162,23 +214,38 @@ if (flow) {
     return scored.sort((a, b) => b.score - a.score).slice(0, 3).map((s) => s.card);
   };
 
+  const showOptions = (where: string, text: string) => {
+    const picks = choose(briefText, where);
+    const list = picks[0].parentElement!;
+    picks.forEach((card, n) => { card.hidden = false; card.classList.toggle('is-pick', n === 0); card.style.setProperty('--n', String(n)); list.append(card); });
+    setText(status, text);
+    flow.classList.add('is-done');
+    flow.dataset.stage = 'options';
+    requestAnimationFrame(() => requestAnimationFrame(() => picks.forEach((c) => c.classList.add('is-in'))));
+  };
+
   const run = (where: string) => {
     clearTimers();
     flow.classList.remove('is-done');
+    flow.dataset.stage = 'working';
     cards.forEach((c) => { c.classList.remove('is-in'); c.hidden = true; });
     bar.style.transform = 'scaleX(0)';
     setText(status, 'Reading your brief');
     later(120, () => { bar.style.transform = 'scaleX(0.3)'; });
+    if (mode === 'trip') {
+      // A long trip goes to the agent: what happens next, how long it takes and where the reply arrives
+      later(1100, () => { bar.style.transform = 'scaleX(1)'; });
+      later(1700, () => {
+        fillSteps();
+        setText(status, 'Planning your trip. This takes a few hours.');
+        flow.classList.add('is-done');
+        flow.dataset.stage = 'handoff';
+      });
+      return;
+    }
     later(1100, () => { setText(status, 'Checking prices and availability'); bar.style.transform = 'scaleX(0.7)'; });
     later(2300, () => { setText(status, 'Choosing three options'); bar.style.transform = 'scaleX(1)'; });
-    later(3300, () => {
-      const picks = choose(briefText, where);
-      const list = picks[0].parentElement!;
-      picks.forEach((card, n) => { card.hidden = false; card.classList.toggle('is-pick', n === 0); card.style.setProperty('--n', String(n)); list.append(card); });
-      setText(status, 'Three options, ready when you are');
-      flow.classList.add('is-done');
-      requestAnimationFrame(() => requestAnimationFrame(() => picks.forEach((c) => c.classList.add('is-in'))));
-    });
+    later(3300, () => showOptions(where, 'Three options, ready when you are'));
   };
 
   const close = () => {
@@ -189,9 +256,11 @@ if (flow) {
     lastFocus?.focus({ preventScroll: true });
   };
 
-  openBrief = (brief, parts, returnFocus) => {
+  openBrief = (brief, parts, returnFocus, where = '') => {
     lastFocus = returnFocus;
     briefText = brief;
+    place = where;
+    mode = classify(brief);
     latest = '';
     round = 0;
     quote.textContent = `“${brief.replace(/[.…]+$/, '')}”`;
@@ -202,7 +271,7 @@ if (flow) {
     sheet.scrollTop = 0;
     requestAnimationFrame(() => requestAnimationFrame(() => flow.classList.add('is-open')));
     sheet.focus({ preventScroll: true });
-    run(parts[0]);
+    run(where);
   };
 
   for (const el of $$('[data-brief-close]', flow)) el.addEventListener('click', close);
@@ -227,7 +296,8 @@ if (flow) {
     quote.textContent = `“${briefText.replace(/[.…]+$/, '')}”`;
     input.value = '';
     round++;
-    run(tags.firstElementChild?.textContent ?? '');
+    mode = 'options';
+    run(place);
   });
 }
 
@@ -236,6 +306,9 @@ const search = $<HTMLFormElement>('[data-search]');
 if (search) {
   const fields = $$('.field[data-field]', search);
   const tell = $<HTMLTextAreaElement>('[data-tell]', search)!;
+  // Search is a place and real dates; these are the empty states
+  const WHERE_EMPTY = 'Search a city or hotel';
+  const FLIGHT_EMPTY = 'London → Where to?';
   let open: HTMLElement | null = null;
 
   const instantly = (fn: () => void) => {
@@ -255,6 +328,8 @@ if (search) {
       search.classList.toggle('is-open', Boolean(field));
       // Freeze the page behind an open popover, keeping the scrollbar's space so nothing shifts
       if (field && !root.classList.contains('is-locked')) root.style.setProperty('--sbw', `${window.innerWidth - root.clientWidth}px`);
+      if (field && !root.classList.contains('is-locked')) pinPage(true);
+      if (!field && root.classList.contains('is-locked')) pinPage(false);
       root.classList.toggle('is-locked', Boolean(field));
     };
     // Switching between fields, or opening with the keyboard, skips the animation.
@@ -277,11 +352,11 @@ if (search) {
     btn.addEventListener('click', () => {
       const willOpen = open !== field;
       setOpen(willOpen ? field : null, keyboard);
-      if (willOpen && keyboard) $<HTMLElement>('button', pop)?.focus();
+      if (willOpen && keyboard) $<HTMLElement>('input, button', pop)?.focus();
     });
     pop.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) return;
+      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement || (e.target as Element).closest('.cal')) return;
       const items = $$<HTMLButtonElement>('button:not(:disabled)', pop);
       const i = items.indexOf(document.activeElement as HTMLButtonElement);
       const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
@@ -296,7 +371,7 @@ if (search) {
     if (!opt.dataset.opt) return;
     const picked = opt.hasAttribute('data-opt-custom') ? null : opt;
     $$('[data-opt]', where).forEach((o) => o.setAttribute('aria-selected', String(o === picked)));
-    setValue(where, opt.dataset.opt!, picked === $$('[data-opt]:not([data-opt-custom])', where)[0]);
+    setValue(where, opt.dataset.opt!);
     setOpen(null, keyboard);
     $<HTMLElement>('.field__btn', where)!.focus({ preventScroll: true });
   }));
@@ -341,17 +416,275 @@ if (search) {
     pop.style.width = '';
     pop.style.height = `${pop.offsetHeight}px`;
     pop.style.width = `${pop.offsetWidth}px`;
-    whereSearch.focus({ preventScroll: true });
+    // On phones the keyboard would cover the list and shove the sheet about: wait for a tap in the box
+    if (!phoneSheet()) whereSearch.focus({ preventScroll: true });
   });
 
-  // When
+  const whereSet = () => Boolean(where.dataset.current) && where.dataset.current !== WHERE_EMPTY && where.dataset.current !== FLIGHT_EMPTY;
+
+  // When: an Airbnb-style range calendar in our own style. Two months side by side (one on phones),
+  // check-in then check-out, a band joining them, and how flexible the dates are.
   const when = fields.find((f) => f.dataset.field === 'when')!;
-  $$('[data-opt]', when).forEach((chip, i) => chip.addEventListener('click', () => {
-    $$('[data-opt]', when).forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
-    setValue(when, chip.dataset.opt!, i === 0);
+  const whenPop = $('.pop', when)!;
+  const cal = $('[data-cal]', when)!;
+  const months = $('[data-cal-months]', when)!;
+  const prev = $<HTMLButtonElement>('[data-cal-prev]', when)!;
+  const next = $<HTMLButtonElement>('[data-cal-next]', when)!;
+  const nightsLabel = $('[data-nights]', when)!;
+  const flexChips = $$<HTMLButtonElement>('[data-flex]', when);
+  const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const parse = (v: string) => { const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const month = (d: Date) => d.toLocaleString('en-GB', { month: 'short' });
+  const range = (a: Date, b: Date) => (a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
+    ? `${a.getDate()}–${b.getDate()} ${month(b)}`
+    : `${a.getDate()} ${month(a)} – ${b.getDate()} ${month(b)}`);
+  const today = iso(new Date());
+  const firstOfThisMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  let checkIn = '';
+  let checkOut = '';
+  let flex = 0;
+  let view = firstOfThisMonth;
+  let hover = '';
+  let focusDay = today;
+  let dateMode: 'dates' | 'flexible' = 'dates';
+  const twoUp = () => window.matchMedia('(min-width: 720px)').matches;
+
+  // Flexible: how long, and which months (pick as many as you like)
+  const lengths = $$<HTMLButtonElement>('[data-length]', when);
+  const monthTrack = $('[data-months]', when)!;
+  const LENGTH: Record<string, { label: string; nights: number }> = { weekend: { label: 'A weekend', nights: 2 }, week: { label: 'A week', nights: 7 }, month: { label: 'A month', nights: 28 } };
+  let stayLength = 'week';
+  const picked = new Set<string>();
+  const nextMonths = Array.from({ length: 12 }, (_, i) => new Date(firstOfThisMonth.getFullYear(), firstOfThisMonth.getMonth() + i, 1));
+  monthTrack.innerHTML = nextMonths.map((m) => `<button class="flexi__month" type="button" aria-pressed="false" data-month="${iso(m).slice(0, 7)}">${'<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" fill=\"none\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"6\" width=\"23\" height=\"20.5\" rx=\"3\" stroke=\"currentColor\" stroke-width=\"1.25\"/><path d=\"M3.5 12h23M10 3.5v5M20 3.5v5\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"round\"/></svg>'}<b>${m.toLocaleString('en-GB', { month: 'long' })}</b><span>${m.getFullYear()}</span></button>`).join('');
+  const listMonths = (style: 'long' | 'short') => nextMonths.filter((m) => picked.has(iso(m).slice(0, 7))).map((m) => m.toLocaleString('en-GB', { month: style }));
+  const joinOr = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} or ${xs[xs.length - 1]}`);
+  const syncFlexible = () => {
+    const len = LENGTH[stayLength];
+    if (!picked.size) {
+      setText(nightsLabel, 'Choose one or more months');
+      delete when.dataset.range;
+      setValue(when, 'Add dates', true);
+      return;
+    }
+    const short = listMonths('short');
+    const text = `${len.label} in ${short.length > 2 ? `${short.length} months` : joinOr(short)}`;
+    setText(nightsLabel, `${len.label}, sometime in ${joinOr(listMonths('long'))}`);
+    when.dataset.range = text;
+    when.dataset.stay = String(len.nights);
+    when.dataset.phrase = `for ${len.label.toLowerCase()}, sometime in ${joinOr(listMonths('long'))}`;
+    setValue(when, text);
+  };
+  for (const b of lengths) b.addEventListener('click', () => {
+    stayLength = b.dataset.length!;
+    lengths.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    syncFlexible();
+  });
+  monthTrack.addEventListener('click', (e) => {
+    const card = (e.target as Element).closest<HTMLButtonElement>('[data-month]');
+    if (!card) return;
+    const key = card.dataset.month!;
+    if (picked.has(key)) picked.delete(key); else picked.add(key);
+    card.setAttribute('aria-pressed', String(picked.has(key)));
+    syncFlexible();
+  });
+  const monthsPrev = $<HTMLButtonElement>('[data-months-prev]', when)!;
+  const monthsNext = $<HTMLButtonElement>('[data-months-next]', when)!;
+  const syncMonthArrows = () => {
+    monthsPrev.disabled = monthTrack.scrollLeft < 4;
+    monthsNext.disabled = monthTrack.scrollLeft + monthTrack.clientWidth > monthTrack.scrollWidth - 4;
+  };
+  const scrollMonths = (dir: number) => monthTrack.scrollBy({ left: dir * monthTrack.clientWidth * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' });
+  monthsPrev.addEventListener('click', () => scrollMonths(-1));
+  monthsNext.addEventListener('click', () => scrollMonths(1));
+  monthTrack.addEventListener('scroll', syncMonthArrows, { passive: true });
+
+  // Dates or Flexible, as one movement: the highlight slides across, the old panel blurs out,
+  // the popover eases to its new height and the new panel's rows arrive one after another.
+  const modeTabs = $$<HTMLButtonElement>('[data-date-mode]', when);
+  const modeSwitch = $('.dates__mode', when)!;
+  const panels = $$('[data-date-panel]', when);
+  const drawer = 'cubic-bezier(0.32, 0.72, 0, 1)';
+  const settle = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  let switching: Animation[] = [];
+  let swapToken = 0;
+  for (const tab of modeTabs) tab.addEventListener('click', async () => {
+    const next = tab.dataset.dateMode as 'dates' | 'flexible';
+    if (next === dateMode) return;
+    dateMode = next;
+    modeSwitch.dataset.mode = next;
+    modeTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+    const outgoing = panels.find((p) => !p.hidden)!;
+    const incoming = panels.find((p) => p.dataset.datePanel === next)!;
+    const swap = () => {
+      outgoing.hidden = true;
+      incoming.hidden = false;
+      syncDates();
+      if (next === 'flexible') requestAnimationFrame(syncMonthArrows);
+    };
+    if (reduceMotion) { swap(); placeWhen(); return; }
+    // A quick second click takes over from wherever the first one got to
+    const token = ++swapToken;
+    switching.forEach((a) => a.cancel());
+    switching = [];
+    const from = whenPop.offsetHeight;
+    const out = outgoing.animate([{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(4px)' }], { duration: 120, easing: 'ease-out', fill: 'forwards' });
+    switching.push(out);
+    try { await out.finished; } catch { return; }
+    if (token !== swapToken) return;
+    out.cancel();
+    swap();
+    const to = whenPop.offsetHeight;
+    whenPop.style.overflow = 'hidden';
+    const grow = whenPop.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: 380, easing: drawer });
+    switching.push(grow);
+    grow.finished.then(() => { whenPop.style.overflow = ''; }, () => { whenPop.style.overflow = ''; });
+    [...incoming.children].forEach((row, i) => {
+      switching.push((row as HTMLElement).animate(
+        [{ opacity: 0, transform: 'translateY(8px)', filter: 'blur(4px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }],
+        { duration: 320, delay: 60 + i * 50, easing: settle, fill: 'backwards' },
+      ));
+    });
+    placeWhen();
+  });
+
+  const renderMonth = (first: Date) => {
+    const title = first.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+    const lead = (first.getDay() + 6) % 7; // weeks start on Monday
+    const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    let cells = '';
+    for (let i = 0; i < lead; i++) cells += '<span class="cal__pad" aria-hidden="true"></span>';
+    const end = checkOut || (checkIn && hover > checkIn ? hover : '');
+    for (let d = 1; d <= days; d++) {
+      const date = new Date(first.getFullYear(), first.getMonth(), d);
+      const id = iso(date);
+      const past = id < today;
+      const cls = ['cal__day'];
+      if (id === checkIn) cls.push('is-start');
+      if (id === checkOut) cls.push('is-end');
+      if (checkIn && end && id > checkIn && id < end) cls.push(checkOut ? 'is-range' : 'is-preview');
+      if (checkIn && end && id === end && !checkOut) cls.push('is-preview-end');
+      if (checkIn && end && id === checkIn) cls.push('has-band');
+      if (id === today) cls.push('is-today');
+      const label = date.toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const state = id === checkIn ? ', check-in' : id === checkOut ? ', check-out' : '';
+      cells += `<button type="button" class="${cls.join(' ')}" data-day="${id}" tabindex="${id === focusDay ? 0 : -1}" aria-label="${label}${state}" aria-pressed="${id === checkIn || id === checkOut}"${past ? ' disabled' : ''}><span>${d}</span></button>`;
+    }
+    // Always six week rows, so the panel keeps one height as you move between months
+    for (let i = lead + days; i < 42; i++) cells += '<span class="cal__pad" aria-hidden="true"></span>';
+    return `<div class="cal__month"><p class="cal__title">${title}</p><div class="cal__dow" aria-hidden="true">${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((x) => `<span>${x}</span>`).join('')}</div><div class="cal__grid" role="group" aria-label="${title}">${cells}</div></div>`;
+  };
+  const render = (refocus = false) => {
+    const second = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+    months.innerHTML = renderMonth(view) + (twoUp() ? renderMonth(second) : '');
+    prev.disabled = view <= firstOfThisMonth;
+    if (refocus) $<HTMLButtonElement>(`[data-day="${focusDay}"]`, months)?.focus({ preventScroll: true });
+  };
+  const slide = (dir: number) => {
+    view = new Date(view.getFullYear(), view.getMonth() + dir, 1);
+    render();
+    if (!reduceMotion) months.animate([{ opacity: 0, transform: `translateX(${dir * 16}px)`, filter: 'blur(4px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 280, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+  };
+  prev.addEventListener('click', () => slide(-1));
+  next.addEventListener('click', () => slide(1));
+
+  const syncDates = () => {
+    if (dateMode === 'flexible') { syncFlexible(); return; }
+    if (checkIn && checkOut) {
+      const a = parse(checkIn);
+      const b = parse(checkOut);
+      const n = Math.round((b.getTime() - a.getTime()) / 864e5);
+      const nights = `${n} night${n === 1 ? '' : 's'}`;
+      const plus = flex ? ` ± ${flex}` : '';
+      setText(nightsLabel, `${nights} · ${range(a, b)}${flex ? ` · ± ${flex} day${flex === 1 ? '' : 's'}` : ''}`);
+      when.dataset.range = range(a, b);
+      when.dataset.stay = String(n);
+      when.dataset.phrase = `${range(a, b)} (${nights}${flex ? `, ± ${flex} days` : ''})`;
+      setValue(when, `${range(a, b)}${plus} · ${nights}`);
+    } else {
+      setText(nightsLabel, checkIn ? 'Now choose your check-out' : 'Choose your check-in');
+      delete when.dataset.range;
+      delete when.dataset.phrase;
+      setValue(when, 'Add dates', true);
+    }
+  };
+  const pick = (id: string) => {
+    if (!checkIn || checkOut || id <= checkIn) { checkIn = id; checkOut = ''; }
+    else checkOut = id;
+    hover = '';
+    focusDay = id;
+    render(true);
+    syncDates();
+  };
+  months.addEventListener('click', (e) => {
+    const day = (e.target as Element).closest<HTMLButtonElement>('[data-day]');
+    if (day && !day.disabled) pick(day.dataset.day!);
+  });
+  // Choosing a check-out: the band follows the pointer from the check-in
+  months.addEventListener('pointerover', (e) => {
+    if (!checkIn || checkOut) return;
+    const day = (e.target as Element).closest<HTMLButtonElement>('[data-day]');
+    const id = day && !day.disabled ? day.dataset.day! : '';
+    if (id !== hover) { hover = id; render(); }
+  });
+  months.addEventListener('pointerleave', () => { if (hover) { hover = ''; render(); } });
+  // Keyboard: arrows move a day or a week, Page Up/Down a month, Enter or Space picks
+  months.addEventListener('keydown', (e) => {
+    const steps: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+    let target: Date | null = null;
+    const current = parse(focusDay);
+    if (e.key in steps) target = addDays(current, steps[e.key]);
+    if (e.key === 'PageUp') target = new Date(current.getFullYear(), current.getMonth() - 1, current.getDate());
+    if (e.key === 'PageDown') target = new Date(current.getFullYear(), current.getMonth() + 1, current.getDate());
+    if (!target) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (iso(target) < today) return;
+    focusDay = iso(target);
+    const shown = twoUp() ? 2 : 1;
+    const last = new Date(view.getFullYear(), view.getMonth() + shown, 0);
+    if (target < view) view = new Date(target.getFullYear(), target.getMonth(), 1);
+    else if (target > last) view = new Date(target.getFullYear(), target.getMonth() - shown + 1, 1);
+    if (!checkOut && checkIn) hover = focusDay;
+    render(true);
+  });
+  for (const chip of flexChips) chip.addEventListener('click', () => {
+    flex = Number(chip.dataset.flex);
+    flexChips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    syncDates();
+  });
+  $('[data-dates-clear]', when)!.addEventListener('click', () => {
+    if (dateMode === 'flexible') {
+      picked.clear();
+      $$('[data-month]', when).forEach((c) => c.setAttribute('aria-pressed', 'false'));
+    } else {
+      checkIn = ''; checkOut = ''; hover = ''; focusDay = today;
+      render(true);
+    }
+    syncDates();
+  });
+  $('[data-dates-done]', when)!.addEventListener('click', () => {
     setOpen(null, keyboard);
     $<HTMLElement>('.field__btn', when)!.focus({ preventScroll: true });
-  }));
+  });
+  // The panel is wider than its field: centre it over the search bar, and show the check-in month
+  const placeWhen = () => {
+    if (window.matchMedia('(max-width: 900px)').matches) { whenPop.style.left = ''; return; }
+    const width = whenPop.offsetWidth;
+    whenPop.style.left = `${Math.round((search.offsetWidth - width) / 2 - when.offsetLeft)}px`;
+  };
+  const focusCalendar = () => { render(); $<HTMLButtonElement>(`[data-day="${focusDay}"]`, months)?.focus({ preventScroll: true }); };
+  $('.field__btn', when)!.addEventListener('click', () => {
+    if (open !== when) return;
+    view = checkIn ? new Date(parse(checkIn).getFullYear(), parse(checkIn).getMonth(), 1) : firstOfThisMonth;
+    focusDay = checkIn || today;
+    render();
+    placeWhen();
+    if (keyboard) focusCalendar();
+  });
+  window.addEventListener('resize', () => { render(); if (open === when) placeWhen(); });
+  render();
 
   // Who
   const who = fields.find((f) => f.dataset.field === 'who')!;
@@ -401,8 +734,7 @@ if (search) {
       place(btn, animate);
       const flights = btn.dataset.tab === 'flights';
       setText($('[data-where-label]', where)!, flights ? 'From → To' : 'Where');
-      const current = where.dataset.current;
-      if (!current || current === 'Anywhere' || current === 'London → Anywhere') setValue(where, flights ? 'London → Anywhere' : 'Anywhere', true);
+      if (!whereSet()) setValue(where, flights ? FLIGHT_EMPTY : WHERE_EMPTY, true);
     };
     tabButtons.forEach((btn) => btn.addEventListener('click', () => select(btn, !keyboard && !reduceMotion)));
     tabs.addEventListener('keydown', (e) => {
@@ -436,7 +768,7 @@ if (search) {
   };
   tell.addEventListener('input', syncGhost);
   const focusBrief = () => { tell.focus({ preventScroll: true }); tell.setSelectionRange(tell.value.length, tell.value.length); };
-  $('.field__btn', tellField)!.addEventListener('click', () => { if (open === tellField) focusBrief(); });
+  $('.field__btn', tellField)!.addEventListener('click', () => { if (open === tellField && !phoneSheet()) focusBrief(); });
   for (const chip of suggests) chip.addEventListener('click', () => {
     const text = chip.dataset.suggest!;
     const pressed = chip.getAttribute('aria-pressed') === 'true';
@@ -451,9 +783,14 @@ if (search) {
     focusBrief();
   });
   $('[data-tell-reset]', tellField)!.addEventListener('click', () => { tell.value = ''; syncGhost(); focusBrief(); });
-  const closeBrief = () => { setOpen(null, keyboard); $<HTMLElement>('.field__btn', tellField)!.focus({ preventScroll: true }); };
-  $('[data-tell-done]', tellField)!.addEventListener('click', closeBrief);
-  tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); closeBrief(); } });
+  // "Send to agent" (or Enter) sends the brief straight away; an empty brief keeps the cursor in the box
+  const sendBrief = () => {
+    if (!tell.value.trim()) { focusBrief(); return; }
+    setOpen(null, true);
+    search.requestSubmit();
+  };
+  $('[data-tell-done]', tellField)!.addEventListener('click', sendBrief);
+  tell.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBrief(); } });
   // Every few seconds the example changes: in the field while the panel is closed, in the brief box while it's open.
   if (examples.length > 1 && !reduceMotion) {
     window.setInterval(() => {
@@ -471,7 +808,7 @@ if (search) {
 
   const focusTell = (prefill?: string) => {
     if (prefill !== undefined) { tell.value = prefill; syncGhost(); }
-    const open = () => { setOpen(tellField, true); focusBrief(); };
+    const open = () => { setOpen(tellField, true); if (!phoneSheet()) focusBrief(); };
     if (window.scrollY < 2 || reduceMotion) { window.scrollTo({ top: 0 }); open(); return; }
     // Scroll up first; the panel (and the scroll lock) waits until the page has arrived
     let done = false;
@@ -507,17 +844,28 @@ if (search) {
 
   search.addEventListener('submit', (e) => {
     e.preventDefault();
+    const brief = tell.value.trim();
+    const place = whereSet() ? where.dataset.current! : '';
+    // A search needs a place and dates: open whichever is missing. A written brief can go straight to the agent.
+    if (!brief && !place) {
+      setOpen(where, true);
+      whereSearch.value = '';
+      filterWhere();
+      if (!phoneSheet()) whereSearch.focus({ preventScroll: true });
+      return;
+    }
+    if (!brief && !when.dataset.range) { setOpen(when, true); render(); placeWhen(); if (dateMode === 'dates') focusCalendar(); return; }
     setOpen(null, true);
-    const parts = [where.dataset.current || 'Anywhere', when.dataset.current || 'Any dates', who.dataset.current || '2 guests'];
-    // Every search opens the brief flow. With nothing written, the brief is phrased from the fields.
+    const guests = who.dataset.current || '2 guests';
+    const parts = [place, when.dataset.range ? when.dataset.current! : '', guests].filter(Boolean);
     if (openBrief) {
-      const [w, d, g] = parts;
-      const composed = `${w === 'Anywhere' ? 'Anywhere' : w}, ${d === 'Any dates' ? 'whenever suits' : d.charAt(0).toLowerCase() + d.slice(1)}, for ${g}`;
-      openBrief(tell.value.trim() || composed, parts, submit);
+      const flights = $('[data-tab="flights"]')?.getAttribute('aria-selected') === 'true';
+      const composed = `${flights ? `Flights from London and a hotel in ${place}` : `A hotel in ${place}`}, ${when.dataset.phrase}, for ${guests}`;
+      openBrief(brief || composed, parts, submit, place);
       return;
     }
     $('[data-toast-body]', toast)!.textContent = tell.value.trim() ? `“${tell.value.trim()}”` : parts.join(' · ');
-    $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will send three options.';
+    $('[data-toast-title]', toast)!.textContent = 'Leave it with us. Your agent will be in touch on WhatsApp.';
     // "Search" morphs to "Sent" and back, the same way the field values change
     const label = $('[data-submit-label]', submit)!;
     setText(label, 'Sent');
@@ -676,4 +1024,84 @@ if (!reduceMotion) {
     new IntersectionObserver(([entry]) => { active = entry.isIntersecting; if (active) update(); }).observe(section);
     window.addEventListener('scroll', () => { if (active && !ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   }
+}
+
+/* ---------- Member log in: open from the nav, email a one-time link (front end only) ---------- */
+const login = $<HTMLDialogElement>('[data-login]');
+if (login) {
+  const form = $<HTMLFormElement>('[data-login-form]', login)!;
+  const email = $<HTMLInputElement>('input[name="email"]', form)!;
+  const field = email.closest('.pfield')!;
+  const err = $('.pfield__err', field)!;
+  const step = (name: 'form' | 'sent') => $$('[data-login-step]', login).forEach((el) => { el.hidden = el.dataset.loginStep !== name; });
+  const open = () => { step('form'); login.showModal(); email.focus(); };
+  $$('[data-login-open]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(); }));
+  $('[data-login-close]', login)!.addEventListener('click', () => login.close());
+  login.addEventListener('click', (e) => { if (e.target === login) login.close(); }); // click on the backdrop
+  $('[data-login-request]', login)!.addEventListener('click', () => login.close());
+  $('[data-login-again]', login)!.addEventListener('click', () => { step('form'); email.select(); });
+  email.addEventListener('input', () => { field.classList.remove('is-invalid'); err.textContent = ''; });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      field.classList.add('is-invalid');
+      err.textContent = value ? 'That email doesn\u2019t look quite right' : email.dataset.error!;
+      email.focus();
+      return;
+    }
+    $('[data-login-email]', login)!.textContent = value;
+    step('sent');
+    $<HTMLButtonElement>('[data-login-again]', login)!.focus();
+  });
+  if (location.hash === '#login') open();
+}
+
+/* ---------- Burger menu: opens a full-screen panel on small screens ---------- */
+const menu = $('[data-menu]');
+const burger = $<HTMLButtonElement>('[data-menu-toggle]');
+if (menu && burger) {
+  const root = document.documentElement;
+  const setOpen = (open: boolean, returnFocus = true) => {
+    root.classList.toggle('is-menu-open', open);
+    root.style.overflow = open ? 'hidden' : '';
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.inert = !open;
+    if (open) $<HTMLElement>('.menu__link', menu)?.focus({ preventScroll: true });
+    else if (returnFocus) burger.focus({ preventScroll: true });
+  };
+  burger.addEventListener('click', () => setOpen(!root.classList.contains('is-menu-open')));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('is-menu-open')) setOpen(false); });
+  // Any link in the menu closes it (same-page links then scroll, log in opens its panel)
+  menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false, false); });
+  window.matchMedia('(min-width: 961px)').addEventListener('change', (e) => { if (e.matches) setOpen(false, false); });
+}
+
+/* ---------- On-screen keyboard: keep bottom sheets above it ----------
+   iOS leaves fixed elements pinned to the bottom of the page behind the keyboard. The visual
+   viewport says how much is actually visible, so sheets can sit on top of the keyboard. */
+const vv = window.visualViewport;
+if (vv) {
+  const root = document.documentElement;
+  // Only lift a sheet while someone is typing in it; otherwise it sits on the bottom edge
+  const typing = () => { const el = document.activeElement as HTMLElement | null; return Boolean(el?.matches('input, textarea') && el.closest('.pop')); };
+  const sync = () => {
+    const kb = typing() ? Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) : 0;
+    root.style.setProperty('--kb', `${kb}px`);
+    root.style.setProperty('--vvh', `${Math.round(typing() ? vv.height : window.innerHeight)}px`);
+    root.classList.toggle('has-kb', kb > 80);
+  };
+  vv.addEventListener('resize', sync);
+  vv.addEventListener('scroll', sync);
+  document.addEventListener('focusout', () => window.setTimeout(sync, 0));
+  sync();
+  // Once the keyboard is up, bring the field and the send button into view inside the sheet
+  document.addEventListener('focusin', (e) => {
+    const el = e.target as HTMLElement;
+    const sheet = el.closest<HTMLElement>('.pop');
+    if (!sheet || !el.matches('input, textarea')) return;
+    sync();
+    window.setTimeout(() => { sync(); sheet.scrollTop = sheet.scrollHeight; }, 350);
+  });
 }
