@@ -489,7 +489,9 @@ ul { list-style: none; }
 .step__title { font-size: 18px; font-weight: 400; line-height: 1.3; }
 .step__desc { margin-top: 10px; max-width: 340px; min-height: 46px; font-size: 18px; line-height: 1.3; color: var(--fg-muted); }
 .step__stage { margin-top: clamp(40px, 6.7vw, 96px); flex: 1; min-height: 381px; border-radius: 6px; background: #2b2b2b; display: grid; place-items: center; overflow: hidden; position: relative; }
-@media (max-width: 960px) { .how__steps { grid-template-columns: 1fr; gap: 40px; } }
+@media (max-width: 960px) { .how__steps { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
+/* Small phones: the illustrated stages scale down a touch so the fanned cards stay inside the panel */
+@media (max-width: 380px) { .step__stage .fan, .step__stage .booking { scale: 0.88; } .step__stage { min-height: 340px; } }
 
 .ill { --card: #1e1e1e; --card-2: #353535; width: 300px; font-size: 11px; line-height: 1.35; }
 .ill-card { background: var(--card); border-radius: 18px; border: 1px solid transparent; box-shadow: var(--ring-dark), 0 18px 40px -6px rgba(0, 0, 0, 0.45); }
@@ -669,6 +671,15 @@ ul { list-style: none; }
 /* The mark sits at the foot of the right column, spanning the link columns' width */
 .footer__markwrap { grid-column: 2; align-self: end; margin-top: 40px; }
 .footer__mark { font-family: var(--font-brand); font-weight: 600; font-size: 80px; line-height: 0.72; letter-spacing: 0.02em; color: #222; text-align: right; white-space: nowrap; user-select: none; }
+/* Touch screens: footer links get a 32px-tall hit area without changing the look */
+@media (pointer: coarse) {
+  .footer__cols li + li { margin-top: 0; }
+  .footer__cols h3 { margin-bottom: 2px; }
+  .footer__cols a { display: inline-block; padding-block: 9px; }
+  .footer__contact { gap: 0 8px; }
+  .footer__contact a { padding-block: 6px; }
+  .arrow-link { padding-block: 6px; margin-block: -6px; }
+}
 @media (max-width: 900px) {
   .footer__top { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 48px; min-height: 0; }
   .footer__brand { grid-row: auto; }
@@ -688,6 +699,7 @@ ul { list-style: none; }
 .pay { display: flex; gap: 8px; }
 .pay li { width: 52px; height: 34px; border-radius: 6px; background: #222; display: grid; place-items: center; }
 .pay img { max-width: 33px; max-height: 22px; }
+.nowrap { white-space: nowrap; }
 .footer__bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 40px; padding-top: 24px; font-size: 13px; color: rgba(255, 255, 255, 0.5); }
 
 /* ---------- Reduced motion: keep fades, drop movement ---------- */

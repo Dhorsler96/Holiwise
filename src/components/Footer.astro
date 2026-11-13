@@ -44,5 +44,5 @@ const pay = [['visa-on-dark', 'Visa'], ['mastercard', 'Mastercard'], ['american-
     </ul>
   </div>
 
-  <div class="footer__bottom"><span>{settings.companyLine}</span><span>© {year} Holiwise Ltd</span></div>
+  <div class="footer__bottom"><span>{settings.companyLine.split(' · ').map((part: string, i: number) => <>{i > 0 && ' · '}<span class="nowrap">{part}</span></>)}</span><span>© {year} Holiwise Ltd</span></div>
 </footer>

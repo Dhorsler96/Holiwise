@@ -122,6 +122,7 @@
 .pquotes__ctrl { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: clamp(56px, 10vw, 144px); }
 .pquotes__dots { display: flex; align-items: center; gap: 1px; padding: 4px; border-radius: 100px; background: rgba(0, 0, 0, 0.05); }
 .pquotes__dot { position: relative; width: 14px; height: 14px; -webkit-tap-highlight-color: transparent; }
+.pquotes__dot::after { content: ''; position: absolute; inset: -9px -2px; }
 .pquotes__dot::before { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: #424242; opacity: 0.3; transition: opacity 200ms ease-out, background-color 200ms ease-out; }
 .pquotes__dot[aria-current='true']::before { background: #262626; opacity: 1; }
 @media (hover: hover) and (pointer: fine) { .pquotes__dot:not([aria-current='true']):hover::before { opacity: 0.6; } }
@@ -170,12 +171,14 @@
 /* ---------- Smaller screens ---------- */
 @media (max-width: 960px) {
   .pillars, .psteps { grid-template-columns: 1fr; }
-  .pstep { min-height: 0; }
+  .pstep { min-height: 0; gap: 28px; }
+  .pstep__text { margin-top: 12px; min-height: 0; }
   .pm-req__grid, .pm-faq__grid { grid-template-columns: 1fr; gap: 32px; }
   .pquotes { padding: 0; }
 }
 @media (max-width: 600px) {
   .pform__row { grid-template-columns: 1fr; }
+  .pm-cta__actions .btn { flex: 1 1 100%; }
   .preq { padding: 28px 20px; }
   .pthanks { inset: 28px 20px; }
   .press { gap: 28px 36px; }
