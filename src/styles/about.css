@@ -21,12 +21,16 @@
   display: flex; transform: translate3d(calc(-1 * var(--tile)), 0, 0);
   animation: drift var(--speed) linear infinite; will-change: transform;
 }
-.drift__layer--far { --speed: 150s; }
-.drift__layer--mid { --speed: 110s; }
-.drift__layer--near { --speed: 80s; }
+.drift__layer--far { --speed: 150s; --depth: 8; }
+.drift__layer--mid { --speed: 110s; --depth: 16; }
+.drift__layer--near { --speed: 80s; --depth: 28; }
 @keyframes drift { to { transform: translate3d(0, 0, 0); } }
 .ahero.is-paused .drift__layer { animation-play-state: paused; }
 .drift__tile { position: relative; flex: none; width: var(--tile); height: 100%; }
+/* Pointer depth: each layer leans away from the cursor by its depth (main thread writes --mx/--my, -1 to 1).
+   It sits on the tiles, so it adds to the layer's drift rather than replacing it. */
+.drift__tile, .ahero__copy { transform: translate3d(calc(var(--mx, 0) * var(--depth, 0) * -1px), calc(var(--my, 0) * var(--depth, 0) * -0.6px), 0); }
+.ahero__copy { --depth: -5; }
 .drift__photo {
   position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) / 720 * 100%);
   width: calc(var(--w) * var(--u)); height: calc(var(--h) * var(--u)); opacity: var(--o);
