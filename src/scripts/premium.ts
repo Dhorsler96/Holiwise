@@ -157,9 +157,10 @@ if (quotes) {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
   });
-  // Pause while someone is reading or using the controls (mouse only, so a tap doesn't freeze it)
-  quotes.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; hold(); } });
-  quotes.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { paused = false; hold(); } });
+  // Pause while the pointer rests on the quote being read (not the dots or arrows, so a click keeps it moving)
+  const reading = $('.pquotes__stage', quotes)!;
+  reading.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; hold(); } });
+  reading.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { paused = false; hold(); } });
   quotes.addEventListener('focusin', () => { if (quotes.matches(':focus-visible, :has(:focus-visible)')) { paused = true; hold(); } });
   quotes.addEventListener('focusout', (e) => { if (!quotes.contains(e.relatedTarget as Node)) { paused = false; hold(); } });
   // Swipe on touch
