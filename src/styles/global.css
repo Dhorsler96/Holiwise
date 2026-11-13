@@ -766,7 +766,6 @@ ul { list-style: none; }
 .brief__channel .chip { height: 32px; padding: 0 12px; font-size: 13px; color: var(--ink); border-color: var(--stroke); }
 .brief__channel .chip[aria-pressed='true'] { color: #fff; }
 .brief__actions { display: flex; align-items: center; gap: 20px; font-size: 14px; }
-.brief__actions [hidden] { display: none; }
 .brief[data-stage='handoff'] :is(.brief__eyebrow, .brief__step, .brief__reply) { animation: brief-in 300ms ease-out backwards; }
 .brief[data-stage='handoff'] .brief__next > .brief__eyebrow { animation-delay: 60ms; }
 .brief[data-stage='handoff'] .brief__step { animation-delay: calc(140ms + var(--n) * 100ms); }

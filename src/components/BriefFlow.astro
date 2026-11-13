@@ -1,8 +1,8 @@
 ---
 /* Prototype: what happens after a search or a brief (11 Nov call).
-   A hotel in a place we know comes back as three options straight away. A hotel anywhere else,
-   or a bigger trip (weeks, several stops, flights), goes to the agent: the sheet says what happens
-   next, how long it takes and where the reply arrives. Front-end only: matching is by keyword
+   A short trip comes back as three options straight away. A long trip (8+ nights, weeks, several
+   stops, flights) goes to the agent: the sheet says what happens next, how long it takes and where
+   the reply arrives. Front-end only: matching is by keyword
    and prices are placeholders. */
 const { destinations, agentHref } = Astro.props;
 
@@ -80,7 +80,6 @@ const options = destinations.filter((d: any) => stays[d.title]).map((d: any) => 
           <button class="chip" type="button" aria-pressed="false" data-channel="email">Email</button>
         </div>
         <div class="brief__actions">
-          <button class="link" type="button" data-brief-example>See an example of what arrives</button>
           <button class="btn btn--dark" type="button" data-brief-close>Done</button>
         </div>
       </div>

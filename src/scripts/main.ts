@@ -144,35 +144,26 @@ if (flow) {
   const cards = $$('[data-option]', flow);
   const refine = $<HTMLFormElement>('[data-brief-refine]', flow)!;
   const steps = $$('.brief__step', flow);
-  const example = $<HTMLButtonElement>('[data-brief-example]', flow)!;
   const channels = $$<HTMLButtonElement>('[data-channel]', flow);
   let channel = 'WhatsApp';
-  // From the 11 Nov call: a hotel in one place comes back in minutes; weeks away, several stops,
-  // flights or an occasion is a bigger trip, which takes a few hours and arrives as a PDF.
-  type Mode = 'options' | 'hotel' | 'trip';
+  // A short trip gets three options straight away. A long one (8+ nights, weeks away, several stops,
+  // flights or an occasion) goes to the agent: the sheet says what happens next, how long it takes
+  // and where the reply arrives (11 Nov call).
+  type Mode = 'options' | 'trip';
   let mode: Mode = 'options';
   let place = '';
-  const known = cards.map((c) => c.dataset.option!.toLowerCase());
-  const BIG = /\b(weeks?|fortnight|month|several|stops|multi|tour|road ?trip|itinerary|island[- ]hopping|safari|flights?|occasion|anniversary|honeymoon|wedding|not sure)\b/i;
-  const classify = (text: string, where: string): Mode => {
+  const LONG = /\b(weeks?|fortnight|month|several|stops|multi|tour|road ?trip|itinerary|island[- ]hopping|safari|flights?|occasion|anniversary|honeymoon|wedding|not sure)\b/i;
+  const classify = (text: string): Mode => {
     const nights = Number(text.match(/(\d+)\s*nights?/i)?.[1] ?? 0);
-    if (BIG.test(text) || nights >= 8) return 'trip';
-    const hay = `${text} ${where}`.toLowerCase();
-    return known.some((k) => hay.includes(k)) ? 'options' : 'hotel';
+    return LONG.test(text) || nights >= 8 ? 'trip' : 'options';
   };
   const on = () => (channel === 'email' ? 'By email' : 'On WhatsApp');
   const fillSteps = () => {
-    const rows = mode === 'trip'
-      ? [
-          ['Albin reads your brief', 'A person, not an algorithm, looks at what you’ve asked for.', 'Now'],
-          ['A quick question, if anything’s unclear', 'Usually about budget, rooms or flight times.', on()],
-          ['Your itinerary, as a PDF', 'Hotels, flights and prices for the whole trip, ready to book or tweak.', 'Within a few hours'],
-        ]
-      : [
-          ['Albin reads your brief', 'A person, not an algorithm, looks at what you’ve asked for.', 'Now'],
-          ['Rates and rooms checked', 'Every price checked against booking direct.', 'Now'],
-          ['Three hotel options', `${channel === 'email' ? 'Sent by email' : 'Sent on WhatsApp'}. Pick one, or tell Albin what to change.`, 'In a few minutes'],
-        ];
+    const rows = [
+      ['Albin reads your brief', 'A person, not an algorithm, looks at what you’ve asked for.', 'Now'],
+      ['A quick question, if anything’s unclear', 'Usually about budget, rooms or flight times.', on()],
+      ['Your itinerary, as a PDF', 'Hotels, flights and prices for the whole trip, ready to book or tweak.', 'Within a few hours'],
+    ];
     steps.forEach((li, i) => {
       $('[data-step-title]', li)!.textContent = rows[i][0];
       $('[data-step-text]', li)!.textContent = rows[i][1];
@@ -225,13 +216,12 @@ if (flow) {
     bar.style.transform = 'scaleX(0)';
     setText(status, 'Reading your brief');
     later(120, () => { bar.style.transform = 'scaleX(0.3)'; });
-    if (mode !== 'options') {
-      // Handed to the agent: say what happens next, how long it takes and where the reply arrives
+    if (mode === 'trip') {
+      // A long trip goes to the agent: what happens next, how long it takes and where the reply arrives
       later(1100, () => { bar.style.transform = 'scaleX(1)'; });
       later(1700, () => {
         fillSteps();
-        example.hidden = mode !== 'trip';
-        setText(status, mode === 'trip' ? 'Planning your trip. This takes a few hours.' : 'Finding your hotel. Options in a few minutes.');
+        setText(status, 'Planning your trip. This takes a few hours.');
         flow.classList.add('is-done');
         flow.dataset.stage = 'handoff';
       });
@@ -241,11 +231,6 @@ if (flow) {
     later(2300, () => { setText(status, 'Choosing three options'); bar.style.transform = 'scaleX(1)'; });
     later(3300, () => showOptions(where, 'Three options, ready when you are'));
   };
-  // For the review: what a bigger trip looks like when the agent's options arrive later
-  example.addEventListener('click', () => {
-    showOptions(place, `Three options, also sent ${channel === 'email' ? 'by email' : 'to WhatsApp'} as a PDF`);
-    sheet.focus({ preventScroll: true });
-  });
 
   const close = () => {
     clearTimers();
@@ -259,7 +244,7 @@ if (flow) {
     lastFocus = returnFocus;
     briefText = brief;
     place = where;
-    mode = classify(brief, where);
+    mode = classify(brief);
     latest = '';
     round = 0;
     quote.textContent = `“${brief.replace(/[.…]+$/, '')}”`;
