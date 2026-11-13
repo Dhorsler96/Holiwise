@@ -336,9 +336,10 @@
         "src": "/images/premium-hero.jpg",
         "alt": "A Four Seasons private jet on the apron at golden hour"
       },
-      "videoUrl": null,
+      "videoUrl": "/video/premium-hero.mp4",
       "primaryLabel": "Request an invitation",
-      "secondaryLabel": "Enter your invite code"
+      "secondaryLabel": "Enter your invite code",
+      "_note": "Four Seasons footage supplied for the design review: confirm usage rights before launch."
     },
     "statement": "Our premium membership is how we look after the people who travel with us most. One agent who knows how you like to travel, a direct line on WhatsApp, and partner privileges on every stay.",
     "includes": {

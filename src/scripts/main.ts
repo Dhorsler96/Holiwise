@@ -32,8 +32,12 @@ window.setTimeout(() => root.classList.add('is-settled'), 1600);
 
 const heroVideo = $<HTMLVideoElement>('[data-hero-video]');
 if (heroVideo && !reduceMotion) {
-  heroVideo.addEventListener('canplay', () => heroVideo.classList.add('is-ready'), { once: true });
-  heroVideo.play().catch(() => {});
+  // Fade the video in once it's actually playing. A cached video can start before this script runs,
+  // so check its state as well as listening for the event.
+  const ready = () => heroVideo.classList.add('is-ready');
+  heroVideo.addEventListener('playing', ready, { once: true });
+  heroVideo.play().then(ready).catch(() => {});
+  if (!heroVideo.paused && heroVideo.readyState >= 3) ready();
 }
 
 /* ---------- Scroll reveals: once, then the observer lets go ---------- */
