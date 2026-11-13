@@ -907,3 +907,13 @@ ul { list-style: none; }
   .brief[data-stage='handoff'] :is(.brief__eyebrow, .brief__step, .brief__reply) { animation-name: fade-in; }
   .brief__progress i { transition: none; }
 }
+/* ---------- Mobile type: balanced headings, no lonely last words ----------
+   Headings and short labels share their words evenly across lines; running text avoids
+   a single word on its own line. Long statements use "pretty" too, as balance only
+   works up to about six lines. Desktop keeps the Figma line breaks. */
+@media (max-width: 960px) {
+  h1, h2, h3, h4, figcaption, label, .eyebrow, .am-eyebrow, .pm-eyebrow { text-wrap: balance; }
+  p, li, dd, blockquote, .statement p, .brief__quote { text-wrap: pretty; }
+  .hero__intro, .phero__intro, .ahero__intro, .acta__text, .pm-cta__text, .pquote__who small,
+  .card__summary, .awhere__offices p, .fav__text, .step__desc, .pstep__text { text-wrap: balance; }
+}
