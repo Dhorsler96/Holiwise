@@ -552,6 +552,8 @@ if (search) {
       const state = id === checkIn ? ', check-in' : id === checkOut ? ', check-out' : '';
       cells += `<button type="button" class="${cls.join(' ')}" data-day="${id}" tabindex="${id === focusDay ? 0 : -1}" aria-label="${label}${state}" aria-pressed="${id === checkIn || id === checkOut}"${past ? ' disabled' : ''}><span>${d}</span></button>`;
     }
+    // Always six week rows, so the panel keeps one height as you move between months
+    for (let i = lead + days; i < 42; i++) cells += '<span class="cal__pad" aria-hidden="true"></span>';
     return `<div class="cal__month"><p class="cal__title">${title}</p><div class="cal__dow" aria-hidden="true">${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((x) => `<span>${x}</span>`).join('')}</div><div class="cal__grid" role="group" aria-label="${title}">${cells}</div></div>`;
   };
   const render = (refocus = false) => {

@@ -827,7 +827,7 @@ ul { list-style: none; }
 @media (hover: hover) and (pointer: fine) { .cal__arrow:not(:disabled):hover { background: rgba(26, 26, 26, 0.06); } }
 .cal__dow, .cal__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .cal__dow { margin: 18px 0 6px; font-size: 12px; line-height: 16px; color: var(--muted); text-align: center; }
-.cal__grid { row-gap: 2px; }
+.cal__grid { row-gap: 2px; grid-auto-rows: 42px; }
 /* Each day is a full-width cell (the band) holding a 40px square (the day) */
 .cal__day { position: relative; height: 42px; display: grid; place-items: center; font-size: 12px; font-weight: 450; font-variant-numeric: tabular-nums; color: var(--ink); -webkit-tap-highlight-color: transparent; }
 .cal__day span { position: relative; z-index: 1; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 4px; transition-property: transform, background-color, color, box-shadow; transition-duration: 150ms; transition-timing-function: ease-out; }
