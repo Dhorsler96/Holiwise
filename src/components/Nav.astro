@@ -1,5 +1,5 @@
 ---
-const { settings, showInvite = true } = Astro.props;
+const { settings, showInvite = true, showLogin = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <header class="nav" data-nav>
@@ -9,6 +9,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   </nav>
   <div class="nav__actions">
     {showInvite && <a class="link nav__invite" href={settings.inviteHref} data-invite-link>{settings.inviteLabel}</a>}
+    {showLogin && <a class="link nav__invite" href="#login" data-login-open>Member log in</a>}
     <a class="btn btn--ghost-light" href={settings.agentHref}>{settings.agentLabel}</a>
   </div>
 </header>

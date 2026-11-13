@@ -128,7 +128,6 @@ if (quotes) {
   const slides = $$('[data-quote]', quotes);
   const dots = $$<HTMLButtonElement>('[data-dot]', quotes);
   let index = 0;
-  let timer = 0;
   let paused = false;
   let visible = false;
   const show = (i: number) => {
@@ -139,12 +138,18 @@ if (quotes) {
     });
     dots.forEach((d, n) => d.setAttribute('aria-current', String(n === index)));
   };
-  const stop = () => { window.clearInterval(timer); timer = 0; };
-  const start = () => {
-    stop();
-    if (!reduceMotion && visible && !paused) timer = window.setInterval(() => show(index + 1), 7000);
+  // The active dot's fill is the timer: a CSS animation that runs while the quotes are on screen
+  // and nobody is reading, and moves to the next review when it completes.
+  const hold = () => quotes.classList.toggle('is-held', paused || !visible);
+  const restart = () => {
+    if (reduceMotion) return;
+    quotes.classList.remove('is-timing');
+    void quotes.offsetWidth; // restart the fill from empty
+    quotes.classList.add('is-timing');
+    hold();
   };
-  const go = (i: number) => { show(i); start(); };
+  dots.forEach((d) => d.addEventListener('animationend', () => { show(index + 1); restart(); }));
+  const go = (i: number) => { show(i); restart(); };
   dots.forEach((d) => d.addEventListener('click', () => go(Number(d.dataset.dot))));
   $('[data-prev]', quotes)!.addEventListener('click', () => go(index - 1));
   $('[data-next]', quotes)!.addEventListener('click', () => go(index + 1));
@@ -152,11 +157,11 @@ if (quotes) {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
   });
-  // Pause while someone is reading or using the controls
-  quotes.addEventListener('pointerenter', () => { paused = true; stop(); });
-  quotes.addEventListener('pointerleave', () => { paused = false; start(); });
-  quotes.addEventListener('focusin', () => { paused = true; stop(); });
-  quotes.addEventListener('focusout', (e) => { if (!quotes.contains(e.relatedTarget as Node)) { paused = false; start(); } });
+  // Pause while someone is reading or using the controls (mouse only, so a tap doesn't freeze it)
+  quotes.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; hold(); } });
+  quotes.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { paused = false; hold(); } });
+  quotes.addEventListener('focusin', () => { if (quotes.matches(':focus-visible, :has(:focus-visible)')) { paused = true; hold(); } });
+  quotes.addEventListener('focusout', (e) => { if (!quotes.contains(e.relatedTarget as Node)) { paused = false; hold(); } });
   // Swipe on touch
   let x0: number | null = null;
   const stage = $('.pquotes__stage', quotes)!;
@@ -167,7 +172,8 @@ if (quotes) {
     x0 = null;
     if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
   });
-  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) start(); else stop(); }, { threshold: 0.4 }).observe(quotes);
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; hold(); }, { threshold: 0.4 }).observe(quotes);
+  restart();
 }
 
 /* ---------- FAQ: one answer open at a time ---------- */
@@ -185,4 +191,35 @@ if (faq) {
       }
     });
   }
+}
+
+/* ---------- Member log in: open from the nav, email a one-time link (front end only) ---------- */
+const login = $<HTMLDialogElement>('[data-login]');
+if (login) {
+  const form = $<HTMLFormElement>('[data-login-form]', login)!;
+  const email = $<HTMLInputElement>('input[name="email"]', form)!;
+  const field = email.closest('.pfield')!;
+  const err = $('.pfield__err', field)!;
+  const step = (name: 'form' | 'sent') => $$('[data-login-step]', login).forEach((el) => { el.hidden = el.dataset.loginStep !== name; });
+  const open = () => { step('form'); login.showModal(); email.focus(); };
+  $$('[data-login-open]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(); }));
+  $('[data-login-close]', login)!.addEventListener('click', () => login.close());
+  login.addEventListener('click', (e) => { if (e.target === login) login.close(); }); // click on the backdrop
+  $('[data-login-request]', login)!.addEventListener('click', () => login.close());
+  $('[data-login-again]', login)!.addEventListener('click', () => { step('form'); email.select(); });
+  email.addEventListener('input', () => { field.classList.remove('is-invalid'); err.textContent = ''; });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      field.classList.add('is-invalid');
+      err.textContent = value ? 'That email doesn\u2019t look quite right' : email.dataset.error!;
+      email.focus();
+      return;
+    }
+    $('[data-login-email]', login)!.textContent = value;
+    step('sent');
+    $<HTMLButtonElement>('[data-login-again]', login)!.focus();
+  });
+  if (location.hash === '#login') open();
 }
