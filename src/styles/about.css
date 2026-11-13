@@ -168,3 +168,12 @@
   .apress__logos { gap: 28px 36px; }
   .acta__actions .btn { flex: 1 1 100%; }
 }
+
+/* Office addresses with a copy button */
+.awhere__addr { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-top: 12px; }
+.awhere__addr address { font-style: normal; font-size: 15px; line-height: 1.5; color: var(--fg-muted); user-select: all; }
+.awhere__copy { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; color: var(--fg); transition: border-color 150ms ease-out, background-color 150ms ease-out, transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) and (pointer: fine) { .awhere__copy:hover { border-color: var(--fg); } }
+.awhere__copy:active { transform: scale(0.97); }
+.awhere__copy.is-copied { border-color: var(--fg); }
+.awhere__copy [data-copy-label] { display: inline-block; min-width: 88px; text-align: left; transition: opacity 150ms ease-out; }

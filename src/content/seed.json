@@ -749,18 +749,26 @@
       "offices": [
         {
           "city": "London",
-          "body": "Our home base, and where most of the travel team sits.",
           "image": "/images/about/office-london.jpg",
-          "alt": "A leafy courtyard with people having lunch at small white tables"
+          "alt": "A leafy courtyard with people having lunch at small white tables",
+          "address": [
+            "14 Hanway Place",
+            "London W1T 1HR",
+            "United Kingdom"
+          ]
         },
         {
           "city": "Stockholm",
-          "body": "Where much of our technology is built.",
           "image": "/images/about/office-stockholm.jpg",
-          "alt": "A bright double-height lobby with a timber ceiling and a wide staircase"
+          "alt": "A bright double-height lobby with a timber ceiling and a wide staircase",
+          "address": [
+            "Birger Jarlsgatan 22",
+            "114 34 Stockholm",
+            "Sweden"
+          ]
         }
       ],
-      "_note": "Office photos from Figma 350:232/350:237 are stand-ins to confirm with Holiwise; copy lines are drafts."
+      "_note": "PLACEHOLDER addresses (made up for layout) and stand-in office photos: replace with Holiwise’s real office details before launch."
     },
     "cta": {
       "heading": "Ready when you are.",
