@@ -643,6 +643,22 @@
           "layer": "near"
         }
       ]
+    },
+    "story": {
+      "lead": "If you’re reading this, it’s probably because you love to travel. So do we. We’re frequent travellers based in London and Stockholm, with backgrounds at Goldman Sachs, Spotify, Microsoft and Barclays. Over years of travelling, we found the trip was always the best part, and the planning, with a dozen tabs open to research, compare and book, the worst.",
+      "paragraphs": [
+        "So we built a travel agency that does the planning for you. Tell your agent where and when, and they come back with a few options that fit. Behind them, technology we built ourselves matches hotels and rooms to how you like to travel, so your agent’s time goes on you.",
+        "Simple stays come back quickly. Bigger trips, with flights, several stops and a few weeks away, get the time they deserve. For people who travel often there is Holiwise Premium: your own agent, member rates at over 1 million stays, and partner privileges on every trip. It’s by invitation."
+      ],
+      "link": {
+        "label": "Discover Premium",
+        "href": "/premium"
+      },
+      "image": {
+        "src": "/images/about/about-story.jpg",
+        "alt": "Three women standing together in a sitting room in front of a painting"
+      },
+      "_note": "Photo from Figma 402:3813 is a placeholder: swap for the Holiwise team before launch."
     }
   }
 }

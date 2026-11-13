@@ -41,6 +41,24 @@ const layers = ['far', 'mid', 'near'] as const;
         </div>
       </div>
     </section>
+
+    <!-- 02 Our story (Figma 402:3771) -->
+    <section class="am astory" data-theme="light">
+      <p class="astory__lead serif words" aria-label={a.story.lead} data-inview data-threshold="0.3">
+        {words(a.story.lead).map((w, i) => <><span class="w" style={`--i:${i}`} aria-hidden="true">{w}</span>{' '}</>)}
+      </p>
+      <div class="astory__row">
+        <div class="astory__media" data-inview data-threshold="0.2">
+          <img src={a.story.image.src} alt={a.story.image.alt} loading="lazy" decoding="async" data-focus />
+        </div>
+        <div class="astory__text">
+          {a.story.paragraphs.map((t: string, i: number) => <p data-reveal data-inview style={`--i:${i + 1}`}>{t}</p>)}
+          <p data-reveal data-inview style={`--i:${a.story.paragraphs.length + 1}`}>
+            <a class="arrow-link" href={a.story.link.href}><span class="arrow-link__text">{a.story.link.label}</span> <span class="arrow-link__arrow" aria-hidden="true">→</span></a>
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
   <Footer settings={settings} />
   <script>import '../scripts/about.ts';</script>
