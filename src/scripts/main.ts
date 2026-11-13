@@ -1037,3 +1037,24 @@ if (login) {
   });
   if (location.hash === '#login') open();
 }
+
+/* ---------- Burger menu: opens a full-screen panel on small screens ---------- */
+const menu = $('[data-menu]');
+const burger = $<HTMLButtonElement>('[data-menu-toggle]');
+if (menu && burger) {
+  const root = document.documentElement;
+  const setOpen = (open: boolean, returnFocus = true) => {
+    root.classList.toggle('is-menu-open', open);
+    root.style.overflow = open ? 'hidden' : '';
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.inert = !open;
+    if (open) $<HTMLElement>('.menu__link', menu)?.focus({ preventScroll: true });
+    else if (returnFocus) burger.focus({ preventScroll: true });
+  };
+  burger.addEventListener('click', () => setOpen(!root.classList.contains('is-menu-open')));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('is-menu-open')) setOpen(false); });
+  // Any link in the menu closes it (same-page links then scroll, log in opens its panel)
+  menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false, false); });
+  window.matchMedia('(min-width: 961px)').addEventListener('change', (e) => { if (e.matches) setOpen(false, false); });
+}
