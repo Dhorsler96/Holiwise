@@ -1004,3 +1004,34 @@ if (!reduceMotion) {
     window.addEventListener('scroll', () => { if (active && !ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   }
 }
+
+/* ---------- Member log in: open from the nav, email a one-time link (front end only) ---------- */
+const login = $<HTMLDialogElement>('[data-login]');
+if (login) {
+  const form = $<HTMLFormElement>('[data-login-form]', login)!;
+  const email = $<HTMLInputElement>('input[name="email"]', form)!;
+  const field = email.closest('.pfield')!;
+  const err = $('.pfield__err', field)!;
+  const step = (name: 'form' | 'sent') => $$('[data-login-step]', login).forEach((el) => { el.hidden = el.dataset.loginStep !== name; });
+  const open = () => { step('form'); login.showModal(); email.focus(); };
+  $$('[data-login-open]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(); }));
+  $('[data-login-close]', login)!.addEventListener('click', () => login.close());
+  login.addEventListener('click', (e) => { if (e.target === login) login.close(); }); // click on the backdrop
+  $('[data-login-request]', login)!.addEventListener('click', () => login.close());
+  $('[data-login-again]', login)!.addEventListener('click', () => { step('form'); email.select(); });
+  email.addEventListener('input', () => { field.classList.remove('is-invalid'); err.textContent = ''; });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      field.classList.add('is-invalid');
+      err.textContent = value ? 'That email doesn\u2019t look quite right' : email.dataset.error!;
+      email.focus();
+      return;
+    }
+    $('[data-login-email]', login)!.textContent = value;
+    step('sent');
+    $<HTMLButtonElement>('[data-login-again]', login)!.focus();
+  });
+  if (location.hash === '#login') open();
+}

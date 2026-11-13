@@ -1,6 +1,10 @@
 ---
-const { settings, showInvite = true, showLogin = false } = Astro.props;
+import Login from './Login.astro';
+const { settings } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// On the Premium page the member button scrolls to the request form; elsewhere it goes there
+const onPremium = path === '/premium';
+const requestHref = onPremium ? '#request' : '/premium#request';
 ---
 <header class="nav" data-nav>
   <a class="nav__brand" href="/" aria-label="Holiwise home">HOLIWISE</a>
@@ -8,8 +12,8 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     {settings.nav.map((item: any) => <a class="link" href={item.href} aria-current={item.href === path ? 'page' : undefined}>{item.label}</a>)}
   </nav>
   <div class="nav__actions">
-    {showInvite && <a class="link nav__invite" href={settings.inviteHref} data-invite-link>{settings.inviteLabel}</a>}
-    {showLogin && <a class="link nav__invite" href="#login" data-login-open>Member log in</a>}
-    <a class="btn btn--ghost-light" href={settings.agentHref}>{settings.agentLabel}</a>
+    <a class="link nav__login" href="#login" data-login-open>Log in</a>
+    <a class="btn btn--ghost-light" href={requestHref} data-to-request={onPremium ? '' : undefined}>Become a member</a>
   </div>
 </header>
+<Login requestHref={requestHref} />

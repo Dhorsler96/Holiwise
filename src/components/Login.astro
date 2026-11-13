@@ -1,0 +1,26 @@
+---
+/* Member log in panel, opened by any [data-login-open] link (nav, Premium hero). Front end only for now. */
+const { requestHref = '/premium#request' } = Astro.props;
+---
+<!-- Member log in: a one-time sign-in link by email, no password (front end only for now) -->
+<dialog class="login" id="login" aria-labelledby="login-title" data-login>
+  <button class="login__close" type="button" aria-label="Close" data-login-close>
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>
+  </button>
+  <div class="login__step" data-login-step="form">
+    <p class="login__eyebrow">Holiwise Premium</p>
+    <h2 class="login__title serif" id="login-title">Welcome back.</h2>
+    <p class="login__text">Members sign in with a one-time link, so there's no password to remember.</p>
+    <form class="login__form" data-login-form novalidate>
+      <label class="pfield"><span class="pfield__label">Email</span><input name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@email.com" required data-error="Please add the email you joined with" /><span class="pfield__err" aria-live="polite"></span></label>
+      <button class="btn btn--light login__submit" type="submit">Send me a sign-in link</button>
+    </form>
+    <p class="login__alt">Not a member yet? <a class="arrow-link" href={requestHref} data-login-request>Request an invitation <span class="arrow-link__arrow" aria-hidden="true">→</span></a></p>
+  </div>
+  <div class="login__step" data-login-step="sent" hidden>
+    <p class="login__eyebrow">Check your inbox</p>
+    <h2 class="login__title serif">Your link is on its way.</h2>
+    <p class="login__text" aria-live="polite">We've sent a sign-in link to <b data-login-email></b>. It works once and expires in 15 minutes.</p>
+    <button class="login__again link" type="button" data-login-again>Use a different email</button>
+  </div>
+</dialog>
