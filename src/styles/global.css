@@ -429,6 +429,13 @@ ul { list-style: none; }
   .tell__ghost { left: 20px; bottom: 14px; }
   .search__submit { align-self: stretch; margin: 8px 12px 12px; }
   .pop { bottom: auto; top: calc(100% + 6px); transform-origin: 24px 0; }
+  /* Popovers open downward here, over the help line and the button: lift the bar and make them solid */
+  .search { z-index: 2; }
+  .pop, .pop.pop--tell { background: #fdfdfd; }
+  .pop--dates { padding: 20px 16px 16px; }
+  .dates__foot { flex-wrap: wrap; row-gap: 12px; }
+  .dates__nights { flex-basis: 100%; }
+  .dates__foot .link { margin-right: auto; white-space: nowrap; }
 }
 
 /* Toast */
@@ -765,13 +772,71 @@ ul { list-style: none; }
 .brief[data-stage='handoff'] .brief__step { animation-delay: calc(140ms + var(--n) * 100ms); }
 .brief[data-stage='handoff'] .brief__reply { animation-delay: 460ms; }
 
-/* When: check-in and check-out */
-.pop--dates { width: 340px; }
-.dates { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 12px 10px; }
-.dates__f { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); }
-.dates__f input { height: 40px; padding: 0 10px; border: 1px solid var(--stroke); border-radius: 4px; background: transparent; outline: none; font: inherit; font-size: 14px; color: var(--ink); transition: border-color 150ms ease-out; }
-.dates__f input:focus { border-color: var(--stroke-strong); }
-.dates__foot { display: flex; align-items: center; gap: 16px; padding: 10px 12px 4px; border-top: 1px solid var(--stroke); }
+/* When: an Airbnb-style range calendar, in Holiwise type and 4px squares */
+.pop--dates { width: min(780px, calc(100vw - 2 * var(--gutter))); padding: 24px 28px 18px; transform-origin: 50% 100%; }
+.cal { position: relative; }
+.cal__months { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 48px; }
+.cal__title { height: 32px; display: grid; place-items: center; font-family: var(--font-serif); font-size: 20px; letter-spacing: -0.01em; color: var(--ink); }
+.cal__arrow { position: absolute; top: 0; z-index: 1; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 4px; color: var(--ink); transition-property: transform, background-color, opacity; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
+.cal__arrow--prev { left: -6px; }
+.cal__arrow--next { right: -6px; }
+.cal__arrow:disabled { opacity: 0.25; cursor: default; }
+.cal__arrow:not(:disabled):active { transform: scale(0.96); }
+@media (hover: hover) and (pointer: fine) { .cal__arrow:not(:disabled):hover { background: rgba(26, 26, 26, 0.06); } }
+.cal__dow, .cal__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cal__dow { margin: 18px 0 6px; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); text-align: center; }
+.cal__grid { row-gap: 2px; }
+/* Each day is a full-width cell (the band) holding a 40px square (the day) */
+.cal__day { position: relative; height: 42px; display: grid; place-items: center; font-size: 14px; font-weight: 450; font-variant-numeric: tabular-nums; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+.cal__day span { position: relative; z-index: 1; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 4px; transition-property: transform, background-color, color, box-shadow; transition-duration: 150ms; transition-timing-function: ease-out; }
+.cal__day:disabled { color: rgba(26, 26, 26, 0.25); cursor: default; }
+.cal__day:not(:disabled):active span { transform: scale(0.96); }
+@media (hover: hover) and (pointer: fine) { .cal__day:not(:disabled):not(.is-start):not(.is-end):hover span { box-shadow: inset 0 0 0 1px var(--ink); } }
+.cal__day:focus-visible { outline: none; }
+.cal__day:focus-visible span { outline: 2px solid var(--ink); outline-offset: 2px; }
+.cal__day.is-today span::after { content: ''; position: absolute; bottom: 6px; left: 50%; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: currentColor; }
+.cal__day.is-start span, .cal__day.is-end span { background: var(--ink); color: #fff; }
+.cal__day.is-preview-end span { box-shadow: inset 0 0 0 1px var(--ink); }
+.cal__day.is-range, .cal__day.is-preview { background: rgba(26, 26, 26, 0.06); }
+.cal__day.is-preview { background: rgba(26, 26, 26, 0.04); }
+/* The band runs from the middle of check-in to the middle of check-out */
+.cal__day.has-band::before, .cal__day.is-end::before, .cal__day.is-preview-end::before { content: ''; position: absolute; top: 0; bottom: 0; background: rgba(26, 26, 26, 0.06); }
+.cal__day.has-band::before { left: 50%; right: 0; }
+.cal__day.is-end::before, .cal__day.is-preview-end::before { left: 0; right: 50%; }
+.cal__day.is-preview-end::before, .cal__day.has-band:not(.is-start ~ .is-end)::before { }
+/* Dates or Flexible: a segmented switch, the picked half lifts to white */
+.dates__mode { display: flex; width: fit-content; margin: 0 auto 22px; padding: 4px; gap: 4px; border-radius: 6px; background: rgba(26, 26, 26, 0.06); }
+.dates__mode button { height: 36px; min-width: 132px; padding: 0 24px; border-radius: 4px; font-size: 14px; color: var(--muted); transition-property: background-color, color, box-shadow, transform; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
+.dates__mode button:active { transform: scale(0.97); }
+.dates__mode [aria-selected='true'] { background: #fff; color: var(--ink); box-shadow: 0 0 0 1px var(--stroke), 0 1px 2px rgba(0, 0, 0, 0.06); }
+@media (hover: hover) and (pointer: fine) { .dates__mode [aria-selected='false']:hover { color: var(--ink); } }
+.dates__panel[hidden] { display: none; }
+/* Flexible: how long, then which months */
+.flexi { text-align: center; }
+.flexi__q { margin: 8px 0 14px; font-family: var(--font-serif); font-size: 20px; letter-spacing: -0.01em; color: var(--ink); }
+.flexi__q + .flexi__lengths { margin-bottom: 26px; }
+.flexi__lengths { display: flex; justify-content: center; gap: 8px; }
+.flexi__lengths .chip { height: 38px; padding: 0 20px; border-color: var(--stroke); }
+.flexi__lengths .chip[aria-pressed='true'], .cal__flex .chip[aria-pressed='true'] { color: #fff; }
+.flexi__months { position: relative; }
+.flexi__track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 4 * 10px) / 5); gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 2px; }
+.flexi__track::-webkit-scrollbar { display: none; }
+.flexi__month { scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 20px 8px 16px; border-radius: 4px; border: 1px solid var(--stroke); color: var(--ink); transition-property: border-color, background-color, box-shadow, transform; transition-duration: 150ms; transition-timing-function: ease-out; -webkit-tap-highlight-color: transparent; }
+.flexi__month svg { margin-bottom: 8px; }
+.flexi__month b { font-size: 14px; font-weight: 450; }
+.flexi__month span { font-size: 12px; color: var(--muted); }
+.flexi__month:active { transform: scale(0.97); }
+.flexi__month[aria-pressed='true'] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); background: rgba(26, 26, 26, 0.03); }
+@media (hover: hover) and (pointer: fine) { .flexi__month:not([aria-pressed='true']):hover { border-color: var(--ink); } }
+.flexi__arrow { top: 50%; margin-top: -16px; background: #fff; box-shadow: 0 0 0 1px var(--stroke), 0 4px 12px -4px rgba(0, 0, 0, 0.15); }
+.flexi__arrow--prev { left: -14px; }
+.flexi__arrow--next { right: -14px; }
+.flexi__arrow:disabled { opacity: 0; pointer-events: none; }
+@media (max-width: 719px) { .flexi__track { grid-auto-columns: calc((100% - 2 * 10px) / 3); } .dates__mode button { min-width: 0; } }
+.cal__flex { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.cal__flex .chip { height: 34px; padding: 0 14px; font-size: 13px; border-color: var(--stroke); }
+.cal__flex .chip[aria-pressed='true'] { color: #fff; }
+.dates__foot { display: flex; align-items: center; gap: 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--stroke); }
 .dates__nights { margin-right: auto; font-size: 13px; color: var(--muted); }
 .dates__foot .link { font-size: 14px; }
 .dates__foot .btn { height: 34px; padding: 0 14px; }

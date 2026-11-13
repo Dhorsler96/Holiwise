@@ -353,7 +353,7 @@ if (search) {
     });
     pop.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) return;
+      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement || (e.target as Element).closest('.cal')) return;
       const items = $$<HTMLButtonElement>('button:not(:disabled)', pop);
       const i = items.indexOf(document.activeElement as HTMLButtonElement);
       const dir = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1;
@@ -418,51 +418,235 @@ if (search) {
 
   const whereSet = () => Boolean(where.dataset.current) && where.dataset.current !== WHERE_EMPTY && where.dataset.current !== FLIGHT_EMPTY;
 
-  // When: real check-in and check-out dates; the field shows the range and the nights
+  // When: an Airbnb-style range calendar in our own style. Two months side by side (one on phones),
+  // check-in then check-out, a band joining them, and how flexible the dates are.
   const when = fields.find((f) => f.dataset.field === 'when')!;
-  const dateIn = $<HTMLInputElement>('[data-date-in]', when)!;
-  const dateOut = $<HTMLInputElement>('[data-date-out]', when)!;
+  const whenPop = $('.pop', when)!;
+  const cal = $('[data-cal]', when)!;
+  const months = $('[data-cal-months]', when)!;
+  const prev = $<HTMLButtonElement>('[data-cal-prev]', when)!;
+  const next = $<HTMLButtonElement>('[data-cal-next]', when)!;
   const nightsLabel = $('[data-nights]', when)!;
+  const flexChips = $$<HTMLButtonElement>('[data-flex]', when);
   const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const parse = (v: string) => { const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
   const month = (d: Date) => d.toLocaleString('en-GB', { month: 'short' });
   const range = (a: Date, b: Date) => (a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
     ? `${a.getDate()}–${b.getDate()} ${month(b)}`
     : `${a.getDate()} ${month(a)} – ${b.getDate()} ${month(b)}`);
-  dateIn.min = iso(new Date());
-  dateOut.min = dateIn.min;
-  const syncDates = () => {
-    if (dateIn.value) {
-      const after = parse(dateIn.value);
-      after.setDate(after.getDate() + 1);
-      dateOut.min = iso(after);
-      if (dateOut.value && dateOut.value <= dateIn.value) dateOut.value = '';
+  const today = iso(new Date());
+  const firstOfThisMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  let checkIn = '';
+  let checkOut = '';
+  let flex = 0;
+  let view = firstOfThisMonth;
+  let hover = '';
+  let focusDay = today;
+  let dateMode: 'dates' | 'flexible' = 'dates';
+  const twoUp = () => window.matchMedia('(min-width: 720px)').matches;
+
+  // Flexible: how long, and which months (pick as many as you like)
+  const lengths = $$<HTMLButtonElement>('[data-length]', when);
+  const monthTrack = $('[data-months]', when)!;
+  const LENGTH: Record<string, { label: string; nights: number }> = { weekend: { label: 'A weekend', nights: 2 }, week: { label: 'A week', nights: 7 }, month: { label: 'A month', nights: 28 } };
+  let stayLength = 'week';
+  const picked = new Set<string>();
+  const nextMonths = Array.from({ length: 12 }, (_, i) => new Date(firstOfThisMonth.getFullYear(), firstOfThisMonth.getMonth() + i, 1));
+  monthTrack.innerHTML = nextMonths.map((m) => `<button class="flexi__month" type="button" aria-pressed="false" data-month="${iso(m).slice(0, 7)}">${'<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" fill=\"none\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"6\" width=\"23\" height=\"20.5\" rx=\"3\" stroke=\"currentColor\" stroke-width=\"1.25\"/><path d=\"M3.5 12h23M10 3.5v5M20 3.5v5\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"round\"/></svg>'}<b>${m.toLocaleString('en-GB', { month: 'long' })}</b><span>${m.getFullYear()}</span></button>`).join('');
+  const listMonths = (style: 'long' | 'short') => nextMonths.filter((m) => picked.has(iso(m).slice(0, 7))).map((m) => m.toLocaleString('en-GB', { month: style }));
+  const joinOr = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} or ${xs[xs.length - 1]}`);
+  const syncFlexible = () => {
+    const len = LENGTH[stayLength];
+    if (!picked.size) {
+      nightsLabel.textContent = 'Choose one or more months';
+      delete when.dataset.range;
+      setValue(when, 'Add dates', true);
+      return;
     }
-    if (dateIn.value && dateOut.value) {
-      const a = parse(dateIn.value);
-      const b = parse(dateOut.value);
+    const short = listMonths('short');
+    const text = `${len.label} in ${short.length > 2 ? `${short.length} months` : joinOr(short)}`;
+    nightsLabel.textContent = `${len.label}, sometime in ${joinOr(listMonths('long'))}`;
+    when.dataset.range = text;
+    when.dataset.stay = String(len.nights);
+    when.dataset.phrase = `for ${len.label.toLowerCase()}, sometime in ${joinOr(listMonths('long'))}`;
+    setValue(when, text);
+  };
+  for (const b of lengths) b.addEventListener('click', () => {
+    stayLength = b.dataset.length!;
+    lengths.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    syncFlexible();
+  });
+  monthTrack.addEventListener('click', (e) => {
+    const card = (e.target as Element).closest<HTMLButtonElement>('[data-month]');
+    if (!card) return;
+    const key = card.dataset.month!;
+    if (picked.has(key)) picked.delete(key); else picked.add(key);
+    card.setAttribute('aria-pressed', String(picked.has(key)));
+    syncFlexible();
+  });
+  const monthsPrev = $<HTMLButtonElement>('[data-months-prev]', when)!;
+  const monthsNext = $<HTMLButtonElement>('[data-months-next]', when)!;
+  const syncMonthArrows = () => {
+    monthsPrev.disabled = monthTrack.scrollLeft < 4;
+    monthsNext.disabled = monthTrack.scrollLeft + monthTrack.clientWidth > monthTrack.scrollWidth - 4;
+  };
+  const scrollMonths = (dir: number) => monthTrack.scrollBy({ left: dir * monthTrack.clientWidth * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' });
+  monthsPrev.addEventListener('click', () => scrollMonths(-1));
+  monthsNext.addEventListener('click', () => scrollMonths(1));
+  monthTrack.addEventListener('scroll', syncMonthArrows, { passive: true });
+
+  // Dates or Flexible: the panels swap with the same soft entrance as everything else
+  const modeTabs = $$<HTMLButtonElement>('[data-date-mode]', when);
+  const panels = $$('[data-date-panel]', when);
+  for (const tab of modeTabs) tab.addEventListener('click', () => {
+    const next = tab.dataset.dateMode as 'dates' | 'flexible';
+    if (next === dateMode) return;
+    dateMode = next;
+    modeTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+    for (const panel of panels) {
+      panel.hidden = panel.dataset.datePanel !== next;
+      if (!panel.hidden && !reduceMotion) panel.animate([{ opacity: 0, transform: 'translateY(6px)', filter: 'blur(4px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 260, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+    }
+    syncDates();
+    if (next === 'flexible') requestAnimationFrame(syncMonthArrows);
+    placeWhen();
+  });
+
+  const renderMonth = (first: Date) => {
+    const title = first.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+    const lead = (first.getDay() + 6) % 7; // weeks start on Monday
+    const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    let cells = '';
+    for (let i = 0; i < lead; i++) cells += '<span class="cal__pad" aria-hidden="true"></span>';
+    const end = checkOut || (checkIn && hover > checkIn ? hover : '');
+    for (let d = 1; d <= days; d++) {
+      const date = new Date(first.getFullYear(), first.getMonth(), d);
+      const id = iso(date);
+      const past = id < today;
+      const cls = ['cal__day'];
+      if (id === checkIn) cls.push('is-start');
+      if (id === checkOut) cls.push('is-end');
+      if (checkIn && end && id > checkIn && id < end) cls.push(checkOut ? 'is-range' : 'is-preview');
+      if (checkIn && end && id === end && !checkOut) cls.push('is-preview-end');
+      if (checkIn && end && id === checkIn) cls.push('has-band');
+      if (id === today) cls.push('is-today');
+      const label = date.toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const state = id === checkIn ? ', check-in' : id === checkOut ? ', check-out' : '';
+      cells += `<button type="button" class="${cls.join(' ')}" data-day="${id}" tabindex="${id === focusDay ? 0 : -1}" aria-label="${label}${state}" aria-pressed="${id === checkIn || id === checkOut}"${past ? ' disabled' : ''}><span>${d}</span></button>`;
+    }
+    return `<div class="cal__month"><p class="cal__title">${title}</p><div class="cal__dow" aria-hidden="true">${['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((x) => `<span>${x}</span>`).join('')}</div><div class="cal__grid" role="group" aria-label="${title}">${cells}</div></div>`;
+  };
+  const render = (refocus = false) => {
+    const second = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+    months.innerHTML = renderMonth(view) + (twoUp() ? renderMonth(second) : '');
+    prev.disabled = view <= firstOfThisMonth;
+    if (refocus) $<HTMLButtonElement>(`[data-day="${focusDay}"]`, months)?.focus({ preventScroll: true });
+  };
+  const slide = (dir: number) => {
+    view = new Date(view.getFullYear(), view.getMonth() + dir, 1);
+    render();
+    if (!reduceMotion) months.animate([{ opacity: 0, transform: `translateX(${dir * 16}px)`, filter: 'blur(4px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 280, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+  };
+  prev.addEventListener('click', () => slide(-1));
+  next.addEventListener('click', () => slide(1));
+
+  const syncDates = () => {
+    if (dateMode === 'flexible') { syncFlexible(); return; }
+    if (checkIn && checkOut) {
+      const a = parse(checkIn);
+      const b = parse(checkOut);
       const n = Math.round((b.getTime() - a.getTime()) / 864e5);
       const nights = `${n} night${n === 1 ? '' : 's'}`;
-      nightsLabel.textContent = nights;
+      const plus = flex ? ` ± ${flex}` : '';
+      nightsLabel.textContent = `${nights} · ${range(a, b)}${flex ? ` · ± ${flex} day${flex === 1 ? '' : 's'}` : ''}`;
       when.dataset.range = range(a, b);
       when.dataset.stay = String(n);
-      setValue(when, `${range(a, b)} · ${nights}`);
+      when.dataset.phrase = `${range(a, b)} (${nights}${flex ? `, ± ${flex} days` : ''})`;
+      setValue(when, `${range(a, b)}${plus} · ${nights}`);
     } else {
-      nightsLabel.textContent = dateIn.value ? 'Now your check-out' : 'Pick your dates';
+      nightsLabel.textContent = checkIn ? 'Now choose your check-out' : 'Choose your check-in';
       delete when.dataset.range;
+      delete when.dataset.phrase;
       setValue(when, 'Add dates', true);
     }
   };
-  dateIn.addEventListener('change', () => {
+  const pick = (id: string) => {
+    if (!checkIn || checkOut || id <= checkIn) { checkIn = id; checkOut = ''; }
+    else checkOut = id;
+    hover = '';
+    focusDay = id;
+    render(true);
     syncDates();
-    if (dateIn.value && !dateOut.value) { dateOut.focus(); try { dateOut.showPicker?.(); } catch { /* not every browser allows it */ } }
+  };
+  months.addEventListener('click', (e) => {
+    const day = (e.target as Element).closest<HTMLButtonElement>('[data-day]');
+    if (day && !day.disabled) pick(day.dataset.day!);
   });
-  dateOut.addEventListener('change', syncDates);
-  $('[data-dates-clear]', when)!.addEventListener('click', () => { dateIn.value = ''; dateOut.value = ''; dateOut.min = dateIn.min; syncDates(); dateIn.focus(); });
+  // Choosing a check-out: the band follows the pointer from the check-in
+  months.addEventListener('pointerover', (e) => {
+    if (!checkIn || checkOut) return;
+    const day = (e.target as Element).closest<HTMLButtonElement>('[data-day]');
+    const id = day && !day.disabled ? day.dataset.day! : '';
+    if (id !== hover) { hover = id; render(); }
+  });
+  months.addEventListener('pointerleave', () => { if (hover) { hover = ''; render(); } });
+  // Keyboard: arrows move a day or a week, Page Up/Down a month, Enter or Space picks
+  months.addEventListener('keydown', (e) => {
+    const steps: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+    let target: Date | null = null;
+    const current = parse(focusDay);
+    if (e.key in steps) target = addDays(current, steps[e.key]);
+    if (e.key === 'PageUp') target = new Date(current.getFullYear(), current.getMonth() - 1, current.getDate());
+    if (e.key === 'PageDown') target = new Date(current.getFullYear(), current.getMonth() + 1, current.getDate());
+    if (!target) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (iso(target) < today) return;
+    focusDay = iso(target);
+    const shown = twoUp() ? 2 : 1;
+    const last = new Date(view.getFullYear(), view.getMonth() + shown, 0);
+    if (target < view) view = new Date(target.getFullYear(), target.getMonth(), 1);
+    else if (target > last) view = new Date(target.getFullYear(), target.getMonth() - shown + 1, 1);
+    if (!checkOut && checkIn) hover = focusDay;
+    render(true);
+  });
+  for (const chip of flexChips) chip.addEventListener('click', () => {
+    flex = Number(chip.dataset.flex);
+    flexChips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    syncDates();
+  });
+  $('[data-dates-clear]', when)!.addEventListener('click', () => {
+    if (dateMode === 'flexible') {
+      picked.clear();
+      $$('[data-month]', when).forEach((c) => c.setAttribute('aria-pressed', 'false'));
+    } else {
+      checkIn = ''; checkOut = ''; hover = ''; focusDay = today;
+      render(true);
+    }
+    syncDates();
+  });
   $('[data-dates-done]', when)!.addEventListener('click', () => {
     setOpen(null, keyboard);
     $<HTMLElement>('.field__btn', when)!.focus({ preventScroll: true });
   });
+  // The panel is wider than its field: centre it over the search bar, and show the check-in month
+  const placeWhen = () => {
+    if (window.matchMedia('(max-width: 900px)').matches) { whenPop.style.left = ''; return; }
+    const width = whenPop.offsetWidth;
+    whenPop.style.left = `${Math.round((search.offsetWidth - width) / 2 - when.offsetLeft)}px`;
+  };
+  const focusCalendar = () => { render(); $<HTMLButtonElement>(`[data-day="${focusDay}"]`, months)?.focus({ preventScroll: true }); };
+  $('.field__btn', when)!.addEventListener('click', () => {
+    if (open !== when) return;
+    view = checkIn ? new Date(parse(checkIn).getFullYear(), parse(checkIn).getMonth(), 1) : firstOfThisMonth;
+    focusDay = checkIn || today;
+    render();
+    placeWhen();
+    if (keyboard) focusCalendar();
+  });
+  window.addEventListener('resize', () => { render(); if (open === when) placeWhen(); });
+  render();
 
   // Who
   const who = fields.find((f) => f.dataset.field === 'who')!;
@@ -632,13 +816,13 @@ if (search) {
       whereSearch.focus({ preventScroll: true });
       return;
     }
-    if (!brief && !when.dataset.range) { setOpen(when, true); dateIn.focus({ preventScroll: true }); return; }
+    if (!brief && !when.dataset.range) { setOpen(when, true); render(); placeWhen(); if (dateMode === 'dates') focusCalendar(); return; }
     setOpen(null, true);
     const guests = who.dataset.current || '2 guests';
     const parts = [place, when.dataset.range ? when.dataset.current! : '', guests].filter(Boolean);
     if (openBrief) {
       const flights = $('[data-tab="flights"]')?.getAttribute('aria-selected') === 'true';
-      const composed = `${flights ? `Flights from London and a hotel in ${place}` : `A hotel in ${place}`}, ${when.dataset.range} (${when.dataset.stay} nights), for ${guests}`;
+      const composed = `${flights ? `Flights from London and a hotel in ${place}` : `A hotel in ${place}`}, ${when.dataset.phrase}, for ${guests}`;
       openBrief(brief || composed, parts, submit, place);
       return;
     }
