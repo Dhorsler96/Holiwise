@@ -123,7 +123,7 @@
 /* The longest reviews run a step smaller so every slide fits about the same height */
 .pquote--long .pquote__text { font-size: clamp(22px, 2.1vw, 30px); line-height: 1.15; }
 .pquote__who { display: flex; align-items: center; gap: 12px; margin-top: 40px; }
-.pquote__avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #191919; color: #fff; font-size: 14px; }
+.pquote__avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #191919; color: var(--bg); font-size: 14px; } /* the initial takes the section colour */
 .pquote__who b { display: block; font-size: 14px; font-weight: 500; }
 .pquote__who small { display: block; font-size: 13px; color: var(--fg-muted); }
 .pquotes__ctrl { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: clamp(56px, 10vw, 144px); }
