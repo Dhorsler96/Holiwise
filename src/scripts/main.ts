@@ -1058,3 +1058,27 @@ if (menu && burger) {
   menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false, false); });
   window.matchMedia('(min-width: 961px)').addEventListener('change', (e) => { if (e.matches) setOpen(false, false); });
 }
+
+/* ---------- On-screen keyboard: keep bottom sheets above it ----------
+   iOS leaves fixed elements pinned to the bottom of the page behind the keyboard. The visual
+   viewport says how much is actually visible, so sheets can sit on top of the keyboard. */
+const vv = window.visualViewport;
+if (vv) {
+  const root = document.documentElement;
+  const sync = () => {
+    const kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    root.style.setProperty('--kb', `${kb}px`);
+    root.style.setProperty('--vvh', `${Math.round(vv.height)}px`);
+    root.classList.toggle('has-kb', kb > 80);
+  };
+  vv.addEventListener('resize', sync);
+  vv.addEventListener('scroll', sync);
+  sync();
+  // Once the keyboard is up, bring the focused field and the send button into view inside the sheet
+  document.addEventListener('focusin', (e) => {
+    const el = e.target as HTMLElement;
+    const sheet = el.closest<HTMLElement>('.pop');
+    if (!sheet || !el.matches('input, textarea')) return;
+    window.setTimeout(() => { sync(); sheet.scrollTop = sheet.scrollHeight; }, 350);
+  });
+}

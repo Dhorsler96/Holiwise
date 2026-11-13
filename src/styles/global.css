@@ -992,8 +992,8 @@ ul { list-style: none; }
 @media (max-width: 600px) {
   .search.is-open { -webkit-backdrop-filter: none; backdrop-filter: none; background: #fdfdfd; }
   .pop, .pop.pop--tell, .pop--dates {
-    position: fixed; inset: auto 0 0 0 !important; z-index: 60; width: auto; min-width: 0;
-    max-height: min(86svh, 720px); overflow-y: auto; -webkit-overflow-scrolling: touch;
+    position: fixed; inset: auto 0 var(--kb, 0px) 0 !important; z-index: 60; width: auto; min-width: 0;
+    max-height: min(86svh, 720px, calc(var(--vvh, 100svh) - 12px)); overflow-y: auto; -webkit-overflow-scrolling: touch;
     padding: 28px 16px max(20px, env(safe-area-inset-bottom)); border-radius: 16px 16px 0 0; background: #fdfdfd;
     box-shadow: 0 0 0 100vmax rgba(10, 10, 10, 0), 0 -12px 40px -12px rgba(0, 0, 0, 0.3);
     transform: translateY(32px); transform-origin: 50% 100%; filter: none;
@@ -1010,4 +1010,16 @@ ul { list-style: none; }
   .pop--tell .pop__title { font-size: 26px; line-height: 32px; }
   /* Tabs stay readable over the video */
   .tabs__tab { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.4); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
+
+/* Phones with the on-screen keyboard up: the sheet sits just above the keyboard (main.ts keeps
+   --kb and --vvh in step with the visible area), and the writing box gives back a little height */
+@media (max-width: 600px) {
+  .has-kb .pop { transition-property: opacity, box-shadow, visibility; }
+  .has-kb .pop--tell .pop__chips { display: none; }
+  .has-kb .pop--tell textarea { height: 104px; }
+}
+/* iPhones zoom into any field under 16px when it's tapped; keep them at 16px on touch screens */
+@media (pointer: coarse) {
+  input, textarea, select, .pop--tell textarea, .pfield input, .pselect select, .brief__refine input { font-size: 16px; }
 }
