@@ -984,3 +984,30 @@ ul { list-style: none; }
 .is-menu-open .menu__link, .is-menu-open .menu__foot { opacity: 1; transform: none; transition: opacity 420ms ease-out, transform 520ms var(--ease-out); transition-delay: calc(80ms + var(--i, 0) * 50ms); }
 @media (min-width: 961px) { .menu { display: none; } }
 @media (prefers-reduced-motion: reduce) { .menu__link, .menu__foot, .nav__burger span { transform: none !important; } }
+
+/* ---------- Search on phones: popovers become a bottom sheet ----------
+   Full width from the foot of the screen with the page dimmed behind (a wide shadow, so the
+   tap-outside-to-close behaviour still works). The bar drops its blur while open, since a
+   backdrop filter would otherwise trap the fixed sheet inside it. */
+@media (max-width: 600px) {
+  .search.is-open { -webkit-backdrop-filter: none; backdrop-filter: none; background: #fdfdfd; }
+  .pop, .pop.pop--tell, .pop--dates {
+    position: fixed; inset: auto 0 0 0 !important; z-index: 60; width: auto; min-width: 0;
+    max-height: min(86svh, 720px); overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 28px 16px max(20px, env(safe-area-inset-bottom)); border-radius: 16px 16px 0 0; background: #fdfdfd;
+    box-shadow: 0 0 0 100vmax rgba(10, 10, 10, 0), 0 -12px 40px -12px rgba(0, 0, 0, 0.3);
+    transform: translateY(32px); transform-origin: 50% 100%; filter: none;
+    transition: opacity 180ms ease-out, transform 220ms ease-out, box-shadow 220ms ease-out, visibility 0s linear 220ms;
+  }
+  .field.is-open .pop {
+    transform: none; box-shadow: 0 0 0 100vmax rgba(10, 10, 10, 0.45), 0 -12px 40px -12px rgba(0, 0, 0, 0.3);
+    transition: opacity 220ms ease-out, transform 380ms var(--ease-drawer), box-shadow 300ms ease-out, visibility 0s;
+  }
+  /* A small grab handle, so it reads as a sheet */
+  .pop::before { content: ''; position: absolute; top: 10px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 2px; background: rgba(0, 0, 0, 0.14); }
+  .pop--dates { padding-top: 28px; }
+  .pop.pop--tell { padding-inline: 28px; padding-top: 32px; }
+  .pop--tell .pop__title { font-size: 26px; line-height: 32px; }
+  /* Tabs stay readable over the video */
+  .tabs__tab { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.4); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
