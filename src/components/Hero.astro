@@ -49,6 +49,7 @@ const suggestions: string[] = hero.tellSuggestions ?? ['Flights and a hotel', 'A
         </button>
         <div class="pop pop--dates" role="dialog" aria-label="Choose your dates">
           <div class="dates__mode" role="tablist" aria-label="Exact or flexible dates">
+            <span class="dates__pill" aria-hidden="true"></span>
             <button type="button" role="tab" aria-selected="true" data-date-mode="dates">Dates</button>
             <button type="button" role="tab" aria-selected="false" data-date-mode="flexible">Flexible</button>
           </div>
@@ -79,7 +80,7 @@ const suggestions: string[] = hero.tellSuggestions ?? ['Flights and a hotel', 'A
             </div>
           </div>
           <div class="dates__foot">
-            <span class="dates__nights" data-nights aria-live="polite">Choose your check-in</span>
+            <span class="dates__nights" data-nights data-morph aria-live="polite">Choose your check-in</span>
             <button class="link" type="button" data-dates-clear>Clear dates</button>
             <button class="btn btn--dark" type="button" data-dates-done>Done</button>
           </div>

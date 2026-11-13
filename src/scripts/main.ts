@@ -459,14 +459,14 @@ if (search) {
   const syncFlexible = () => {
     const len = LENGTH[stayLength];
     if (!picked.size) {
-      nightsLabel.textContent = 'Choose one or more months';
+      setText(nightsLabel, 'Choose one or more months');
       delete when.dataset.range;
       setValue(when, 'Add dates', true);
       return;
     }
     const short = listMonths('short');
     const text = `${len.label} in ${short.length > 2 ? `${short.length} months` : joinOr(short)}`;
-    nightsLabel.textContent = `${len.label}, sometime in ${joinOr(listMonths('long'))}`;
+    setText(nightsLabel, `${len.label}, sometime in ${joinOr(listMonths('long'))}`);
     when.dataset.range = text;
     when.dataset.stay = String(len.nights);
     when.dataset.phrase = `for ${len.label.toLowerCase()}, sometime in ${joinOr(listMonths('long'))}`;
@@ -496,20 +496,52 @@ if (search) {
   monthsNext.addEventListener('click', () => scrollMonths(1));
   monthTrack.addEventListener('scroll', syncMonthArrows, { passive: true });
 
-  // Dates or Flexible: the panels swap with the same soft entrance as everything else
+  // Dates or Flexible, as one movement: the highlight slides across, the old panel blurs out,
+  // the popover eases to its new height and the new panel's rows arrive one after another.
   const modeTabs = $$<HTMLButtonElement>('[data-date-mode]', when);
+  const modeSwitch = $('.dates__mode', when)!;
   const panels = $$('[data-date-panel]', when);
-  for (const tab of modeTabs) tab.addEventListener('click', () => {
+  const drawer = 'cubic-bezier(0.32, 0.72, 0, 1)';
+  const settle = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  let switching: Animation[] = [];
+  let swapToken = 0;
+  for (const tab of modeTabs) tab.addEventListener('click', async () => {
     const next = tab.dataset.dateMode as 'dates' | 'flexible';
     if (next === dateMode) return;
     dateMode = next;
+    modeSwitch.dataset.mode = next;
     modeTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-    for (const panel of panels) {
-      panel.hidden = panel.dataset.datePanel !== next;
-      if (!panel.hidden && !reduceMotion) panel.animate([{ opacity: 0, transform: 'translateY(6px)', filter: 'blur(4px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 260, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
-    }
-    syncDates();
-    if (next === 'flexible') requestAnimationFrame(syncMonthArrows);
+    const outgoing = panels.find((p) => !p.hidden)!;
+    const incoming = panels.find((p) => p.dataset.datePanel === next)!;
+    const swap = () => {
+      outgoing.hidden = true;
+      incoming.hidden = false;
+      syncDates();
+      if (next === 'flexible') requestAnimationFrame(syncMonthArrows);
+    };
+    if (reduceMotion) { swap(); placeWhen(); return; }
+    // A quick second click takes over from wherever the first one got to
+    const token = ++swapToken;
+    switching.forEach((a) => a.cancel());
+    switching = [];
+    const from = whenPop.offsetHeight;
+    const out = outgoing.animate([{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(4px)' }], { duration: 120, easing: 'ease-out', fill: 'forwards' });
+    switching.push(out);
+    try { await out.finished; } catch { return; }
+    if (token !== swapToken) return;
+    out.cancel();
+    swap();
+    const to = whenPop.offsetHeight;
+    whenPop.style.overflow = 'hidden';
+    const grow = whenPop.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: 380, easing: drawer });
+    switching.push(grow);
+    grow.finished.then(() => { whenPop.style.overflow = ''; }, () => { whenPop.style.overflow = ''; });
+    [...incoming.children].forEach((row, i) => {
+      switching.push((row as HTMLElement).animate(
+        [{ opacity: 0, transform: 'translateY(8px)', filter: 'blur(4px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }],
+        { duration: 320, delay: 60 + i * 50, easing: settle, fill: 'backwards' },
+      ));
+    });
     placeWhen();
   });
 
@@ -559,13 +591,13 @@ if (search) {
       const n = Math.round((b.getTime() - a.getTime()) / 864e5);
       const nights = `${n} night${n === 1 ? '' : 's'}`;
       const plus = flex ? ` ± ${flex}` : '';
-      nightsLabel.textContent = `${nights} · ${range(a, b)}${flex ? ` · ± ${flex} day${flex === 1 ? '' : 's'}` : ''}`;
+      setText(nightsLabel, `${nights} · ${range(a, b)}${flex ? ` · ± ${flex} day${flex === 1 ? '' : 's'}` : ''}`);
       when.dataset.range = range(a, b);
       when.dataset.stay = String(n);
       when.dataset.phrase = `${range(a, b)} (${nights}${flex ? `, ± ${flex} days` : ''})`;
       setValue(when, `${range(a, b)}${plus} · ${nights}`);
     } else {
-      nightsLabel.textContent = checkIn ? 'Now choose your check-out' : 'Choose your check-in';
+      setText(nightsLabel, checkIn ? 'Now choose your check-out' : 'Choose your check-in');
       delete when.dataset.range;
       delete when.dataset.phrase;
       setValue(when, 'Add dates', true);
