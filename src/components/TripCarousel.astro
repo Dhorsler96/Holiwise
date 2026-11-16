@@ -17,7 +17,7 @@ const total = data.items.length;
       <button class="where__arrow" type="button" aria-label="Next trip" data-trips-next><svg width="12" height="9" viewBox="0 0 12 9" fill="none" aria-hidden="true"><path d="M0 4.5h11.5M11.5 4.5L7 9M11.5 4.5L7 0" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
   </div>
-  <ul class="trips__track" data-trips-track data-stagger data-inview data-threshold="0.15" tabindex="0" aria-label={data.heading}>
+  <ul class="trips__track" data-trips-track tabindex="0" aria-label={data.heading}>
     {data.items.map((t: any, i: number) => (
       <li class="trip" style={`--i:${Math.min(i, 3)}`} aria-label={`${t.title}, ${i + 1} of ${total}`}>
         <div class="trip__media" style={`--tone:${t.tone}`}>
