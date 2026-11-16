@@ -20,9 +20,9 @@ const { home, settings } = await getSiteContent();
     <Hero hero={home.hero} destinations={home.whereNext.destinations} />
     <Statement text={home.statement} />
     <HowItWorks data={home.howItWorks} />
+    <Deal data={home.deal} />
     <WhereNext data={home.whereNext} />
     <TripCarousel data={home.trips} />
-    <Deal data={home.deal} />
     <FinalCta data={home.finalCta} agentHref={settings.agentHref} />
   </main>
   <Footer settings={settings} />
