@@ -1084,7 +1084,8 @@ ul { list-style: none; }
 .trip__price { font-size: 13px; line-height: 1.4; color: var(--fg-muted); }
 .trips__progress { display: flex; align-items: center; gap: 16px; margin-top: 48px; padding-inline: var(--gutter); }
 .trips__bar { position: relative; flex: 1; height: 2px; border-radius: 1px; background: rgba(20, 20, 20, 0.12); overflow: hidden; }
-.trips__bar i { position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: 1px; background: var(--ink); transform-origin: left; transform: scaleX(var(--p, 0.2)); transition: transform 400ms var(--ease-out); }
+/* A scroll indicator: the thumb is as wide as the share of the row on screen and moves with the scroll itself */
+.trips__bar i { position: absolute; inset: 0 auto 0 0; width: calc(var(--w, 0.2) * 100%); border-radius: 1px; background: var(--ink); transform: translateX(calc(var(--x, 0) * 100%)); will-change: transform; }
 .trips__count { font-size: 12px; line-height: 16px; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
 @media (max-width: 760px) {
   .trips__arrows { display: none; }
@@ -1093,4 +1094,3 @@ ul { list-style: none; }
   .trip { width: min(300px, 78vw); }
   .trips__progress { margin-top: 32px; }
 }
-@media (prefers-reduced-motion: reduce) { .trips__bar i { transition: none; } }

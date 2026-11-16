@@ -1134,9 +1134,12 @@ if (trips) {
   const sync = () => {
     const max = track.scrollWidth - track.clientWidth;
     const atEnd = track.scrollLeft >= max - 4;
-    const i = atEnd ? cards.length - 1 : Math.round(track.scrollLeft / step());
+    // Thumb: its width is the share of the row on screen; it travels with the scroll, so it never jumps
+    fill.style.setProperty('--w', String(track.clientWidth / track.scrollWidth));
+    fill.style.setProperty('--x', String(track.scrollLeft / track.clientWidth));
+    // Count: the card at the left edge, stepping one at a time
+    const i = Math.min(cards.length - 1, Math.round(track.scrollLeft / step()));
     count.textContent = String(i + 1).padStart(2, '0');
-    fill.style.setProperty('--p', String((i + 1) / cards.length));
     prev.disabled = track.scrollLeft <= 4;
     next.disabled = atEnd;
   };
