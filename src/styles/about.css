@@ -125,16 +125,8 @@
 .ateam__role { margin-top: 4px; font-size: 14px; font-weight: 450; line-height: 20px; color: var(--fg-muted); }
 
 /* ---------- 07 Where we are (light) ---------- */
-.awhere__offices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.awhere__offices li { display: flex; flex-direction: column; }
 /* Office photos still to come: a quiet placeholder, as in Figma */
-.awhere__img { aspect-ratio: 650 / 420; border-radius: 4px; background: #f2f2f2; overflow: hidden; }
-.awhere__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* Office photos come into focus with their card, a beat behind the stagger */
-.js .awhere__img [data-focus] { transition-delay: calc(var(--i, 0) * 90ms + 150ms); }
-.js .awhere__offices.is-in [data-focus] { opacity: 1; filter: none; }
-.awhere__offices h3 { margin-top: 16px; font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
-.awhere__offices p { margin-top: 16px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
 
 /* ---------- 08 As featured in (light) ---------- */
 .apress { padding-block: 80px; text-align: center; }
@@ -155,22 +147,10 @@
 
 @media (max-width: 960px) {
   .afacts__list, .ateam__row { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
-  .ahow__cards, .awhere__offices { grid-template-columns: 1fr; }
+  .ahow__cards { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .apress__logos { gap: 28px 36px; }
   .acta__actions .btn { flex: 1 1 100%; }
 }
 
-/* Office addresses: one line where it fits, breaking only between the parts */
-.awhere__addr { margin-top: 12px; font-style: normal; font-size: 15px; line-height: 1.5; color: var(--fg-muted); }
-/* A small copy icon right after the address; it turns into a tick once copied */
-.awhere__copy { position: relative; display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -6px 0 -6px 4px; vertical-align: middle; border-radius: 4px; color: var(--fg-muted); transition: color 150ms ease-out, background-color 150ms ease-out, transform 150ms ease-out; -webkit-tap-highlight-color: transparent; }
-.awhere__copy::after { content: ''; position: absolute; inset: -8px; }
-@media (hover: hover) and (pointer: fine) { .awhere__copy:hover { color: var(--fg); background: rgba(0, 0, 0, 0.05); } }
-.awhere__copy:active { transform: scale(0.92); }
-.awhere__copy svg { grid-area: 1 / 1; transition: opacity 150ms ease-out, transform 200ms var(--ease-out); }
-.awhere__copy-done { opacity: 0; transform: scale(0.6); }
-.awhere__copy.is-copied { color: var(--fg); }
-.awhere__copy.is-copied .awhere__copy-icon { opacity: 0; transform: scale(0.6); }
-.awhere__copy.is-copied .awhere__copy-done { opacity: 1; transform: none; }

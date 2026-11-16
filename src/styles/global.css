@@ -932,7 +932,7 @@ ul { list-style: none; }
   h1, h2, h3, h4, figcaption, label, .eyebrow, .am-eyebrow, .pm-eyebrow { text-wrap: balance; }
   p, li, dd, blockquote, .statement p, .brief__quote { text-wrap: pretty; }
   .hero__intro, .phero__intro, .ahero__intro, .acta__text, .pm-cta__text, .pquote__who small,
-  .card__summary, .awhere__offices p, .fav__text, .step__desc, .pstep__text { text-wrap: balance; }
+  .card__summary, .fav__text, .step__desc, .pstep__text { text-wrap: balance; }
 }
 
 /* ---------- Form fields (Premium request form and the log in panel) ---------- */
