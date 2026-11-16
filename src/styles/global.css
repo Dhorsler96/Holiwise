@@ -636,7 +636,7 @@ ul { list-style: none; }
 @media (prefers-reduced-motion: reduce) { .js .fav { transform: none; filter: none; transition-property: opacity; } .fav__media img { transition: none; } }
 
 /* ---------- Deal ---------- */
-.deal { background: var(--bg); color: var(--ink); --fg-muted: var(--muted); --rule: rgba(26, 26, 26, 0.12); display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 700px); justify-content: space-between; align-items: center; gap: 40px; }
+.deal { background: var(--bg); color: var(--fg); display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 700px); justify-content: space-between; align-items: center; gap: 40px; }
 .deal__title { font-size: clamp(30px, 2.8vw, 40px); }
 .deal__body { margin-top: 14px; max-width: 387px; color: var(--fg-muted); line-height: 1.3; }
 .deal__pill { display: inline-flex; align-items: center; gap: 8px; margin-top: 40px; padding: 4px 12px 4px 8px; border-radius: 999px; background: var(--surface); color: #1f9d00; font-size: 14px; font-family: var(--font-accent); letter-spacing: 0; font-weight: 500; }
@@ -647,14 +647,16 @@ ul { list-style: none; }
 .deal__note { font-size: 13px; color: var(--fg-muted); }
 .deal__card { background: var(--surface); border-radius: 16px; padding: 24px; }
 .deal__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.deal__badge { flex: none; margin-top: 4px; padding: 4px 8px; border-radius: 2px; background: var(--ink); color: #fff; font-style: normal; font-size: 11px; letter-spacing: 0.06em; font-family: var(--font-accent); font-weight: 500; text-transform: uppercase; }
+.deal__badge { flex: none; margin-top: 4px; padding: 4px 8px; border-radius: 2px; background: var(--fg); color: var(--bg); font-style: normal; font-size: 11px; letter-spacing: 0.06em; font-family: var(--font-accent); font-weight: 500; text-transform: uppercase; }
 .deal__stay { font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; }
 .deal__eyebrow { margin: 12px 0 12px; font-size: 13px; font-family: var(--font-accent); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); }
 .deal__row { display: flex; justify-content: space-between; gap: 16px; padding: 12.5px 0; border-top: 1px solid var(--rule); font-size: 16px; }
 .deal__row dt { font-family: var(--font-accent); letter-spacing: 0; font-weight: 500; }
 .deal__row dd { margin: 0; color: var(--fg-muted); text-align: right; }
 .deal__invite { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--rule); font-size: 15px; color: var(--fg-muted); }
-.deal__invite .arrow-link { color: var(--ink); }
+.deal__invite .arrow-link { color: var(--fg); }
+/* Premium follows the page theme (it can arrive while the page is still dark from How it works): the solid button inverts with it */
+.deal .btn--dark { background: var(--fg); color: var(--bg); transition-property: background-color, color, transform; transition-duration: 500ms, 500ms, 150ms; }
 .js .deal__row, .js .deal__invite { opacity: 0; transform: translateY(12px); filter: blur(4px); transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out; transition-delay: calc(100ms + var(--i) * 100ms); }
 .js .deal__card.is-in .deal__row, .js .deal__card.is-in .deal__invite { opacity: 1; transform: none; filter: none; }
 @media (max-width: 900px) { .deal { grid-template-columns: 1fr; } }
