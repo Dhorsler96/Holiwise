@@ -186,12 +186,12 @@ const chevron = (dir: 'left' | 'right') => `<svg width="12" height="10" viewBox=
     </section>
 
     <!-- 10 Closing CTA -->
-    <section class="pm pm-cta" data-theme="green">
+    <section class="pm pm-cta" data-theme="light">
       <h2 class="pm-cta__title serif" data-inview data-threshold="0.4"><span class="mask">{words(p.cta.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
       <p class="pm-cta__text" data-reveal data-inview style="--i:3">{p.cta.body}</p>
       <div class="pm-cta__actions" data-reveal data-inview style="--i:4">
-        <a class="btn btn--light" href="#request" data-to-request>{p.hero.primaryLabel}</a>
-        <a class="btn btn--ghost-light" href="#invite" data-to-invite>{p.hero.secondaryLabel}</a>
+        <a class="btn btn--dark" href="#request" data-to-request>{p.hero.primaryLabel}</a>
+        <a class="btn btn--ghost-dark" href="#invite" data-to-invite>{p.hero.secondaryLabel}</a>
       </div>
     </section>
   </main>
