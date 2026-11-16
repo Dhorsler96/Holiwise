@@ -13,7 +13,7 @@
 .pm-head { max-width: 640px; }
 .pm-title { font-size: clamp(30px, 2.8vw, 40px); line-height: 1.05; letter-spacing: -0.01em; }
 .pm-intro { margin-top: 14px; max-width: 520px; font-size: 15px; line-height: 1.5; color: var(--fg-muted); text-wrap: pretty; }
-.pm-eyebrow { font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); text-align: center; }
+.pm-eyebrow { font-size: 12px; font-family: var(--font-accent); font-weight: 500; line-height: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); text-align: center; }
 
 
 /* ---------- 01 Hero ---------- */
@@ -29,7 +29,7 @@
 .phero__title { font-size: clamp(42px, 4.45vw, 64px); line-height: 0.95; letter-spacing: -0.03em; }
 .js .phero__title .mask > span { transition-delay: calc(120ms + var(--i) * 80ms); }
 .js.is-loaded .phero__title .mask > span { opacity: 1; transform: none; filter: none; }
-.phero__intro { max-width: 560px; font-size: 14px; line-height: 20px; text-wrap: balance; }
+.phero__intro { max-width: 560px; font-size: 14px; font-weight: 400; line-height: 20px; text-wrap: balance; }
 .phero__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .phero__member { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
 .phero__member .link { color: #fff; }
@@ -51,9 +51,9 @@
 @media (hover: hover) and (pointer: fine) { .pillar:hover .pillar__media img { transform: scale(1); } }
 .pillar__body { padding: 0 24px; }
 .pillar__title { font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
-.pillar__text { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--fg-muted); text-wrap: pretty; }
+.pillar__text { margin-top: 12px; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--fg-muted); text-wrap: pretty; }
 .pillar__points { margin-top: 20px; }
-.pillar__points li { display: flex; align-items: center; gap: 8px; padding: 12px 0; border-top: 1px solid var(--stroke); font-size: 14px; line-height: 20px; letter-spacing: 0.01em; }
+.pillar__points li { display: flex; align-items: center; gap: 8px; padding: 12px 0; border-top: 1px solid var(--stroke); font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0.01em; }
 .pillar__points svg { flex: none; }
 
 /* ---------- 04 How to join ---------- */
@@ -61,10 +61,10 @@
 .pm-join .pm-head { margin-bottom: clamp(56px, 7.8vw, 112px); }
 .psteps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; list-style: none; margin: 0; padding: 0; }
 .pstep { display: flex; flex-direction: column; justify-content: space-between; gap: 48px; min-height: 273px; padding: 24px; border-radius: 4px; background: var(--surface); }
-.pstep__n { font-size: 36px; font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; color: #9a9a9a; font-variant-numeric: tabular-nums; }
+.pstep__n { font-size: 36px; font-family: var(--font-accent); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; color: #9a9a9a; font-variant-numeric: tabular-nums; }
 .pstep__title { font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
 /* Descriptions hold three lines, so every title sits at the same height */
-.pstep__text { margin-top: clamp(28px, 5vw, 72px); max-width: 280px; min-height: 60px; font-size: 14px; line-height: 20px; color: var(--fg-muted); }
+.pstep__text { margin-top: clamp(28px, 5vw, 72px); max-width: 280px; min-height: 60px; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--fg-muted); }
 
 /* ---------- 06 Request an invitation ---------- */
 .pm-req__grid { display: grid; grid-template-columns: minmax(0, 640px) minmax(0, 680px); justify-content: space-between; align-items: start; gap: 40px; }
@@ -105,8 +105,8 @@
 /* The longest reviews run a step smaller so every slide fits about the same height */
 .pquote--long .pquote__text { font-size: clamp(22px, 2.1vw, 30px); line-height: 1.15; }
 .pquote__who { display: flex; align-items: center; gap: 12px; margin-top: 40px; }
-.pquote__avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #191919; color: var(--bg); font-size: 14px; } /* the initial takes the section colour */
-.pquote__who b { display: block; font-size: 14px; font-weight: 500; }
+.pquote__avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #191919; color: var(--bg); font-size: 14px; font-weight: 400; } /* the initial takes the section colour */
+.pquote__who b { display: block; font-size: 14px; font-family: var(--font-accent); font-weight: 500; }
 .pquote__who small { display: block; font-size: 13px; color: var(--fg-muted); }
 .pquotes__ctrl { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: clamp(56px, 10vw, 144px); }
 .pquotes__dots { display: flex; align-items: center; gap: 1px; padding: 4px; border-radius: 100px; background: rgba(0, 0, 0, 0.05); }
@@ -138,7 +138,7 @@
 .faq { display: flex; flex-direction: column; gap: 8px; }
 .faq__item { border-radius: 4px; background: var(--surface); }
 .faq__item h3 { font: inherit; }
-.faq__q { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; padding: 16px; text-align: left; font-size: 15px; line-height: 1.5; border-radius: 4px; -webkit-tap-highlight-color: transparent; }
+.faq__q { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; padding: 16px; text-align: left; font-family: var(--font-sans); font-weight: 300; font-size: 15px; line-height: 1.5; border-radius: 4px; -webkit-tap-highlight-color: transparent; }
 .faq__q > span:first-child { transition: opacity 150ms ease-out; }
 @media (hover: hover) and (pointer: fine) { .faq__item:not(.is-open) .faq__q:hover > span:first-child { opacity: 0.6; } }
 /* Plus to minus: the vertical bar turns flat */
@@ -148,7 +148,7 @@
 .faq__item.is-open .faq__icon::after { transform: rotate(0deg); }
 .faq__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms var(--ease-out); }
 .faq__a > div { overflow: hidden; }
-.faq__a p { max-width: 640px; padding: 0 16px 16px; font-size: 14px; line-height: 20px; color: var(--fg-muted); opacity: 0; filter: blur(4px); transition: opacity 200ms ease-out, filter 200ms ease-out; }
+.faq__a p { max-width: 640px; padding: 0 16px 16px; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--fg-muted); opacity: 0; filter: blur(4px); transition: opacity 200ms ease-out, filter 200ms ease-out; }
 .faq__item.is-open .faq__a { grid-template-rows: 1fr; }
 .faq__item.is-open .faq__a p { opacity: 1; filter: none; transition-delay: 80ms; }
 
