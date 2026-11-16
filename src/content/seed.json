@@ -102,7 +102,7 @@
       "intro": "Experience the world effortlessly. Tell us where and when, and your agent takes it from there, on WhatsApp.",
       "poster": {
         "src": "/images/hero-poster.jpg",
-        "alt": "Aerial view of a hotel garden and pool beside a lagoon"
+        "alt": "A woman with a glass of champagne in an infinity pool at sunset, palm trees behind"
       },
       "videoUrl": "/video/hero.mp4",
       "helper": "Planning something bigger? Tell your agent, and they’ll reply on WhatsApp",
@@ -118,7 +118,8 @@
         "A special occasion",
         "Several stops, one trip",
         "Not sure yet"
-      ]
+      ],
+      "_videoNote": "Hero and Premium videos are Filmsupply preview clips (watermarked): license the clean versions before launch."
     },
     "statement": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and we’ll find you options in minutes.",
     "howItWorks": {
@@ -423,7 +424,7 @@
       "intro": "A private travel service for people who travel often. Your own agent, privileges at the hotels you love, and no membership fee.",
       "poster": {
         "src": "/images/premium-hero.jpg",
-        "alt": "A Four Seasons private jet on the apron at golden hour"
+        "alt": "A traveller’s hand on a suitcase handle, looking up at palm trees and a hotel"
       },
       "videoUrl": "/video/premium-hero.mp4",
       "primaryLabel": "Request an invitation",
