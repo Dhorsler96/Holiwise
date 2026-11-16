@@ -318,6 +318,79 @@
           "_note": "INTERNAL ONLY: Belmond image used as a placeholder, not licensed for public use. Replace before launch."
         }
       ]
+    },
+    "trips": {
+      "heading": "Some of our favourite trips",
+      "intro": "From a weekend in Paris to three cities in Japan. Every one started with a message, and your agent planned the rest.",
+      "linkLabel": "Plan a trip like this",
+      "items": [
+        {
+          "length": "Weekend",
+          "place": "France",
+          "title": "A weekend in Paris",
+          "legs": [
+            "Eurostar from London St Pancras",
+            "Two nights in Saint-Germain",
+            "A table at a bistro we love"
+          ],
+          "price": "£X,XXX pp",
+          "imageNote": "Image: Paris rooftops at first light",
+          "tone": "#d9d3ca"
+        },
+        {
+          "length": "5 nights",
+          "place": "French Alps",
+          "title": "Courchevel by private jet",
+          "legs": [
+            "Private jet from Farnborough",
+            "Helicopter transfer to Courchevel 1850",
+            "Airelles Courchevel, five nights"
+          ],
+          "price": "£X,XXX pp",
+          "imageNote": "Image: chalet terrace above Courchevel",
+          "tone": "#cfd6dc"
+        },
+        {
+          "length": "10 nights",
+          "place": "Kenya & Zanzibar",
+          "title": "A safari, then the sea",
+          "legs": [
+            "Flights to Nairobi",
+            "Masai Mara camp, four nights",
+            "Zanzibar beach villa, five nights"
+          ],
+          "price": "£X,XXX pp",
+          "imageNote": "Image: the Masai Mara at dusk",
+          "tone": "#d3d1c2"
+        },
+        {
+          "length": "7 nights",
+          "place": "Italy",
+          "title": "The Amalfi Coast by boat",
+          "legs": [
+            "Flights to Naples",
+            "Private boat to Positano",
+            "Ravello, then a day on Capri"
+          ],
+          "price": "£X,XXX pp",
+          "imageNote": "Image: Positano from the water",
+          "tone": "#c9d6d8"
+        },
+        {
+          "length": "12 nights",
+          "place": "Japan",
+          "title": "Tokyo, Kyoto and Osaka",
+          "legs": [
+            "Flights to Tokyo, four nights",
+            "Bullet train to Kyoto, five nights",
+            "Osaka for the food, three nights"
+          ],
+          "price": "£X,XXX pp",
+          "imageNote": "Image: Kyoto temple garden in autumn",
+          "tone": "#dccdc3"
+        }
+      ],
+      "_note": "Figma 461:2 (Week 02). Images are placeholders until the art direction is agreed: add image {src, alt} to a trip to show a photo instead of its tone and note. Prices are placeholders."
     }
   },
   "premium": {

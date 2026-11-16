@@ -818,6 +818,8 @@ if (search) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   for (const link of $$('[data-focus-tell]')) link.addEventListener('click', (e) => { e.preventDefault(); focusTell(); });
+  // Trip cards: "Plan a trip like this" opens the brief with the trip already written in
+  for (const link of $$('[data-tell]')) link.addEventListener('click', (e) => { e.preventDefault(); focusTell(link.dataset.tell); });
   for (const link of $$('[data-ask]')) link.addEventListener('click', (e) => {
     e.preventDefault();
     const opt = $$('[data-opt]', where).find((o) => o.dataset.opt === link.dataset.ask);
@@ -1118,4 +1120,51 @@ if (vv) {
     const top = next ? next.getBoundingClientRect().top + window.scrollY : window.innerHeight;
     window.scrollTo({ top, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }));
+}
+
+/* ---------- Favourite trips carousel: arrows step one card, the bar and count follow the scroll ---------- */
+const trips = $('[data-trips]');
+if (trips) {
+  const track = $<HTMLElement>('[data-trips-track]', trips)!;
+  const cards = $$<HTMLElement>('.trip', track);
+  const fill = $<HTMLElement>('[data-trips-fill]', trips)!;
+  const count = $('[data-trips-count]', trips)!;
+  const prev = $<HTMLButtonElement>('[data-trips-prev]', trips)!, next = $<HTMLButtonElement>('[data-trips-next]', trips)!;
+  const step = () => cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
+  const sync = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    const atEnd = track.scrollLeft >= max - 4;
+    const i = atEnd ? cards.length - 1 : Math.round(track.scrollLeft / step());
+    count.textContent = String(i + 1).padStart(2, '0');
+    fill.style.setProperty('--p', String((i + 1) / cards.length));
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = atEnd;
+  };
+  const smooth = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: smooth }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: smooth }));
+  track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+  track.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); next.click(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev.click(); }
+  });
+  // Drag with a mouse (touch already swipes natively); a drag never counts as a click on a link
+  let x0 = 0, s0 = 0, moved = false, down = false;
+  track.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse' || e.button !== 0) return; down = true; moved = false; x0 = e.clientX; s0 = track.scrollLeft; });
+  window.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const dx = e.clientX - x0;
+    if (!moved && Math.abs(dx) > 4) { moved = true; track.classList.add('is-dragging'); }
+    if (moved) track.scrollLeft = s0 - dx;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!down) return; down = false;
+    if (!moved) return;
+    track.classList.remove('is-dragging');
+    const i = Math.round(track.scrollLeft / step());
+    track.scrollTo({ left: i * step(), behavior: smooth });
+  });
+  track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+  window.addEventListener('resize', sync);
+  sync();
 }

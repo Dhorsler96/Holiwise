@@ -110,6 +110,7 @@ export async function getSiteContent(): Promise<SiteContent> {
               }))
             : s.favourites.stays,
         },
+        trips: s.trips, // seed only for now (Figma 461:2)
         deal: over(s.deal, home.deal),
         finalCta: { ...over(s.finalCta, home.finalCta), image: toImg(home.finalCta?.image, 2400, s.finalCta.image) },
       },

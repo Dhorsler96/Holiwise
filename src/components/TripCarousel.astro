@@ -1,0 +1,43 @@
+---
+/* "Some of our favourite trips": whole itineraries in a carousel, simple to complex (Figma 461:2).
+   Replaces the stays grid. Native horizontal scroll with snap (swipe on touch, drag with a mouse);
+   the arrows step one card and the bar and count follow along (main.ts). */
+const { data } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const total = data.items.length;
+---
+<section class="trips section" id="stays" data-theme="light" data-trips>
+  <div class="trips__head">
+    <div data-reveal data-inview>
+      <h2 class="trips__title serif">{data.heading}</h2>
+      <p class="trips__intro">{data.intro}</p>
+    </div>
+    <div class="where__arrows trips__arrows" data-reveal data-inview style="--i:2">
+      <button class="where__arrow" type="button" aria-label="Previous trip" data-trips-prev><svg width="12" height="9" viewBox="0 0 12 9" fill="none" aria-hidden="true" style="transform: scaleX(-1)"><path d="M0 4.5h11.5M11.5 4.5L7 9M11.5 4.5L7 0" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/></svg></button>
+      <button class="where__arrow" type="button" aria-label="Next trip" data-trips-next><svg width="12" height="9" viewBox="0 0 12 9" fill="none" aria-hidden="true"><path d="M0 4.5h11.5M11.5 4.5L7 9M11.5 4.5L7 0" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/></svg></button>
+    </div>
+  </div>
+  <ul class="trips__track" data-trips-track data-stagger data-inview data-threshold="0.15" tabindex="0" aria-label={data.heading}>
+    {data.items.map((t: any, i: number) => (
+      <li class="trip" style={`--i:${Math.min(i, 3)}`} aria-label={`${t.title}, ${i + 1} of ${total}`}>
+        <div class="trip__media" style={`--tone:${t.tone}`}>
+          {t.image ? <img src={t.image.src} alt={t.image.alt} loading="lazy" decoding="async" draggable="false" /> : <span class="trip__note">{t.imageNote}</span>}
+          <em class="trip__tag">{t.length}</em>
+        </div>
+        <p class="trip__place">{t.place}</p>
+        <h3 class="trip__title serif">{t.title}</h3>
+        <ol class="trip__route">
+          {t.legs.map((leg: string) => <li>{leg}</li>)}
+        </ol>
+        <div class="trip__foot">
+          <p class="trip__price">From {t.price}</p>
+          <a class="arrow-link" href="#top" data-tell={`Something like your “${t.title}” trip`}><span class="arrow-link__text">{data.linkLabel}</span> <span class="arrow-link__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </li>
+    ))}
+  </ul>
+  <div class="trips__progress" aria-hidden="true">
+    <span class="trips__bar"><i data-trips-fill style={`--p:${1 / total}`}></i></span>
+    <span class="trips__count"><span data-trips-count>01</span> / {pad(total)}</span>
+  </div>
+</section>
