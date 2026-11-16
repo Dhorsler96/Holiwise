@@ -54,7 +54,7 @@
 .ahero__title { font-size: clamp(42px, 4.45vw, 64px); line-height: 0.95; letter-spacing: -0.02em; }
 .js .ahero__title .mask > span { transition-delay: calc(120ms + var(--i) * 80ms); }
 .js.is-loaded .ahero__title .mask > span { opacity: 1; transform: none; filter: none; }
-.ahero__intro { max-width: 600px; font-size: 14px; font-weight: 400; line-height: 20px; text-wrap: balance; }
+.ahero__intro { max-width: 600px; font-size: 14px; font-weight: 450; line-height: 20px; text-wrap: balance; }
 .js .ahero__intro, .js .ahero__actions {
   opacity: 0; transform: translateY(12px); filter: blur(4px);
   transition-property: opacity, transform, filter; transition-duration: 300ms; transition-timing-function: ease-out;
@@ -122,7 +122,7 @@
 .ateam__photo img { width: 100%; height: 100%; object-fit: cover; outline: 1px solid var(--image-outline-dark); outline-offset: -1px; transition: transform 900ms var(--ease-out); }
 @media (hover: hover) and (pointer: fine) { .ateam__person:hover .ateam__photo img { transform: scale(1.03); } }
 .ateam__name { margin-top: 16px; font-size: 22px; line-height: 25px; letter-spacing: -0.01em; }
-.ateam__role { margin-top: 4px; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--fg-muted); }
+.ateam__role { margin-top: 4px; font-size: 14px; font-weight: 450; line-height: 20px; color: var(--fg-muted); }
 
 /* ---------- 07 Where we are (light) ---------- */
 .awhere__offices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
