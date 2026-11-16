@@ -1094,3 +1094,6 @@ ul { list-style: none; }
   .trip { width: min(300px, 78vw); }
   .trips__progress { margin-top: 32px; }
 }
+/* The trips sit right above the dark final CTA: keep their own light colours rather than following the
+   page theme, so the cards never turn dark while the CTA scrolls in beneath them */
+.js body[data-theme] .trips { --bg: #ffffff; --fg: #1a1a1a; --fg-muted: #6b6b6b; --rule: rgba(26, 26, 26, 0.12); --surface: #f7f7f7; }
