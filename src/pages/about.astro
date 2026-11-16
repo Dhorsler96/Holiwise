@@ -114,12 +114,12 @@ const layers = ['far', 'mid', 'near'] as const;
     </section>
 
     <!-- 10 Closing CTA -->
-    <section class="am acta" data-theme="green">
+    <section class="am acta" data-theme="light">
       <h2 class="acta__title serif" data-inview data-threshold="0.4"><span class="mask">{words(a.cta.heading).map((w, i) => <><span style={`--i:${i}`}>{w}</span>{' '}</>)}</span></h2>
       <p class="acta__text" data-reveal data-inview style="--i:3">{a.cta.body}</p>
       <div class="acta__actions" data-reveal data-inview style="--i:4">
-        <a class="btn btn--light" href={settings.agentHref}>{a.cta.primaryLabel}</a>
-        <a class="btn btn--ghost-light" href={a.cta.secondaryHref}>{a.cta.secondaryLabel}</a>
+        <a class="btn btn--dark" href={settings.agentHref}>{a.cta.primaryLabel}</a>
+        <a class="btn btn--ghost-dark" href={a.cta.secondaryHref}>{a.cta.secondaryLabel}</a>
       </div>
     </section>
   </main>
