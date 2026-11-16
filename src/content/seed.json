@@ -239,8 +239,8 @@
     "finalCta": {
       "headline": "Wherever you’re going next,\nwe’ll help you out",
       "image": {
-        "src": "/images/cta-sea.jpg",
-        "alt": "A calm sea at dusk, the sky orange above the horizon"
+        "src": "/images/cta-amalfi.jpg",
+        "alt": "The Amalfi coast at dusk, a cliffside town above the sea"
       },
       "primaryLabel": "Start planning",
       "secondaryLabel": "Message an agent"
