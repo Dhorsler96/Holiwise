@@ -119,7 +119,7 @@
         "Several stops, one trip",
         "Not sure yet"
       ],
-      "_videoNote": "Home hero is a Shutterstock preview (watermarked, 898px): license the full-resolution clip before launch. Premium hero is an AI-generated chauffeur clip (1280x720)."
+      "_videoNote": "Home and Premium heroes are Shutterstock previews (watermarked, 898px): license the full-resolution clips before launch."
     },
     "statement": "Experience the world effortlessly. Tell us what you have in mind, even if it’s just a mood, and we’ll find you options in minutes.",
     "howItWorks": {
@@ -424,7 +424,7 @@
       "intro": "A private travel service for people who travel often. Your own agent, privileges at the hotels you love, and no membership fee.",
       "poster": {
         "src": "/images/premium-hero.jpg",
-        "alt": "A chauffeur in a dark suit loading luggage into the boot of a car outside a hotel"
+        "alt": "A chauffeur in a dark suit waiting beside a black car, hands clasped"
       },
       "videoUrl": "/video/premium-hero.mp4",
       "primaryLabel": "Request an invitation",
