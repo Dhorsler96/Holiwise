@@ -25,6 +25,8 @@
 /* The poster already carries Figma's 30% black; a video gets the same through brightness */
 .phero__media video { filter: brightness(0.7); opacity: 0; transition: opacity 800ms ease; }
 .phero__media video.is-ready { opacity: 1; }
+/* Same top gradient as the homepage hero, so the nav reads over bright water */
+.phero__media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 42.6%); pointer-events: none; }
 .phero__copy { position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(72px, 15svh, 120px); display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
 .phero__title { font-size: clamp(42px, 4.45vw, 64px); line-height: 0.95; letter-spacing: -0.03em; }
 .js .phero__title .mask > span { transition-delay: calc(120ms + var(--i) * 80ms); }
